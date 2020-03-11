@@ -1,0 +1,12 @@
+/parser.cpp
+/parser.hh
+/Makefile
+/myCompiller.cbp
+/location.hh
+/CMakeCache.txt
+/cmake_install.cmake
+/bin/
+/cmake-build-debug/
+/CMakeFiles/
+/scanner/scanner.cpp
+
