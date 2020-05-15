@@ -6,6 +6,8 @@
 
 class Integer : BaseObject {
 public:
+    Integer(int val);
+    int ToInt() override;
 
 private:
     int value_;
