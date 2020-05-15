@@ -20,5 +20,7 @@
 #include <GreaterOrEqualExpression.h>
 #include <EqualExpression.h>
 #include <LessOrEqualExpression.h>
+#include <Scope.h>
+#include <DeclareStatement.h>
 
 #endif //MYCOMPILLER_SOURCES_H

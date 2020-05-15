@@ -3,6 +3,7 @@
 #include "Interprenter.h"
 
 #include "sources.h"
+#include <Integer.h>
 
 void Interprenter::Visit(StatementList* statements) {
     for (auto statement: statements->statements_) {
@@ -11,7 +12,8 @@ void Interprenter::Visit(StatementList* statements) {
 }
 
 void Interprenter::Visit(Assignment* assignment) {
-    variables_[assignment->variable_] = VisitAndSetValue(assignment->expression_);
+    auto value = std::make_shared<Integer>(VisitAndSetValue(assignment->expression_));
+    symbol_table_.SetValue(Symbol(assignment->variable_), value);
 }
 
 void Interprenter::Visit(AddExpression* addExpression) {
@@ -31,7 +33,7 @@ void Interprenter::Visit(SubstractExpression* expression) {
 }
 
 void Interprenter::Visit(IdentExpression* expression) {
-    last_value_set_ = variables_[expression->ident_];
+    last_value_set_ = symbol_table_.GetValue(Symbol(expression->ident_))->ToInt();
 }
 
 void Interprenter::Visit(NumExpression* expression) {
@@ -47,8 +49,6 @@ void Interprenter::ExecuteCode(Program* program) {
 }
 
 Interprenter::Interprenter() {
-    variables_["one"] = 1;
-    variables_["two"] = 2;
     last_value_set_ = 0;
 }
 
@@ -58,7 +58,8 @@ void Interprenter::Visit(PrintStatement* print) {
 
 void Interprenter::Visit(ReadStatement* read) {
     std::cin >> last_value_set_;
-    variables_[read->GetVariableName()] = last_value_set_;
+    auto value = std::make_shared<Integer>(last_value_set_);
+    symbol_table_.SetValue(Symbol(read->GetVariableName()), value);
 }
 
 void Interprenter::Visit(EqualExpression* eq) {
@@ -83,8 +84,20 @@ void Interprenter::Visit(GreaterOrEqualExpression* expr) {
 
 void Interprenter::Visit(IfStatement* ifStatement) {
     if (VisitAndSetValue(ifStatement->ifExpression_)) {
-        ifStatement->statements_->AcceptVisitor(this);
+        ifStatement->then_->AcceptVisitor(this);
+    } else if (ifStatement->else_ != nullptr) {
+        ifStatement->else_->AcceptVisitor(this);
     }
+}
+
+void Interprenter::Visit(Scope* scope) {
+    symbol_table_.BeginScope();
+    scope->statements_->AcceptVisitor(this);
+    symbol_table_.EndScope();
+}
+
+void Interprenter::Visit(DeclareStatement* decl) {
+    symbol_table_.DeclareVariable(Symbol(decl->name_));
 }
 
 

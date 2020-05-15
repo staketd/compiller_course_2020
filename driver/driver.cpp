@@ -44,8 +44,6 @@ void Driver::Evaluate() const {
 }
 
 void Driver::Print() const {
-    PrintTreeVisitor ptv("program.txt");
-    ptv.PrintProgram(program);
 }
 
 

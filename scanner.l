@@ -54,7 +54,10 @@ blank [ \t\r]
 "<="        return yy::parser::make_LE      (loc);
 ">="        return yy::parser::make_GE      (loc);
 "if"        return yy::parser::make_IF      (loc);
-"endif"     return yy::parser::make_ENDIF    (loc);
+"{"         return yy::parser::make_LEFTSCOPE(loc);
+"}"         return yy::parser::make_RIGHTSCOPE(loc);
+"else"      return yy::parser::make_ELSE(loc);
+"var"       return yy::parser::make_VAR(loc);
 
 {int}       return make_NUMBER(yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER(yytext, loc);

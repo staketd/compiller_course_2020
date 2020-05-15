@@ -113,3 +113,6 @@ void PrintTreeVisitor::Visit(GreaterOrEqualExpression*) {
 
 void PrintTreeVisitor::Visit(IfStatement*) {
 }
+
+void PrintTreeVisitor::Visit(Scope*) {
+}

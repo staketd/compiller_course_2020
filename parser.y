@@ -51,7 +51,10 @@
     GE ">="
     EQUAL "=="
     IF "if"
-    ENDIF "endif"
+    LEFTSCOPE "{"
+    RIGHTSCOPE "}"
+    ELSE "else"
+    VAR "var"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
@@ -64,6 +67,8 @@
 %nterm <PrintStatement*> printStatement
 %nterm <ReadStatement*> readStatement
 %nterm <IfStatement*> IfStatement
+%nterm <Scope*> Scope
+%nterm <DeclareStatement*> DeclareStatement
 
 %printer {yyo << $$;} <*>;
 
@@ -76,22 +81,37 @@ statements:
     | statements statement {
     	$1->AddStatement($2);
     	$$ = $1;
-    }
+    };
 
 statement:
 	assignment {$$ = $1;}
 	| printStatement {$$ = $1;}
 	| readStatement {$$ = $1;}
 	| IfStatement {$$ = $1;}
+	| Scope {$$ = $1;}
+	| DeclareStatement {$$ = $1;}
+	;
+
+DeclareStatement:
+	"var" "identifier" {$$ = new DeclareStatement($2);}
+	;
+
+Scope:
+	"{" statements "}" {$$ = new Scope($2);}
+	;
 
 IfStatement:
-	"if" "(" expr ")" statements "endif" {$$ = new IfStatement($3, $5);}
+	"if" "(" expr ")" Scope {$$ = new IfStatement($3, $5, nullptr);}
+	| "if" "(" expr ")" Scope "else" Scope {$$ = new IfStatement($3, $5, $7);}
+	;
 
 printStatement:
 	"print" "(" expr ")" {$$ = new PrintStatement($3);}
+	;
 
 readStatement:
 	"read" "(" "identifier" ")" {$$ = new ReadStatement($3);}
+	;
 
 assignment:
     "identifier" ":=" expr {

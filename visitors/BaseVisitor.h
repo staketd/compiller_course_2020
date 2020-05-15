@@ -23,6 +23,8 @@ public:
     virtual void Visit(LessOrEqualExpression*) = 0;
     virtual void Visit(GreaterOrEqualExpression*) = 0;
     virtual void Visit(IfStatement*) = 0;
+    virtual void Visit(Scope*) = 0;
+    virtual void Visit(DeclareStatement*) = 0;
 };
 
 

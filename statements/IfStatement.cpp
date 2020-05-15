@@ -1,8 +1,8 @@
 
 #include "IfStatement.h"
 
-IfStatement::IfStatement(Expression* expr, StatementList* statements)
-        : ifExpression_(expr), statements_(statements) {
+IfStatement::IfStatement(Expression* expr, Scope* then, Scope* s_else)
+        : ifExpression_(expr), then_(then), else_(s_else) {
 }
 
 void IfStatement::AcceptVisitor(BaseVisitor* visitor) {

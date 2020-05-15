@@ -19,5 +19,7 @@ class GreaterExpression;
 class LessOrEqualExpression;
 class GreaterOrEqualExpression;
 class IfStatement;
+class Scope;
+class DeclareStatement;
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

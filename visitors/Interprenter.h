@@ -3,7 +3,7 @@
 #define MYCOMPILLER_INTERPRENTER_H
 
 #include <TemplateBaseVisitor.h>
-#include <map>
+#include <Table.h>
 
 class Interprenter: public TemplateBaseVisitor<int> {
 public:
@@ -28,8 +28,10 @@ private:
     void Visit(LessOrEqualExpression*) override;
     void Visit(GreaterOrEqualExpression*) override;
     void Visit(IfStatement*) override;
+    void Visit(Scope*) override;
+    void Visit(DeclareStatement*) override;
 
-    std::map<std::string, int> variables_;
+    Table symbol_table_;
 };
 
 

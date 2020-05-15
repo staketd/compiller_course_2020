@@ -75,7 +75,7 @@ set(
         symbol_table/Symbol.cpp
         symbol_table/Table.cpp
         objects/BaseObject.h
-        objects/Integer.cpp objects/Integer.h)
+        objects/Integer.cpp objects/Integer.h objects/UninitObject.cpp objects/UninitObject.h statements/Scope.cpp statements/Scope.h statements/DeclareStatement.cpp statements/DeclareStatement.h)
 
 add_executable(
         myCompiller

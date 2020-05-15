@@ -8,6 +8,11 @@ class Symbol {
 public:
     explicit Symbol(std::string);
     [[nodiscard]] std::string GetName() const;
+
+    bool operator==(const Symbol&) const;
+    bool operator!=(const Symbol&) const;
+
+    Symbol(const Symbol&);
 private:
     std::string name_;
 };
@@ -16,7 +21,7 @@ namespace std {
     template<>
     struct hash<Symbol> {
         std::size_t operator()(const Symbol& symb) const {
-            return std::hash<std::string>()(symb.GetName());
+            return hash<string>()(symb.GetName());
         }
     };
 }

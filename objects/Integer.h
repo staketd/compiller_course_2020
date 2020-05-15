@@ -4,7 +4,7 @@
 
 #include <BaseObject.h>
 
-class Integer : BaseObject {
+class Integer : public BaseObject {
 public:
     Integer(int val);
     int ToInt() override;

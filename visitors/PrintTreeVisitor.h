@@ -27,6 +27,7 @@ private:
     void Visit(LessOrEqualExpression*) override;
     void Visit(GreaterOrEqualExpression*) override;
     void Visit(IfStatement*) override;
+    void Visit(Scope*) override;
     void PrintTabs();
     size_t tabs_num_;
     std::ofstream stream_;
