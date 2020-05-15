@@ -14,6 +14,8 @@ include_directories(
         statements
         BaseClass
         visitors
+        symbol_table
+        objects
         .
 )
 
@@ -38,8 +40,10 @@ FLEX_TARGET(
         ${myCompiller_SOURCE_DIR}/scanner/scanner.cpp
 )
 
-add_executable(
-        myCompiller
+set(
+        SOURCES
+        BaseClass/BaseClass.cpp
+        Program.cpp Program.h
         main.cpp
         driver/driver.cpp
         expressions/AddExpression.cpp
@@ -48,14 +52,6 @@ add_executable(
         expressions/SubstractExpression.cpp
         expressions/NumExpression.cpp
         expressions/IdentExpression.cpp
-        statements/Assignment.cpp
-        statements/Statement.cpp
-        statements/PrintStatement.cpp
-        statements/ReadStatement.cpp
-        statements/IfStatement.cpp
-        ${BISON_MyParser_OUTPUTS}
-        ${FLEX_MyScanner_OUTPUTS}
-        statements/StatementList.cpp
         expressions/Expression.h
         expressions/BinaryExpression.cpp
         expressions/EqualExpression.cpp
@@ -63,13 +59,27 @@ add_executable(
         expressions/GreaterExpression.cpp
         expressions/LessOrEqualExpression.cpp
         expressions/GreaterOrEqualExpression.cpp
+        statements/Assignment.cpp
+        statements/Statement.cpp
+        statements/PrintStatement.cpp
+        statements/ReadStatement.cpp
+        statements/IfStatement.cpp
+        statements/StatementList.cpp
+        ${BISON_MyParser_OUTPUTS}
+        ${FLEX_MyScanner_OUTPUTS}
         visitors/sources.h
-        Program.cpp Program.h
         visitors/BaseVisitor.cpp visitors/BaseVisitor.h
-        BaseClass/BaseClass.cpp BaseClass/BaseClass.h
         visitors/Interprenter.cpp visitors/Interprenter.h
         visitors/PrintTreeVisitor.cpp visitors/PrintTreeVisitor.h
         visitors/TemplateBaseVisitor.cpp
+        symbol_table/Symbol.cpp
+        symbol_table/Table.cpp
+        objects/BaseObject.h
+        objects/Integer.cpp objects/Integer.h)
+
+add_executable(
+        myCompiller
+        ${SOURCES}
 )
 
 target_include_directories(myCompiller PRIVATE ${myCompille_SOURCE_DIR})
