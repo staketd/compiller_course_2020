@@ -3,7 +3,7 @@
 
 class Expression;
 class Assignment;
-class AssignmentList;
+class StatementList;
 class AddExpression;
 class SubstractExpression;
 class MulExpression;
@@ -11,5 +11,13 @@ class DivExpression;
 class NumExpression;
 class IdentExpression;
 class Program;
+class PrintStatement;
+class ReadStatement;
+class EqualExpression;
+class LessExpression;
+class GreaterExpression;
+class LessOrEqualExpression;
+class GreaterOrEqualExpression;
+class IfStatement;
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

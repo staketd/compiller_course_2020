@@ -6,7 +6,6 @@
 class NumExpression: public Expression {
 public:
     NumExpression(int value);
-    [[nodiscard]] int eval() const override ;
     void AcceptVisitor(BaseVisitor*) override;
 
     int value_;

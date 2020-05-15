@@ -38,12 +38,12 @@ void Driver::FinishScan() {
     stream.close();
 }
 
-int Driver::Evaluate() {
+void Driver::Evaluate() const {
     Interprenter interprenter;
-    return interprenter.ExecuteCode(program);
+    interprenter.ExecuteCode(program);
 }
 
-void Driver::Print() {
+void Driver::Print() const {
     PrintTreeVisitor ptv("program.txt");
     ptv.PrintProgram(program);
 }

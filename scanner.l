@@ -27,37 +27,41 @@ int   [0-9]+
 blank [ \t\r]
 
 %{
-  // Code run each time a pattern is matched.
   # define YY_USER_ACTION  loc.columns (yyleng);
 %}
 %%
+
 %{
-  // A handy shortcut to the location held by the driver.
   yy::location& loc = driver.location;
-  // Code run each time yylex is called.
   loc.step();
 %}
 
-{blank}+   loc.step ();
-\n+        loc.lines (yyleng); loc.step ();
+{blank}+    loc.step ();
+\n+         loc.lines (yyleng); loc.step ();
 
-"-"        {
-              std::cout << loc.begin.line << " " << loc.end.line << std::endl;
-              return yy::parser::make_MINUS  (loc);
-           }
-"+"        return yy::parser::make_PLUS   (loc);
-"*"        return yy::parser::make_STAR   (loc);
-"/"        return yy::parser::make_SLASH  (loc);
-"("        return yy::parser::make_LPAREN (loc);
-")"        return yy::parser::make_RPAREN (loc);
-":="       return yy::parser::make_ASSIGN (loc);
+"-"         return yy::parser::make_MINUS   (loc);
+"+"         return yy::parser::make_PLUS    (loc);
+"*"         return yy::parser::make_STAR    (loc);
+"/"         return yy::parser::make_SLASH   (loc);
+"("         return yy::parser::make_LPAREN  (loc);
+")"         return yy::parser::make_RPAREN  (loc);
+":="        return yy::parser::make_ASSIGN  (loc);
+"print"     return yy::parser::make_PRINT   (loc);
+"read"      return yy::parser::make_READ    (loc);
+"<"         return yy::parser::make_LESS    (loc);
+">"         return yy::parser::make_GREATER (loc);
+"=="        return yy::parser::make_EQUAL   (loc);
+"<="        return yy::parser::make_LE      (loc);
+">="        return yy::parser::make_GE      (loc);
+"if"        return yy::parser::make_IF      (loc);
+"endif"     return yy::parser::make_ENDIF    (loc);
 
-{int}      return make_NUMBER(yytext, loc);
-{id}       return yy::parser::make_IDENTIFIER(yytext, loc);
-.          {
+{int}       return make_NUMBER(yytext, loc);
+{id}        return yy::parser::make_IDENTIFIER(yytext, loc);
+.           {
                 throw yy::parser::syntax_error(loc, "invalid character: " + std::string(yytext));
-           }
-<<EOF>>    return yy::parser::make_END (loc);
+            }
+<<EOF>>     return yy::parser::make_END (loc);
 %%
 
 yy::parser::symbol_type make_NUMBER(

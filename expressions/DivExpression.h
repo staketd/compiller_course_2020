@@ -1,15 +1,13 @@
 #ifndef MYCOMPILLER_DIVEXPRESSION_H
 #define MYCOMPILLER_DIVEXPRESSION_H
 
-#include "Expression.h"
+#include <BinaryExpression.h>
 
-class DivExpression: public Expression {
+class DivExpression: public BinaryExpression {
 public:
-    DivExpression(Expression*, Expression*);
-    [[nodiscard]] int eval() const override;
+    using BinaryExpression::BinaryExpression;
+
     void AcceptVisitor(BaseVisitor*) override;
-    Expression* first_;
-    Expression* second_;
 };
 
 #endif //MYCOMPILLER_DIVEXPRESSION_H

@@ -7,7 +7,6 @@
 class IdentExpression: public Expression {
 public:
     IdentExpression(std::string ident);
-    int eval() const override;
     void AcceptVisitor(BaseVisitor*) override;
     std::string ident_;
 };

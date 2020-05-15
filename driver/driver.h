@@ -22,8 +22,8 @@ public:
 
     void InitiateScan();
     void FinishScan();
-    int Evaluate();
-    void Print();
+    void Evaluate() const;
+    void Print() const;
 
     int Parse(const std::string& f);
     friend class Scanner;

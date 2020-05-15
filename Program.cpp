@@ -1,5 +1,7 @@
-
 #include "Program.h"
 
-Program::Program(AssignmentList* assignments, Expression* expression) : assignments_(assignments),
-                                                                        expression_(expression) {}
+Program::Program(StatementList* statements) : statements_(statements) {}
+
+void Program::AcceptVisitor(BaseVisitor* visitor) {
+    statements_->AcceptVisitor(visitor);
+}

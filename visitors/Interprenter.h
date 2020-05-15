@@ -2,12 +2,16 @@
 #ifndef MYCOMPILLER_INTERPRENTER_H
 #define MYCOMPILLER_INTERPRENTER_H
 
-#include <BaseVisitor.h>
+#include <TemplateBaseVisitor.h>
 #include <map>
 
-class Interprenter: public BaseVisitor {
+class Interprenter: public TemplateBaseVisitor<int> {
+public:
+    Interprenter();
+    void ExecuteCode(Program*);
+
 private:
-    void Visit(AssignmentList*) override;
+    void Visit(StatementList*) override;
     void Visit(Assignment*) override;
     void Visit(AddExpression*) override;
     void Visit(MulExpression*) override;
@@ -16,18 +20,16 @@ private:
     void Visit(IdentExpression*) override;
     void Visit(NumExpression*) override;
     void Visit(Program*) override;
+    void Visit(PrintStatement*) override;
+    void Visit(ReadStatement*) override;
+    void Visit(EqualExpression*) override;
+    void Visit(LessExpression*) override;
+    void Visit(GreaterExpression*) override;
+    void Visit(LessOrEqualExpression*) override;
+    void Visit(GreaterOrEqualExpression*) override;
+    void Visit(IfStatement*) override;
 
-    void SetLastValue(int value);
-
-    void UnsetLastValue();
     std::map<std::string, int> variables_;
-
-
-    int last_calculated_value_;
-    bool last_value_is_set_;
-public:
-    Interprenter();
-    int ExecuteCode(Program*);
 };
 
 

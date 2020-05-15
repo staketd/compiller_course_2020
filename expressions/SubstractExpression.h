@@ -2,15 +2,13 @@
 #ifndef MYCOMPILLER_SUBSTRACTEXPRESSION_H
 #define MYCOMPILLER_SUBSTRACTEXPRESSION_H
 
-#include "Expression.h"
+#include <BinaryExpression.h>
 
-class SubstractExpression: public Expression {
+class SubstractExpression: public BinaryExpression {
 public:
-    SubstractExpression(Expression*, Expression*);
-    [[nodiscard]] int eval() const override;
+    using BinaryExpression::BinaryExpression;
+
     void AcceptVisitor(BaseVisitor*) override;
-    Expression* first_;
-    Expression* second_;
 };
 
 

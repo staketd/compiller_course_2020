@@ -1,14 +1,16 @@
 #ifndef MYCOMPILLER_PROGRAM_H
 #define MYCOMPILLER_PROGRAM_H
 
-#include <AssignmentList.h>
+#include <StatementList.h>
 #include <Expression.h>
 
-class Program {
+class Program: BaseClass {
 public:
-    Program(AssignmentList*, Expression*);
-    AssignmentList* assignments_;
-    Expression* expression_;
+    explicit Program(StatementList*);
+    void AcceptVisitor(BaseVisitor*) override;
+
+private:
+    StatementList* statements_;
 };
 
 

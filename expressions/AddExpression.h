@@ -1,15 +1,13 @@
 #ifndef MYCOMPILLER_ADDEXPRESSION_H
 #define MYCOMPILLER_ADDEXPRESSION_H
 
-#include "Expression.h"
+#include <BinaryExpression.h>
 
-class AddExpression: public Expression {
+class AddExpression: public BinaryExpression {
 public:
-    AddExpression(Expression* first, Expression* second);
-    [[nodiscard]] int eval() const override;
+    using BinaryExpression::BinaryExpression;
+
     void AcceptVisitor(BaseVisitor*) override;
-    Expression* first_;
-    Expression* second_;
 };
 
 #endif //MYCOMPILLER_ADDEXPRESSION_H

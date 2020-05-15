@@ -11,7 +11,7 @@ include_directories(
         scanner
         driver
         expressions
-        assignments
+        statements
         BaseClass
         visitors
         .
@@ -48,14 +48,28 @@ add_executable(
         expressions/SubstractExpression.cpp
         expressions/NumExpression.cpp
         expressions/IdentExpression.cpp
-        assignments/Assignment.cpp
+        statements/Assignment.cpp
+        statements/Statement.cpp
+        statements/PrintStatement.cpp
+        statements/ReadStatement.cpp
+        statements/IfStatement.cpp
         ${BISON_MyParser_OUTPUTS}
         ${FLEX_MyScanner_OUTPUTS}
-        assignments/AssignmentList.cpp
-        assignments/AssignmentList.h
+        statements/StatementList.cpp
         expressions/Expression.h
+        expressions/BinaryExpression.cpp
+        expressions/EqualExpression.cpp
+        expressions/LessExpression.cpp
+        expressions/GreaterExpression.cpp
+        expressions/LessOrEqualExpression.cpp
+        expressions/GreaterOrEqualExpression.cpp
+        visitors/sources.h
         Program.cpp Program.h
         visitors/BaseVisitor.cpp visitors/BaseVisitor.h
-        BaseClass/BaseClass.cpp BaseClass/BaseClass.h visitors/Interprenter.cpp visitors/Interprenter.h visitors/PrintTreeVisitor.cpp visitors/PrintTreeVisitor.h)
+        BaseClass/BaseClass.cpp BaseClass/BaseClass.h
+        visitors/Interprenter.cpp visitors/Interprenter.h
+        visitors/PrintTreeVisitor.cpp visitors/PrintTreeVisitor.h
+        visitors/TemplateBaseVisitor.cpp
+)
 
 target_include_directories(myCompiller PRIVATE ${myCompille_SOURCE_DIR})

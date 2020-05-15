@@ -1,15 +1,13 @@
 #ifndef MYCOMPILLER_MULEXPRESSION_H
 #define MYCOMPILLER_MULEXPRESSION_H
 
-#include "Expression.h"
+#include <BinaryExpression.h>
 
-class MulExpression: public Expression {
+class MulExpression: public BinaryExpression {
 public:
-    MulExpression(Expression*, Expression*);
+    using BinaryExpression::BinaryExpression;
+
     void AcceptVisitor(BaseVisitor*) override;
-    [[nodiscard]] int eval() const override;
-    Expression* first_;
-    Expression* second_;
 };
 
 #endif //MYCOMPILLER_MULEXPRESSION_H

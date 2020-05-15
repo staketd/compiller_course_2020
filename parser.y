@@ -10,15 +10,7 @@
     #include <string>
     class Scanner;
     class Driver;
-    #include <AddExpression.h>
-    #include <MulExpression.h>
-    #include <DivExpression.h>
-    #include <NumExpression.h>
-    #include <SubstractExpression.h>
-    #include <IdentExpression.h>
-    #include <Assignment.h>
-    #include <AssignmentList.h>
-    #include <Program.h>
+    #include <sources.h>
 }
 
 %define parse.trace
@@ -51,27 +43,55 @@
     SLASH "/"
     LPAREN "("
     RPAREN ")"
+    PRINT "print"
+    READ "read"
+    LESS "<"
+    GREATER ">"
+    LE "<="
+    GE ">="
+    EQUAL "=="
+    IF "if"
+    ENDIF "endif"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
 %nterm <Expression*> expr
-%nterm <AssignmentList*> assignments
+%nterm <StatementList*> statements
 %nterm <Assignment*> assignment
+%nterm <Statement*> statement
 %nterm <Program*> unit;
+%nterm <PrintStatement*> printStatement
+%nterm <ReadStatement*> readStatement
+%nterm <IfStatement*> IfStatement
 
 %printer {yyo << $$;} <*>;
 
 %%
 %start unit;
-unit: assignments expr { $$ = new Program($1, $2); driver.program = $$;};
+unit: statements { $$ = new Program($1); driver.program = $$;};
 
-assignments:
-    %empty {$$ = new AssignmentList();}
-    | assignments assignment {
-    	$1->AddAssignment($2);
+statements:
+    %empty {$$ = new StatementList();}
+    | statements statement {
+    	$1->AddStatement($2);
     	$$ = $1;
     }
+
+statement:
+	assignment {$$ = $1;}
+	| printStatement {$$ = $1;}
+	| readStatement {$$ = $1;}
+	| IfStatement {$$ = $1;}
+
+IfStatement:
+	"if" "(" expr ")" statements "endif" {$$ = new IfStatement($3, $5);}
+
+printStatement:
+	"print" "(" expr ")" {$$ = new PrintStatement($3);}
+
+readStatement:
+	"read" "(" "identifier" ")" {$$ = new ReadStatement($3);}
 
 assignment:
     "identifier" ":=" expr {
@@ -80,14 +100,20 @@ assignment:
 
 %left "+" "-";
 %left "*" "/";
+%left "<" ">" "==" "<=" ">=";
 
 expr:
-    "number" 		{$$ = new NumExpression($1);}
-    | "identifier" 	{$$ = new IdentExpression($1); }
+    "number" 			{$$ = new NumExpression($1);}
+    | "identifier" 		{$$ = new IdentExpression($1); }
     | expr "+" expr 	{$$ = new AddExpression($1, $3); }
     | expr "-" expr 	{$$ = new SubstractExpression($1, $3); }
     | expr "*" expr 	{$$ = new MulExpression($1, $3); }
     | expr "/" expr 	{$$ = new DivExpression($1, $3); }
+    | expr "<" expr		{$$ = new LessExpression($1, $3);}
+    | expr ">" expr		{$$ = new GreaterExpression($1, $3);}
+    | expr "==" expr	{$$ = new EqualExpression($1, $3);}
+    | expr ">=" expr	{$$ = new GreaterOrEqualExpression($1, $3);}
+    | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3);}
     | "(" expr ")" 	{$$ = $2; };
 
 %%

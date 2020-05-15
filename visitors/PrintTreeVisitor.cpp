@@ -1,15 +1,15 @@
 
-#include <AssignmentList.h>
+#include <StatementList.h>
 #include <AddExpression.h>
 #include "PrintTreeVisitor.h"
 #include "sources.h"
 
-void PrintTreeVisitor::Visit(AssignmentList* assignmentList) {
+void PrintTreeVisitor::Visit(StatementList* assignmentList) {
     PrintTabs();
     stream_<< "Assignment list: \n";
     ++tabs_num_;
-    for (auto assignment: assignmentList->assignments_) {
-        Visit(assignment);
+    for (auto statement: assignmentList->statements_) {
+        statement->AcceptVisitor(this);
     }
     --tabs_num_;
 }
@@ -82,14 +82,34 @@ void PrintTreeVisitor::Visit(Program* program) {
     PrintTabs();
     stream_ << "Program: \n";
     ++tabs_num_;
-    program->assignments_->AcceptVisitor(this);
-    --tabs_num_;
-    stream_ << "Expression: \n";
-    ++tabs_num_;
-    program->expression_->AcceptVisitor(this);
+    program->AcceptVisitor(this);
     --tabs_num_;
 }
 
 void PrintTreeVisitor::PrintProgram(Program* program) {
-    Visit(program);
+    program->AcceptVisitor(this);
+}
+
+void PrintTreeVisitor::Visit(PrintStatement*) {
+}
+
+void PrintTreeVisitor::Visit(ReadStatement*) {
+}
+
+void PrintTreeVisitor::Visit(EqualExpression*) {
+}
+
+void PrintTreeVisitor::Visit(LessExpression*) {
+}
+
+void PrintTreeVisitor::Visit(GreaterExpression*) {
+}
+
+void PrintTreeVisitor::Visit(LessOrEqualExpression*) {
+}
+
+void PrintTreeVisitor::Visit(GreaterOrEqualExpression*) {
+}
+
+void PrintTreeVisitor::Visit(IfStatement*) {
 }

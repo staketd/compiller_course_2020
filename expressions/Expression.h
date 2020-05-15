@@ -4,9 +4,6 @@
 #include <BaseClass.h>
 
 class Expression: public BaseClass {
-public:
-    virtual int eval() const = 0;
-private:
 };
 
 
