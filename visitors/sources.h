@@ -6,6 +6,7 @@
 #include <MulExpression.h>
 #include <DivExpression.h>
 #include <NumExpression.h>
+#include <ModuloExpression.h>
 #include <SubstractExpression.h>
 #include <IdentExpression.h>
 #include <Assignment.h>
@@ -21,6 +22,7 @@
 #include <EqualExpression.h>
 #include <LessOrEqualExpression.h>
 #include <Scope.h>
-#include <DeclareStatement.h>
+#include <VariableDeclaration.h>
+#include <WhileStatement.h>
 
 #endif //MYCOMPILLER_SOURCES_H

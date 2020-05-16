@@ -8,7 +8,8 @@ Driver::Driver():
     trace_parsing(false),
     trace_scanning(false),
     scanner(*this),
-    parser(scanner, *this) {
+    parser(scanner, *this),
+    global_scope_(new ScopeLayer()) {
     variables["one"] = 1;
     variables["two"] = 2;
 }
@@ -39,7 +40,7 @@ void Driver::FinishScan() {
 }
 
 void Driver::Evaluate() const {
-    Interprenter interprenter;
+    Interprenter interprenter(global_scope_.GetRoot());
     interprenter.ExecuteCode(program);
 }
 

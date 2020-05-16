@@ -14,6 +14,7 @@ public:
     virtual void Visit(SubstractExpression*) = 0;
     virtual void Visit(IdentExpression*) = 0;
     virtual void Visit(NumExpression*) = 0;
+    virtual void Visit(ModuloExpression*) = 0;
     virtual void Visit(Program*) = 0;
     virtual void Visit(PrintStatement*) = 0;
     virtual void Visit(ReadStatement*) = 0;
@@ -24,7 +25,8 @@ public:
     virtual void Visit(GreaterOrEqualExpression*) = 0;
     virtual void Visit(IfStatement*) = 0;
     virtual void Visit(Scope*) = 0;
-    virtual void Visit(DeclareStatement*) = 0;
+    virtual void Visit(VariableDeclaration*) = 0;
+    virtual void Visit(WhileStatement*) = 0;
 };
 
 

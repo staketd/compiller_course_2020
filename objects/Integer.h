@@ -2,9 +2,9 @@
 #ifndef MYCOMPILLER_INTEGER_H
 #define MYCOMPILLER_INTEGER_H
 
-#include <BaseObject.h>
+#include <PrimitiveType.h>
 
-class Integer : public BaseObject {
+class Integer : public PrimitiveType {
 public:
     Integer(int val);
     int ToInt() override;

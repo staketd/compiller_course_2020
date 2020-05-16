@@ -6,6 +6,7 @@
 #include <scanner.h>
 #include <parser.hh>
 #include <Program.h>
+#include <ScopeLayerTree.h>
 
 class Driver {
 public:
@@ -30,6 +31,7 @@ public:
 
 private:
     std::ifstream stream;
+    ScopeLayerTree global_scope_;
 };
 
 #include "parser.hh"

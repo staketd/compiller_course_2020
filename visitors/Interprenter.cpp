@@ -13,7 +13,7 @@ void Interprenter::Visit(StatementList* statements) {
 
 void Interprenter::Visit(Assignment* assignment) {
     auto value = std::make_shared<Integer>(VisitAndSetValue(assignment->expression_));
-    symbol_table_.SetValue(Symbol(assignment->variable_), value);
+    current_layer_->SetValue(Symbol(assignment->variable_), value);
 }
 
 void Interprenter::Visit(AddExpression* addExpression) {
@@ -33,7 +33,7 @@ void Interprenter::Visit(SubstractExpression* expression) {
 }
 
 void Interprenter::Visit(IdentExpression* expression) {
-    last_value_set_ = symbol_table_.GetValue(Symbol(expression->ident_))->ToInt();
+    last_value_set_ = current_layer_->GetValue(Symbol(expression->ident_))->ToInt();
 }
 
 void Interprenter::Visit(NumExpression* expression) {
@@ -45,11 +45,7 @@ void Interprenter::Visit(Program* program) {
 }
 
 void Interprenter::ExecuteCode(Program* program) {
-    program->AcceptVisitor(this);
-}
-
-Interprenter::Interprenter() {
-    last_value_set_ = 0;
+    Visit(program);
 }
 
 void Interprenter::Visit(PrintStatement* print) {
@@ -59,7 +55,7 @@ void Interprenter::Visit(PrintStatement* print) {
 void Interprenter::Visit(ReadStatement* read) {
     std::cin >> last_value_set_;
     auto value = std::make_shared<Integer>(last_value_set_);
-    symbol_table_.SetValue(Symbol(read->GetVariableName()), value);
+    current_layer_->SetValue(Symbol(read->GetVariableName()), value);
 }
 
 void Interprenter::Visit(EqualExpression* eq) {
@@ -91,13 +87,26 @@ void Interprenter::Visit(IfStatement* ifStatement) {
 }
 
 void Interprenter::Visit(Scope* scope) {
-    symbol_table_.BeginScope();
+    current_layer_ = new ScopeLayer(current_layer_);
     scope->statements_->AcceptVisitor(this);
-    symbol_table_.EndScope();
+    current_layer_ = current_layer_->GetParent();
 }
 
-void Interprenter::Visit(DeclareStatement* decl) {
-    symbol_table_.DeclareVariable(Symbol(decl->name_));
+void Interprenter::Visit(VariableDeclaration* decl) {
+    current_layer_->DeclareVariable(Symbol(decl->name_));
+}
+
+Interprenter::Interprenter(ScopeLayer* main_scope) : current_layer_(main_scope) {
+}
+
+void Interprenter::Visit(ModuloExpression* expression) {
+    last_value_set_ = VisitAndSetValue(expression->first_) % VisitAndSetValue(expression->second_);
+}
+
+void Interprenter::Visit(WhileStatement* statement) {
+    while (VisitAndSetValue(statement->check_expression_)) {
+        Visit(statement->scope_);
+    }
 }
 
 

@@ -4,10 +4,11 @@
 
 #include <TemplateBaseVisitor.h>
 #include <Table.h>
+#include <ScopeLayer.h>
 
 class Interprenter: public TemplateBaseVisitor<int> {
 public:
-    Interprenter();
+    explicit Interprenter(ScopeLayer*);
     void ExecuteCode(Program*);
 
 private:
@@ -29,9 +30,11 @@ private:
     void Visit(GreaterOrEqualExpression*) override;
     void Visit(IfStatement*) override;
     void Visit(Scope*) override;
-    void Visit(DeclareStatement*) override;
+    void Visit(VariableDeclaration*) override;
+    void Visit(ModuloExpression*) override;
+    void Visit(WhileStatement*) override;
 
-    Table symbol_table_;
+    ScopeLayer* current_layer_;
 };
 
 

@@ -55,6 +55,9 @@
     RIGHTSCOPE "}"
     ELSE "else"
     VAR "var"
+    SEMICOLON ";"
+    MODULO "%"
+    WHILE "while"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
@@ -68,7 +71,8 @@
 %nterm <ReadStatement*> readStatement
 %nterm <IfStatement*> IfStatement
 %nterm <Scope*> Scope
-%nterm <DeclareStatement*> DeclareStatement
+%nterm <VariableDeclaration*> VariableDeclaration
+%nterm <WhileStatement*> While
 
 %printer {yyo << $$;} <*>;
 
@@ -84,16 +88,21 @@ statements:
     };
 
 statement:
-	assignment {$$ = $1;}
-	| printStatement {$$ = $1;}
-	| readStatement {$$ = $1;}
+	assignment ";" {$$ = $1;}
+	| printStatement ";" {$$ = $1;}
+	| readStatement ";" {$$ = $1;}
 	| IfStatement {$$ = $1;}
 	| Scope {$$ = $1;}
-	| DeclareStatement {$$ = $1;}
+	| VariableDeclaration ";" {$$ = $1;}
+	| While {$$ = $1;}
 	;
 
-DeclareStatement:
-	"var" "identifier" {$$ = new DeclareStatement($2);}
+While:
+	"while" "(" expr ")" Scope {$$ = new WhileStatement($3, $5);}
+	;
+
+VariableDeclaration:
+	"var" "identifier" {$$ = new VariableDeclaration($2);}
 	;
 
 Scope:
@@ -118,9 +127,9 @@ assignment:
     	$$ = new Assignment($1, $3);
     };
 
-%left "+" "-";
-%left "*" "/";
 %left "<" ">" "==" "<=" ">=";
+%left "+" "-";
+%left "*" "/" "%";
 
 expr:
     "number" 			{$$ = new NumExpression($1);}

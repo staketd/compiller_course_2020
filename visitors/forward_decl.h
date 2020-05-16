@@ -20,6 +20,8 @@ class LessOrEqualExpression;
 class GreaterOrEqualExpression;
 class IfStatement;
 class Scope;
-class DeclareStatement;
+class VariableDeclaration;
+class ModuloExpression;
+class WhileStatement;
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

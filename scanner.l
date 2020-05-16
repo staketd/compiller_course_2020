@@ -56,8 +56,11 @@ blank [ \t\r]
 "if"        return yy::parser::make_IF      (loc);
 "{"         return yy::parser::make_LEFTSCOPE(loc);
 "}"         return yy::parser::make_RIGHTSCOPE(loc);
-"else"      return yy::parser::make_ELSE(loc);
-"var"       return yy::parser::make_VAR(loc);
+"else"      return yy::parser::make_ELSE    (loc);
+"var"       return yy::parser::make_VAR     (loc);
+";"         return yy::parser::make_SEMICOLON(loc);
+"%"         return yy::parser::make_MODULO  (loc);
+"while"     return yy::parser::make_WHILE   (loc);
 
 {int}       return make_NUMBER(yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER(yytext, loc);
