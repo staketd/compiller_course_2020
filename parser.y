@@ -36,7 +36,7 @@
 
 %token
     END 0 "end of file"
-    ASSIGN ":="
+    ASSIGN "="
     PLUS "+"
     MINUS "-"
     STAR "*"
@@ -123,7 +123,7 @@ readStatement:
 	;
 
 assignment:
-    "identifier" ":=" expr {
+    "identifier" "=" expr {
     	$$ = new Assignment($1, $3);
     };
 

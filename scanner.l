@@ -45,7 +45,7 @@ blank [ \t\r]
 "/"         return yy::parser::make_SLASH   (loc);
 "("         return yy::parser::make_LPAREN  (loc);
 ")"         return yy::parser::make_RPAREN  (loc);
-":="        return yy::parser::make_ASSIGN  (loc);
+"="        return yy::parser::make_ASSIGN  (loc);
 "print"     return yy::parser::make_PRINT   (loc);
 "read"      return yy::parser::make_READ    (loc);
 "<"         return yy::parser::make_LESS    (loc);
