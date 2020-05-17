@@ -24,6 +24,7 @@ public:
     void InitiateScan();
     void FinishScan();
     void Evaluate() const;
+    void BuildSymbolTree();
     void Print() const;
 
     int Parse(const std::string& f);

@@ -143,6 +143,7 @@ expr:
     | expr "==" expr	{$$ = new EqualExpression($1, $3);}
     | expr ">=" expr	{$$ = new GreaterOrEqualExpression($1, $3);}
     | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3);}
+    | expr "%" expr 	{$$ = new ModuloExpression($1, $3);}
     | "(" expr ")" 	{$$ = $2; };
 
 %%

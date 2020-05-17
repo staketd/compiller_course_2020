@@ -1,14 +1,13 @@
 
-#ifndef MYCOMPILLER_INTERPRENTER_H
-#define MYCOMPILLER_INTERPRENTER_H
-
-#include <TemplateBaseVisitor.h>
+#ifndef MYCOMPILLER_BUILDSYMBOLLAYERTREE_H
+#define MYCOMPILLER_BUILDSYMBOLLAYERTREE_H
+#include <BaseVisitor.h>
 #include <ScopeLayer.h>
 
-class Interprenter : public TemplateBaseVisitor<int> {
+class BuildSymbolLayerTree : public BaseVisitor {
  public:
-  explicit Interprenter(ScopeLayer*);
-  void ExecuteCode(Program*);
+  BuildSymbolLayerTree(ScopeLayer*);
+  void BuildTree(Program*);
 
  private:
   void Visit(StatementList*) override;
@@ -33,8 +32,8 @@ class Interprenter : public TemplateBaseVisitor<int> {
   void Visit(ModuloExpression*) override;
   void Visit(WhileStatement*) override;
 
+ private:
   ScopeLayer* current_layer_;
-  std::vector<size_t> current_children_;
 };
 
-#endif  // MYCOMPILLER_INTERPRENTER_H
+#endif  // MYCOMPILLER_BUILDSYMBOLLAYERTREE_H

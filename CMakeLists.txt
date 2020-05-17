@@ -73,9 +73,8 @@ set(
         visitors/PrintTreeVisitor.cpp visitors/PrintTreeVisitor.h
         visitors/TemplateBaseVisitor.cpp
         symbol_table/Symbol.cpp
-        symbol_table/Table.cpp
         objects/BaseObject.h
-        objects/Integer.cpp objects/Integer.h objects/UninitObject.cpp objects/UninitObject.h statements/Scope.cpp statements/Scope.h statements/VariableDeclaration.cpp statements/VariableDeclaration.h symbol_table/ScopeLayer.cpp symbol_table/ScopeLayer.h symbol_table/ScopeLayerTree.cpp symbol_table/ScopeLayerTree.h objects/PrimitiveType.cpp objects/PrimitiveType.h objects/FunctionType.cpp objects/FunctionType.h objects/ClassType.cpp objects/ClassType.h expressions/ModuloExpression.cpp expressions/ModuloExpression.h statements/WhileStatement.cpp statements/WhileStatement.h)
+        objects/Integer.cpp objects/Integer.h objects/UninitObject.cpp objects/UninitObject.h statements/Scope.cpp statements/Scope.h statements/VariableDeclaration.cpp statements/VariableDeclaration.h symbol_table/ScopeLayer.cpp symbol_table/ScopeLayer.h symbol_table/ScopeLayerTree.cpp symbol_table/ScopeLayerTree.h objects/PrimitiveType.cpp objects/PrimitiveType.h objects/FunctionType.cpp objects/FunctionType.h objects/ClassType.cpp objects/ClassType.h expressions/ModuloExpression.cpp expressions/ModuloExpression.h statements/WhileStatement.cpp statements/WhileStatement.h visitors/BuildSymbolLayerTree.cpp visitors/BuildSymbolLayerTree.h)
 
 add_executable(
         myCompiller
