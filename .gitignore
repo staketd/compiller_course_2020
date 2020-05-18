@@ -5,7 +5,9 @@
 /location.hh
 /CMakeCache.txt
 /cmake_install.cmake
-/bin/
+/bin/myCompiller
+/bin/test.in
+/bin/program.txt
 /cmake-build-debug/
 /CMakeFiles/
 /scanner/scanner.cpp

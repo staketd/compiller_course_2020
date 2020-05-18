@@ -16,6 +16,7 @@ include_directories(
         visitors
         symbol_table
         types
+        include
         .
 )
 
