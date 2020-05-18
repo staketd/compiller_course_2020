@@ -24,5 +24,9 @@
 #include <Scope.h>
 #include <VariableDeclaration.h>
 #include <WhileStatement.h>
+#include <BaseType.h>
+#include <UserClassType.h>
+#include <Integer.h>
+#include <BoolType.h>
 
 #endif //MYCOMPILLER_SOURCES_H

@@ -7,3 +7,7 @@ int Integer::ToInt() {
 
 Integer::Integer(int val) : value_(val) {
 }
+
+bool Integer::IsInteger() {
+  return true;
+}

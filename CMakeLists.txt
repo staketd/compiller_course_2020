@@ -15,7 +15,7 @@ include_directories(
         BaseClass
         visitors
         symbol_table
-        objects
+        types
         .
 )
 
@@ -67,14 +67,14 @@ set(
         statements/StatementList.cpp
         ${BISON_MyParser_OUTPUTS}
         ${FLEX_MyScanner_OUTPUTS}
-        visitors/sources.h
+        include/sources.h
         visitors/BaseVisitor.cpp visitors/BaseVisitor.h
         visitors/Interprenter.cpp visitors/Interprenter.h
         visitors/PrintTreeVisitor.cpp visitors/PrintTreeVisitor.h
         visitors/TemplateBaseVisitor.cpp
         symbol_table/Symbol.cpp
-        objects/BaseObject.h
-        objects/Integer.cpp objects/Integer.h objects/UninitObject.cpp objects/UninitObject.h statements/Scope.cpp statements/Scope.h statements/VariableDeclaration.cpp statements/VariableDeclaration.h symbol_table/ScopeLayer.cpp symbol_table/ScopeLayer.h symbol_table/ScopeLayerTree.cpp symbol_table/ScopeLayerTree.h objects/PrimitiveType.cpp objects/PrimitiveType.h objects/FunctionType.cpp objects/FunctionType.h objects/ClassType.cpp objects/ClassType.h expressions/ModuloExpression.cpp expressions/ModuloExpression.h statements/WhileStatement.cpp statements/WhileStatement.h visitors/BuildSymbolLayerTree.cpp visitors/BuildSymbolLayerTree.h)
+        types/BaseType.h
+        types/Integer.cpp types/Integer.h types/UninitObject.cpp types/UninitObject.h statements/Scope.cpp statements/Scope.h statements/VariableDeclaration.cpp statements/VariableDeclaration.h symbol_table/ScopeLayer.cpp symbol_table/ScopeLayer.h symbol_table/ScopeLayerTree.cpp symbol_table/ScopeLayerTree.h types/PrimitiveType.cpp types/PrimitiveType.h types/FunctionType.cpp types/FunctionType.h types/UserClassType.cpp types/UserClassType.h expressions/ModuloExpression.cpp expressions/ModuloExpression.h statements/WhileStatement.cpp statements/WhileStatement.h visitors/BuildSymbolLayerTree.cpp visitors/BuildSymbolLayerTree.h types/BoolType.cpp types/BoolType.h visitors/TypeChecker.cpp visitors/TypeChecker.h include/error_macro.h)
 
 add_executable(
         myCompiller

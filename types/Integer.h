@@ -8,6 +8,7 @@ class Integer : public PrimitiveType {
 public:
     Integer(int val);
     int ToInt() override;
+    bool IsInteger() override;
 
 private:
     int value_;

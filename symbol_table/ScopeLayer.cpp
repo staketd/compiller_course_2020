@@ -5,7 +5,7 @@ ScopeLayer::ScopeLayer() : parent_(nullptr) {
 }
 
 void ScopeLayer::SetValue(const Symbol& symbol,
-                          const std::shared_ptr<BaseObject>& obj) {
+                          const std::shared_ptr<BaseType>& obj) {
   ScopeLayer* layer_with_variable = FindLayerWithSymbol(symbol);
   if (layer_with_variable == nullptr) {
     throw std::runtime_error("Variable \"" + symbol.GetName() +
@@ -15,9 +15,7 @@ void ScopeLayer::SetValue(const Symbol& symbol,
 }
 
 bool ScopeLayer::HasSymbol(const Symbol& symbol) {
-  return values_.find(symbol) != values_.end() &&
-         offsets_[symbol] < offset_now_; // Checking that variable was declared
-                                          // and before now
+  return values_.find(symbol) != values_.end();
 }
 
 void ScopeLayer::DeclareVariable(const Symbol& symbol) {
@@ -38,7 +36,7 @@ ScopeLayer* ScopeLayer::FindLayerWithSymbol(const Symbol& symbol) {
   return now_layer;
 }
 
-std::shared_ptr<BaseObject> ScopeLayer::GetValue(const Symbol& symbol) {
+std::shared_ptr<BaseType> ScopeLayer::GetValue(const Symbol& symbol) {
   ScopeLayer* layer_with_variable = FindLayerWithSymbol(symbol);
   if (layer_with_variable == nullptr) {
     throw std::runtime_error("Variable \"" + symbol.GetName() +
@@ -63,6 +61,6 @@ ScopeLayer* ScopeLayer::GetChildren(size_t index) {
   return children_[index];
 }
 
-void ScopeLayer::IncreaseOffset() {
-  ++offset_now_;
+bool ScopeLayer::WasDeclared(const Symbol& symbol) {
+  return FindLayerWithSymbol(symbol) != nullptr;
 }

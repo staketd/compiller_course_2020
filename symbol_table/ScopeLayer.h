@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <Symbol.h>
 #include <memory>
-#include <BaseObject.h>
+#include <BaseType.h>
 #include <vector>
 
 class ScopeLayer : public std::enable_shared_from_this<ScopeLayer> {
@@ -13,9 +13,9 @@ class ScopeLayer : public std::enable_shared_from_this<ScopeLayer> {
   explicit ScopeLayer(ScopeLayer*);
 
   void DeclareVariable(const Symbol&);
-  std::shared_ptr<BaseObject> GetValue(const Symbol&);
+  std::shared_ptr<BaseType> GetValue(const Symbol&);
 
-  void SetValue(const Symbol&, const std::shared_ptr<BaseObject>&);
+  void SetValue(const Symbol&, const std::shared_ptr<BaseType>&);
   bool HasSymbol(const Symbol&);
 
   ScopeLayer* GetParent() const;
@@ -24,15 +24,16 @@ class ScopeLayer : public std::enable_shared_from_this<ScopeLayer> {
   ScopeLayer* GetChildren(size_t);
   void IncreaseOffset();
 
+  bool WasDeclared(const Symbol&);
+
  private:
   ScopeLayer* FindLayerWithSymbol(const Symbol&);
 
  private:
-  std::unordered_map<Symbol, std::shared_ptr<BaseObject>> values_;
+  std::unordered_map<Symbol, std::shared_ptr<BaseType>> values_;
   std::unordered_map<Symbol, size_t> offsets_;
   ScopeLayer* parent_;
   std::vector<Symbol> variable_declaration_order_;
-  size_t offset_now_{0};
   std::vector<ScopeLayer*> children_;
 };
 

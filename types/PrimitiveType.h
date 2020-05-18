@@ -2,9 +2,9 @@
 #ifndef MYCOMPILLER_PRIMITIVETYPE_H
 #define MYCOMPILLER_PRIMITIVETYPE_H
 
-#include <BaseObject.h>
+#include <BaseType.h>
 
-class PrimitiveType : public BaseObject {
+class PrimitiveType : public BaseType {
 
 };
 

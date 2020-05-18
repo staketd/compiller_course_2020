@@ -2,19 +2,20 @@
 #ifndef MYCOMPILLER_FUNCTIONTYPE_H
 #define MYCOMPILLER_FUNCTIONTYPE_H
 
-#include <BaseObject.h>
+#include <BaseType.h>
 #include <vector>
 #include <string>
 
-class FunctionType : public BaseObject {
+class FunctionType : public BaseType {
 public:
     int ToInt() override;
+    bool IsFunction() override;
 
 public:
     explicit FunctionType(std::vector<std::string> );
-    std::vector<BaseObject*> arguments_;
+    std::vector<BaseType*> arguments_;
     std::vector<std::string> arguments_names_;
-    BaseObject* return_type_;
+    BaseType* return_type_;
 };
 
 

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Interprenter.h"
 
-#include "sources.h"
+#include "include/sources.h"
 #include <Integer.h>
 
 void Interprenter::Visit(StatementList* statements) {
@@ -109,7 +109,6 @@ void Interprenter::Visit(Scope* scope) {
 }
 
 void Interprenter::Visit(VariableDeclaration* decl) {
-  current_layer_->IncreaseOffset();
 }
 
 Interprenter::Interprenter(ScopeLayer* main_scope)

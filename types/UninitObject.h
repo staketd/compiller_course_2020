@@ -2,9 +2,9 @@
 #ifndef MYCOMPILLER_UNINITOBJECT_H
 #define MYCOMPILLER_UNINITOBJECT_H
 
-#include <BaseObject.h>
+#include <BaseType.h>
 
-class UninitObject : public BaseObject {
+class UninitObject : public BaseType {
     int ToInt() override;
 };
 

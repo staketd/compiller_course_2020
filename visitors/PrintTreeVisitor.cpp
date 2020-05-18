@@ -2,7 +2,7 @@
 #include <StatementList.h>
 #include <AddExpression.h>
 #include "PrintTreeVisitor.h"
-#include "sources.h"
+#include "include/sources.h"
 
 void PrintTreeVisitor::Visit(StatementList* assignmentList) {
     PrintTabs();

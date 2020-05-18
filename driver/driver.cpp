@@ -4,6 +4,7 @@
 #include <Interprenter.h>
 #include <PrintTreeVisitor.h>
 #include <BuildSymbolLayerTree.h>
+#include <TypeChecker.h>
 
 Driver::Driver()
     : trace_parsing(false),
@@ -51,4 +52,9 @@ void Driver::Print() const {
 void Driver::BuildSymbolTree() {
   BuildSymbolLayerTree build(global_scope_.GetRoot());
   build.BuildTree(program);
+}
+
+void Driver::CheckTypes() {
+    TypeChecker checker(global_scope_.GetRoot());
+    checker.CheckType(program);
 }
