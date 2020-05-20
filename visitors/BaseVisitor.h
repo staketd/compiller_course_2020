@@ -27,6 +27,13 @@ public:
     virtual void Visit(Scope*) = 0;
     virtual void Visit(VariableDeclaration*) = 0;
     virtual void Visit(WhileStatement*) = 0;
+    virtual void Visit(CallArgumentList*) = 0;
+    virtual void Visit(Function*) = 0;
+    virtual void Visit(FuncArgumentList*) = 0;
+    virtual void Visit(FunctionList*) = 0;
+    virtual void Visit(FuncCallExpression*) = 0;
+    virtual void Visit(ReturnStatement*) = 0;
+    virtual void Visit(FuncCallStatement*) = 0;
 };
 
 

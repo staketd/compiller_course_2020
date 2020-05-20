@@ -1,0 +1,15 @@
+Integer binpow(a, k) {
+    if (k == 1) {
+        return a;
+    }
+    Integer res;
+    res = binpow(a, k / 2);
+    if (k % 2 == 1) {
+        return res * res * a;
+    }
+    return res * res;
+}
+
+Integer main() {
+    print(binpow(2, 10));
+}

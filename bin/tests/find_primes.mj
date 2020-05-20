@@ -1,20 +1,22 @@
-var a;
-a = 2;
-var b;
-read(b);
-while (a < b) {
-    var k;
-    k = 2;
-    var flag;
-    flag = 0;
-    while (k * k <= a) {
-        if (a % k == 0) {
-            flag = 1;
+Integer main() {
+    Integer a;
+    a = 2;
+    Integer b;
+    read(b);
+    while (a < b) {
+        Integer k;
+        k = 2;
+        Integer flag;
+        flag = 0;
+        while (k * k <= a) {
+            if (a % k == 0) {
+                flag = 1;
+            }
+            k = k + 1;
         }
-        k = k + 1;
+        if (flag == 0) {
+            print(a);
+        }
+        a = a + 1;
     }
-    if (flag == 0) {
-        print(a);
-    }
-    a = a + 1;
 }

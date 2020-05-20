@@ -1,10 +1,10 @@
 #include <driver.h>
 #include "parser.hh"
-
-#include <Interprenter.h>
-#include <PrintTreeVisitor.h>
+#include <Frame.h>
 #include <BuildSymbolLayerTree.h>
 #include <TypeChecker.h>
+#include <Function.h>
+#include <FunctionCallVisitor.h>
 
 Driver::Driver()
     : trace_parsing(false),
@@ -32,29 +32,35 @@ void Driver::InitiateScan() {
   if (file.empty() || file == "-") {
     return;
   }
-  stream.open(file);
+  stream_.open(file);
   std::cout << file << std::endl;
-  scanner.yyrestart(&stream);
+  scanner.yyrestart(&stream_);
 }
 
 void Driver::FinishScan() {
-  stream.close();
+  stream_.close();
 }
 
-void Driver::Evaluate() const {
-  Interprenter interprenter(global_scope_.GetRoot());
-  interprenter.ExecuteCode(program);
+void Driver::Evaluate() {
+  BuildSymbolTree();
+  CheckTypes();
+
+  Frame main_frame;
+
+  FunctionCallVisitor visitor(std::move(main_frame), map_, global_scope_,
+                              global_scope_.Get(Symbol("main")));
+  visitor.ExecuteCode(map_.Get(Symbol("main")));
 }
 
 void Driver::Print() const {
 }
 
 void Driver::BuildSymbolTree() {
-  BuildSymbolLayerTree build(global_scope_.GetRoot());
+  BuildSymbolLayerTree build(global_scope_, map_);
   build.BuildTree(program);
 }
 
 void Driver::CheckTypes() {
-    TypeChecker checker(global_scope_.GetRoot());
-    checker.CheckType(program);
+  TypeChecker checker(global_scope_.GetRoot(), map_);
+  checker.CheckType(program);
 }

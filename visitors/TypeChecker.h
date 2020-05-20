@@ -3,10 +3,11 @@
 #define MYCOMPILLER_VISITORS_TYPECHECKER_H_
 #include <BaseVisitor.h>
 #include <ScopeLayer.h>
+#include <FunctionMap.h>
 
 class TypeChecker : public BaseVisitor {
  public:
-  TypeChecker(ScopeLayer*);
+  TypeChecker(ScopeLayer*, FunctionMap&);
   void CheckType(Program*);
 
  private:
@@ -31,8 +32,16 @@ class TypeChecker : public BaseVisitor {
   void Visit(VariableDeclaration*) override;
   void Visit(ModuloExpression*) override;
   void Visit(WhileStatement*) override;
+  void Visit(Function*) override;
+  void Visit(FunctionList*) override;
+  void Visit(FuncArgumentList*) override;
+  void Visit(CallArgumentList*) override;
+  void Visit(FuncCallExpression*) override;
+  void Visit(ReturnStatement*) override;
+  void Visit(FuncCallStatement*) override;
 
  private:
+  FunctionMap& func_map_;
   ScopeLayer* current_layer_;
   std::vector<size_t> current_children_;
 };

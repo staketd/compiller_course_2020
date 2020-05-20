@@ -1,5 +1,7 @@
-var a;
-a = 2 + 4;
-print(a);
-a = a - 20;
-print(a);
+Integer main() {
+    Integer a;
+    a = 2 + 4;
+    print(a);
+    a = a - 20;
+    print(a);
+}

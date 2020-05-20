@@ -30,10 +30,11 @@ void TypeChecker::Visit(Assignment* assignment) {
 }
 
 bool CheckIntegerOperation(BinaryExpression* expression) {
-  return !(!expression->first_->Type()->IsInteger() &&
-               !expression->first_->Type()->IsBool() ||
-           !expression->first_->Type()->IsInteger() &&
-               !expression->first_->Type()->IsBool());
+  auto a1 = expression->first_->Type()->IsInteger();
+  auto a2 = expression->first_->Type()->IsBool();
+  auto a3 = expression->first_->Type()->IsInteger();
+  auto a4 = expression->first_->Type()->IsBool();
+  return !(a1 || a2) || !(a3 || a4);
 }
 
 void TypeChecker::Visit(AddExpression* expression) {
@@ -73,7 +74,7 @@ void TypeChecker::Visit(SubstractExpression* expression) {
 
 void TypeChecker::Visit(IdentExpression* expression) {
   expression->Type() =
-      current_layer_->GetValue(Symbol(expression->ident_)).get();
+      current_layer_->GetValue(Symbol(expression->name_)).get();
 }
 
 void TypeChecker::Visit(NumExpression* expression) {
@@ -93,7 +94,6 @@ void TypeChecker::Visit(PrintStatement* print) {
 }
 
 void TypeChecker::Visit(ReadStatement*) {
-
 }
 
 void TypeChecker::Visit(EqualExpression* expression) {
@@ -160,12 +160,14 @@ void TypeChecker::Visit(Scope* scope) {
   scope->statements_->AcceptVisitor(this);
 
   current_children_.pop_back();
+  current_layer_ = current_layer_->GetParent();
 }
 
 void TypeChecker::Visit(VariableDeclaration* vardecl) {
 }
 
-TypeChecker::TypeChecker(ScopeLayer* root) : current_layer_(root) {
+TypeChecker::TypeChecker(ScopeLayer* root, FunctionMap& map)
+    : current_layer_(root), current_children_({0}), func_map_(map) {
 }
 
 void TypeChecker::Visit(ModuloExpression* expression) {
@@ -188,4 +190,40 @@ void TypeChecker::Visit(WhileStatement* while_statement) {
 
 void TypeChecker::CheckType(Program* program) {
   Visit(program);
+}
+
+void TypeChecker::Visit(Function* function) {
+  current_layer_ = current_layer_->GetChildren(current_children_.back()++);
+  current_children_.push_back(0);
+  function->statements_->AcceptVisitor(this);
+  current_children_.pop_back();
+  current_layer_ = current_layer_->GetParent();
+}
+
+void TypeChecker::Visit(FunctionList* list) {
+  for (auto function : list->functions_) {
+    function->AcceptVisitor(this);
+  }
+}
+
+void TypeChecker::Visit(FuncArgumentList*) {
+}
+
+void TypeChecker::Visit(CallArgumentList*) {
+}
+
+void TypeChecker::Visit(FuncCallExpression* expression) {
+  auto type = current_layer_->GetValue(Symbol(expression->name_));
+  if (!type->IsFunction()) {
+    ERROR(expression->name_ + "is not a function\n");
+  }
+  expression->Type() =
+      func_map_.Get(Symbol(expression->name_))->return_type_->GetType();
+}
+
+void TypeChecker::Visit(ReturnStatement* statement) {
+}
+
+void TypeChecker::Visit(FuncCallStatement* statement) {
+  statement->expression_->AcceptVisitor(this);
 }

@@ -1,2 +1,4 @@
-var a;
-var a;
+Integer main() {
+    Integer a;
+    Bool a;
+}

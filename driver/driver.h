@@ -5,8 +5,9 @@
 #include <fstream>
 #include <scanner.h>
 #include <parser.hh>
-#include <Program.h>
+#include <grammar/Program.h>
 #include <ScopeLayerTree.h>
+#include <FunctionMap.h>
 
 class Driver {
 public:
@@ -20,10 +21,11 @@ public:
     yy::location location;
     yy::parser parser;
     Program* program;
+    FunctionMap map_;
 
     void InitiateScan();
     void FinishScan();
-    void Evaluate() const;
+    void Evaluate();
     void BuildSymbolTree();
     void CheckTypes();
     void Print() const;
@@ -32,7 +34,7 @@ public:
     friend class Scanner;
 
 private:
-    std::ifstream stream;
+    std::ifstream stream_;
     ScopeLayerTree global_scope_;
 };
 

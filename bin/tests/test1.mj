@@ -1,11 +1,13 @@
-var a;
-var b;
-var c;
-a = 100;
-b = 200;
-c = a * b;
-print (c);
-if (a < 200) {
-    c = 0;
+Integer main() {
+    Integer a;
+    Integer b;
+    Integer c;
+    a = 100;
+    b = 200;
+    c = a * b;
+    print (c);
+    if (a < 200) {
+        c = 0;
+    }
+    print(c);
 }
-print(c);

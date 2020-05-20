@@ -12,7 +12,7 @@ class ScopeLayer : public std::enable_shared_from_this<ScopeLayer> {
   ScopeLayer();
   explicit ScopeLayer(ScopeLayer*);
 
-  void DeclareVariable(const Symbol&);
+  void DeclareSymbol(const Symbol&, std::shared_ptr<BaseType>);
   std::shared_ptr<BaseType> GetValue(const Symbol&);
 
   void SetValue(const Symbol&, const std::shared_ptr<BaseType>&);
@@ -22,7 +22,6 @@ class ScopeLayer : public std::enable_shared_from_this<ScopeLayer> {
   ScopeLayer* CreateChildren();
 
   ScopeLayer* GetChildren(size_t);
-  void IncreaseOffset();
 
   bool WasDeclared(const Symbol&);
 

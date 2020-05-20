@@ -10,12 +10,10 @@ class FunctionType : public BaseType {
 public:
     int ToInt() override;
     bool IsFunction() override;
+    BaseType* GetType() override;
 
 public:
-    explicit FunctionType(std::vector<std::string> );
-    std::vector<BaseType*> arguments_;
-    std::vector<std::string> arguments_names_;
-    BaseType* return_type_;
+    explicit FunctionType();
 };
 
 

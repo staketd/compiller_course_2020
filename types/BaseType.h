@@ -6,6 +6,7 @@ class BaseType {
  public:
   virtual int ToInt() = 0;
   virtual ~BaseType() = default;
+  virtual BaseType* GetType() = 0;
 
   virtual bool IsInteger() {
     return false;

@@ -11,7 +11,7 @@
 #include <IdentExpression.h>
 #include <Assignment.h>
 #include <StatementList.h>
-#include <Program.h>
+#include <grammar/Program.h>
 #include <Statement.h>
 #include <PrintStatement.h>
 #include <ReadStatement.h>
@@ -28,5 +28,12 @@
 #include <UserClassType.h>
 #include <Integer.h>
 #include <BoolType.h>
+#include <CallArgumentList.h>
+#include <Function.h>
+#include <FuncArgumentList.h>
+#include <FunctionList.h>
+#include <FuncCallExpression.h>
+#include <ReturnStatement.h>
+#include <FuncCallStatement.h>
 
 #endif //MYCOMPILLER_SOURCES_H

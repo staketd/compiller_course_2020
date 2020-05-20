@@ -39,7 +39,7 @@ void Interprenter::Visit(SubstractExpression* expression) {
 
 void Interprenter::Visit(IdentExpression* expression) {
   last_value_set_ =
-      current_layer_->GetValue(Symbol(expression->ident_))->ToInt();
+      current_layer_->GetValue(Symbol(expression->name_))->ToInt();
 }
 
 void Interprenter::Visit(NumExpression* expression) {

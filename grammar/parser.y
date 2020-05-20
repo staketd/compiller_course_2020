@@ -58,6 +58,10 @@
     SEMICOLON ";"
     MODULO "%"
     WHILE "while"
+    COMMA ","
+    INTEGER "Integer"
+    BOOL "Bool"
+    RETURN "return"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
@@ -73,12 +77,57 @@
 %nterm <Scope*> Scope
 %nterm <VariableDeclaration*> VariableDeclaration
 %nterm <WhileStatement*> While
+%nterm <FunctionList*> Functions
+%nterm <std::string> type
+%nterm <FuncArgumentList*> Arguments
+%nterm <FuncArgumentList*> empty_arguments
+%nterm <FuncArgumentList*> complex_arguments
+%nterm <CallArgumentList*> call_arguments
+%nterm <FuncCallExpression*> func_call
+%nterm <CallArgumentList*> empty_call_arguments
+%nterm <CallArgumentList*> complex_call_arguments
+%nterm <Function*> function
+%nterm <FuncCallStatement*> st_func_call
 
 %printer {yyo << $$;} <*>;
 
 %%
 %start unit;
-unit: statements { $$ = new Program($1); driver.program = $$;};
+unit: Functions { $$ = new Program($1); driver.program = $$;};
+
+Functions:
+	%empty {$$ = new FunctionList();}
+	| Functions function {
+		$1->AddFunction($2);
+		$$ = $1;
+	}
+	;
+
+function:
+	type "identifier" "(" Arguments ")" "{" statements "}" {$$ = new Function($2, $4, $7, $1);}
+	;
+
+type:
+	"Integer" {$$ = "Integer";}
+	| "Bool" {$$ = "Bool";}
+	;
+
+Arguments:
+	empty_arguments {$$ = $1;}
+	| complex_arguments {$$ = $1;}
+	;
+
+empty_arguments:
+	%empty {$$ = new FuncArgumentList();}
+	;
+
+complex_arguments:
+	"identifier" {
+		$$ = new FuncArgumentList();
+		$$->AddArgument($1);
+	}
+	| complex_arguments "," "identifier" {$1->AddArgument($3), $$ = $1;}
+	;
 
 statements:
     %empty {$$ = new StatementList();}
@@ -95,6 +144,12 @@ statement:
 	| Scope {$$ = $1;}
 	| VariableDeclaration ";" {$$ = $1;}
 	| While {$$ = $1;}
+	| st_func_call ";" {$$ = $1;}
+	| "return" expr ";" {$$ = new ReturnStatement($2);}
+	;
+
+st_func_call:
+	func_call {$$ = new FuncCallStatement($1);}
 	;
 
 While:
@@ -102,7 +157,7 @@ While:
 	;
 
 VariableDeclaration:
-	"var" "identifier" {$$ = new VariableDeclaration($2);}
+	type "identifier" {$$ = new VariableDeclaration($2, $1);}
 	;
 
 Scope:
@@ -144,8 +199,31 @@ expr:
     | expr ">=" expr	{$$ = new GreaterOrEqualExpression($1, $3);}
     | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3);}
     | expr "%" expr 	{$$ = new ModuloExpression($1, $3);}
-    | "(" expr ")" 	{$$ = $2; };
+    | "(" expr ")" 	{$$ = $2; }
+    | func_call {$$ = $1;}
+    ;
 
+func_call:
+	"identifier" "(" call_arguments ")" {$$ = new FuncCallExpression($1, $3);}
+
+call_arguments:
+	empty_call_arguments {$$ = $1;}
+	| complex_call_arguments {$$ = $1;}
+	;
+
+empty_call_arguments:
+	%empty {$$ = new CallArgumentList();}
+	;
+
+complex_call_arguments:
+	expr {
+		$$ = new CallArgumentList();
+		$$->AddArgument($1);
+	}
+	| complex_call_arguments "," expr {
+		$1->AddArgument($3);
+		$$ = $1;
+	}
 %%
 
 void

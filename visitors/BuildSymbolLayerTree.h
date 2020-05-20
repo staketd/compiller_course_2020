@@ -3,10 +3,12 @@
 #define MYCOMPILLER_BUILDSYMBOLLAYERTREE_H
 #include <BaseVisitor.h>
 #include <ScopeLayer.h>
+#include <ScopeLayerTree.h>
+#include <FunctionMap.h>
 
 class BuildSymbolLayerTree : public BaseVisitor {
  public:
-  BuildSymbolLayerTree(ScopeLayer*);
+  BuildSymbolLayerTree(ScopeLayerTree&, FunctionMap&);
   void BuildTree(Program*);
 
  private:
@@ -31,9 +33,18 @@ class BuildSymbolLayerTree : public BaseVisitor {
   void Visit(VariableDeclaration*) override;
   void Visit(ModuloExpression*) override;
   void Visit(WhileStatement*) override;
+  void Visit(CallArgumentList*) override;
+  void Visit(Function*) override;
+  void Visit(FuncArgumentList*) override;
+  void Visit(FunctionList*) override;
+  void Visit(FuncCallExpression*) override;
+  void Visit(ReturnStatement*) override;
+  void Visit(FuncCallStatement*) override;
 
  private:
+  ScopeLayerTree& tree_;
   ScopeLayer* current_layer_;
+  FunctionMap& functions_;
 };
 
 #endif  // MYCOMPILLER_BUILDSYMBOLLAYERTREE_H

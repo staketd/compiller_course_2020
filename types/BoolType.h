@@ -5,9 +5,11 @@
 
 class BoolType : public PrimitiveType {
  public:
+  BoolType();
   BoolType(bool);
   bool IsBool() override;
   int ToInt() override;
+  BaseType* GetType() override;
 
  private:
   bool value_;

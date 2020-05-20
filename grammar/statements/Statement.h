@@ -1,8 +1,8 @@
 #ifndef MYCOMPILLER_STATEMENT_H
 #define MYCOMPILLER_STATEMENT_H
-#include <BaseClass.h>
+#include <BaseASTClass.h>
 
-class Statement: public BaseClass {
+class Statement: public BaseASTClass {
     
 };
 

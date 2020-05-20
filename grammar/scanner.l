@@ -61,6 +61,10 @@ blank [ \t\r]
 ";"         return yy::parser::make_SEMICOLON(loc);
 "%"         return yy::parser::make_MODULO  (loc);
 "while"     return yy::parser::make_WHILE   (loc);
+","         return yy::parser::make_COMMA(loc);
+"Integer"   return yy::parser::make_INTEGER(loc);
+"Bool"      return yy::parser::make_BOOL(loc);
+"return"    return yy::parser::make_RETURN(loc);
 
 {int}       return make_NUMBER(yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER(yytext, loc);

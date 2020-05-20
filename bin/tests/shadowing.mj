@@ -1,8 +1,10 @@
-var a;
-a = 3;
-if (a == 3) {
-    var a;
-    a = 4;
+Integer main() {
+    Integer a;
+    a = 3;
+    if (a == 3) {
+        Integer a;
+        a = 4;
+        print(a);
+    }
     print(a);
 }
-print(a);

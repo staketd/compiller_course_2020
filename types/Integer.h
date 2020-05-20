@@ -5,14 +5,15 @@
 #include <PrimitiveType.h>
 
 class Integer : public PrimitiveType {
-public:
-    Integer(int val);
-    int ToInt() override;
-    bool IsInteger() override;
+ public:
+  Integer();
+  Integer(int val);
+  int ToInt() override;
+  bool IsInteger() override;
+  BaseType* GetType() override;
 
-private:
-    int value_;
+ private:
+  int value_;
 };
 
-
-#endif //MYCOMPILLER_INTEGER_H
+#endif  // MYCOMPILLER_INTEGER_H

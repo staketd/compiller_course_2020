@@ -5,7 +5,7 @@
 #include <Statement.h>
 #include <vector>
 
-class StatementList: BaseClass {
+class StatementList: BaseASTClass {
 public:
     void AddStatement(Statement*);
     void AcceptVisitor(BaseVisitor*) override;

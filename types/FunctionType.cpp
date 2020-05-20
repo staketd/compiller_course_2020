@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <utility>
 
-FunctionType::FunctionType(std::vector<std::string>  names) : arguments_names_(std::move(names)) {
+FunctionType::FunctionType() {
 }
 
 int FunctionType::ToInt() {
@@ -12,4 +12,7 @@ int FunctionType::ToInt() {
 
 bool FunctionType::IsFunction() {
   return true;
+}
+BaseType* FunctionType::GetType() {
+  return new FunctionType();
 }

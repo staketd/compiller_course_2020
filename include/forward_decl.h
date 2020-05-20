@@ -23,5 +23,12 @@ class Scope;
 class VariableDeclaration;
 class ModuloExpression;
 class WhileStatement;
+class Function;
+class CallArgumentList;
+class FuncArgumentList;
+class FunctionList;
+class FuncCallExpression;
+class ReturnStatement;
+class FuncCallStatement;
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

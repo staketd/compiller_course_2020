@@ -18,12 +18,12 @@ bool ScopeLayer::HasSymbol(const Symbol& symbol) {
   return values_.find(symbol) != values_.end();
 }
 
-void ScopeLayer::DeclareVariable(const Symbol& symbol) {
+void ScopeLayer::DeclareSymbol(const Symbol& symbol, std::shared_ptr<BaseType> type) {
   if (values_.find(symbol) != values_.end()) {
     throw std::runtime_error("Redeclaration of variable \"" + symbol.GetName() +
                              "\"");
   }
-  values_[symbol] = std::make_shared<UninitObject>();
+  values_[symbol] = type;
   offsets_[symbol] = variable_declaration_order_.size();
   variable_declaration_order_.push_back(symbol);
 }

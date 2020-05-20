@@ -1,7 +1,9 @@
-var a;
-a = 1;
-if (a == 1) {
-    print(b * 2);
-    var b;
-    b = a * 2;
+Integer main() {
+    Integer a;
+    a = 1;
+    if (a == 1) {
+        print(b * 2);
+        Integer b;
+        b = a * 2;
+    }
 }

@@ -1,10 +1,10 @@
 #ifndef MYCOMPILLER_EXPRESSION_H
 #define MYCOMPILLER_EXPRESSION_H
 
-#include <BaseClass.h>
+#include <BaseASTClass.h>
 #include <BaseType.h>
 
-class Expression: public BaseClass {
+class Expression: public BaseASTClass {
  public:
   virtual BaseType*& Type() {
     return type_;
