@@ -2,6 +2,8 @@
 #include "FunctionCallVisitor.h"
 #include <sources.h>
 #include <iostream>
+#include <algorithm>
+#include <error_macro.h>
 
 void FunctionCallVisitor::Visit(StatementList* statements) {
   for (auto statement : statements->statements_) {
@@ -173,15 +175,33 @@ void FunctionCallVisitor::ExecuteCode(Function* func) {
   Visit(func);
 }
 
+std::string ToStr(size_t x) {
+  if (x == 0) {
+    return "0";
+  }
+  std::string res;
+  while (x) {
+    res += '0' + x % 10;
+    x /= 10;
+  }
+  std::reverse(res.begin(), res.end());
+  return res;
+}
+
 void FunctionCallVisitor::Visit(FuncCallExpression* expression) {
   std::vector<int> args;
   for (auto expr : expression->arguments_->arguments_) {
     args.push_back(VisitAndSetValue(expr));
   }
+  auto call_function = functions_.Get(Symbol(expression->name_));
+  if (call_function->arguments_->names_.size() != args.size()) {
+    ERROR(ToStr(call_function->arguments_->names_.size()) +
+                       " Arguments expected, but " + ToStr(args.size()) +
+                       " were given\n");
+  }
   Frame frame(args);
   frame.SetParent(&frame_);
 
-  auto call_function = functions_.Get(Symbol(expression->name_));
   FunctionCallVisitor visitor(std::move(frame), functions_, tree_,
                               tree_.Get(Symbol(expression->name_)));
   visitor.ExecuteCode(call_function);

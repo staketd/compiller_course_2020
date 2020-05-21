@@ -1,0 +1,7 @@
+Integer test() {
+    return 1;
+}
+
+Integer main() {
+    test(10);
+}
