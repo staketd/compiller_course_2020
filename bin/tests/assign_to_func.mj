@@ -1,0 +1,8 @@
+Integer test() {
+    return 1;
+}
+
+Integer main() {
+    Integer a;
+    test = a;
+}
