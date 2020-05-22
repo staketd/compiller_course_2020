@@ -1,3 +1,5 @@
-Integer main() {
-    print(2+2);
+class Main {
+    public static void main () {
+        print(2 + 2);
+    }
 }

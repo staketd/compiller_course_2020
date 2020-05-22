@@ -1,11 +1,12 @@
-Integer main() {
-    Integer a;
-    a = 1;
-    if (a == 1) {
-        a = a + 1;
-        if (a == 2) {
+class Main {
+    public static void main() {
+        Integer a = 1;
+        if (a == 1) {
             a = a + 1;
+            if (a == 2) {
+                a = a + 1;
+            }
         }
+        print (a);
     }
-    print (a);
 }

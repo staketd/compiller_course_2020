@@ -8,11 +8,11 @@
 #include <grammar/Program.h>
 #include <ScopeLayerTree.h>
 #include <FunctionMap.h>
+#include <ClassMap.h>
 
 class Driver {
 public:
     Driver();
-    std::map<std::string, int> variables;
     int result;
     std::string file;
     bool trace_parsing;
@@ -21,7 +21,8 @@ public:
     yy::location location;
     yy::parser parser;
     Program* program;
-    FunctionMap map_;
+    FunctionMap func_map_;
+    ClassMap class_map_;
 
     void InitiateScan();
     void FinishScan();

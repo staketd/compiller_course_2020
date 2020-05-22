@@ -5,10 +5,11 @@
 #include <ScopeLayer.h>
 #include <ScopeLayerTree.h>
 #include <FunctionMap.h>
+#include <ClassMap.h>
 
 class BuildSymbolLayerTree : public BaseVisitor {
  public:
-  BuildSymbolLayerTree(ScopeLayerTree&, FunctionMap&);
+  BuildSymbolLayerTree(ScopeLayerTree&, FunctionMap&, ClassMap&);
   void BuildTree(Program*);
 
  private:
@@ -34,14 +35,24 @@ class BuildSymbolLayerTree : public BaseVisitor {
   void Visit(ModuloExpression*) override;
   void Visit(WhileStatement*) override;
   void Visit(CallArgumentList*) override;
-  void Visit(Function*) override;
-  void Visit(FuncArgumentList*) override;
-  void Visit(FunctionList*) override;
-  void Visit(FuncCallExpression*) override;
+  void Visit(ClassMethod*) override;
+  void Visit(MethodArgumentList*) override;
+  void Visit(ClassBody*) override;
+  void Visit(MethodCallExpression*) override;
   void Visit(ReturnStatement*) override;
-  void Visit(FuncCallStatement*) override;
+  void Visit(MethodCallStmt*) override;
+  void Visit(Class*) override;
+  void Visit(ClassList*) override;
+  void Visit(ClassField*) override;
+  void Visit(ClassMain*) override;
+  void Visit(ThisExpression*) override;
+  void Visit(NewExpression*) override;
+
+  bool IsCorrectVariableType(const std::string& type);
 
  private:
+  std::string current_class_name_;
+  ClassMap& class_map_;
   ScopeLayerTree& tree_;
   ScopeLayer* current_layer_;
   FunctionMap& functions_;

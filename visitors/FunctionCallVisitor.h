@@ -5,14 +5,17 @@
 #include <ScopeLayer.h>
 #include <vector>
 #include <Frame.h>
-#include <FunctionTable.h>
+#include <CallTable.h>
 #include <ScopeLayerTree.h>
 #include <FunctionMap.h>
+#include <ClassMap.h>
 
-class FunctionCallVisitor : public TemplateBaseVisitor<int> {
+class FunctionCallVisitor
+    : public TemplateBaseVisitor<std::shared_ptr<BaseObject>> {
  public:
-  FunctionCallVisitor(Frame, FunctionMap&, ScopeLayerTree&, ScopeLayer*);
-  void ExecuteCode(Function*);
+  FunctionCallVisitor(Frame, FunctionMap&, ScopeLayerTree&, ScopeLayer*,
+                      std::shared_ptr<ClassObject>, ClassMap&);
+  void ExecuteCode(ClassMethod*);
 
  private:
   void Visit(StatementList*) override;
@@ -37,22 +40,32 @@ class FunctionCallVisitor : public TemplateBaseVisitor<int> {
   void Visit(ModuloExpression*) override;
   void Visit(WhileStatement*) override;
   void Visit(CallArgumentList*) override;
-  void Visit(Function*) override;
-  void Visit(FuncArgumentList*) override;
-  void Visit(FunctionList*) override;
-  void Visit(FuncCallExpression*) override;
+  void Visit(ClassMethod*) override;
+  void Visit(MethodArgumentList*) override;
+  void Visit(ClassBody*) override;
+  void Visit(MethodCallExpression*) override;
   void Visit(ReturnStatement*) override;
-  void Visit(FuncCallStatement*) override;
+  void Visit(MethodCallStmt*) override;
+  void Visit(Class*) override;
+  void Visit(ClassList*) override;
+  void Visit(ClassField*) override;
+  void Visit(ClassMain*) override;
+  void Visit(ThisExpression*) override;
+  void Visit(NewExpression*) override;
+
+  std::shared_ptr<ClassObject> InitClass(Class*);
 
  private:
-  int GetValue(const Symbol&);
-  void SetValue(const Symbol&, int);
+  std::shared_ptr<BaseObject> GetValue(const Symbol&);
+  void SetValue(const Symbol&, std::shared_ptr<BaseObject>);
 
  private:
-  FunctionTable table_;
+  ClassMap& class_map_;
+  CallTable table_;
   FunctionMap& functions_;
   ScopeLayerTree& tree_;
   Frame frame_;
+  std::shared_ptr<ClassObject> current_class_;
   ScopeLayer* current_layer_;
   std::vector<int> current_children_;
   bool returned_{false};

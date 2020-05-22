@@ -1,9 +1,9 @@
-Integer main() {
-    Integer a;
-    a = 1;
-    if (a == 1) {
-        print(b * 2);
-        Integer b;
-        b = a * 2;
+class Main {
+    public static void main() {
+        Integer a = 1;
+        if (a == 1) {
+            print(b * 2);
+            Integer b = a * 2;
+        }
     }
 }

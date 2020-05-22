@@ -1,10 +1,9 @@
 #include "ScopeLayer.h"
-#include <UninitObject.h>
 
 ScopeLayer::ScopeLayer() : parent_(nullptr) {
 }
 
-void ScopeLayer::SetValue(const Symbol& symbol,
+void ScopeLayer::SetType(const Symbol& symbol,
                           const std::shared_ptr<BaseType>& obj) {
   ScopeLayer* layer_with_variable = FindLayerWithSymbol(symbol);
   if (layer_with_variable == nullptr) {
@@ -20,7 +19,7 @@ bool ScopeLayer::HasSymbol(const Symbol& symbol) {
 
 void ScopeLayer::DeclareSymbol(const Symbol& symbol, std::shared_ptr<BaseType> type) {
   if (values_.find(symbol) != values_.end()) {
-    throw std::runtime_error("Redeclaration of variable \"" + symbol.GetName() +
+    throw std::runtime_error("Redeclaration of symbol \"" + symbol.GetName() +
                              "\"");
   }
   values_[symbol] = type;
@@ -36,7 +35,7 @@ ScopeLayer* ScopeLayer::FindLayerWithSymbol(const Symbol& symbol) {
   return now_layer;
 }
 
-std::shared_ptr<BaseType> ScopeLayer::GetValue(const Symbol& symbol) {
+std::shared_ptr<BaseType> ScopeLayer::GetType(const Symbol& symbol) {
   ScopeLayer* layer_with_variable = FindLayerWithSymbol(symbol);
   if (layer_with_variable == nullptr) {
     throw std::runtime_error("Variable \"" + symbol.GetName() +

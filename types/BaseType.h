@@ -1,28 +1,32 @@
 
-#ifndef MYCOMPILLER_BASEOBJECT_H
-#define MYCOMPILLER_BASEOBJECT_H
+#ifndef MYCOMPILLER_BASETYPE_H
+#define MYCOMPILLER_BASETYPE_H
+#include <string>
+#include <memory>
 
 class BaseType {
  public:
-  virtual int ToInt() = 0;
-  virtual ~BaseType() = default;
-  virtual BaseType* GetType() = 0;
+  enum class Type {
+    Integer,
+    Bool,
+    Void,
+    Class,
+    Function,
+  };
 
-  virtual bool IsInteger() {
-    return false;
-  }
+  bool IsBool();
+  bool IsInteger();
+  bool IsClass();
+  bool IsFunction();
+  bool IsVoid();
 
-  virtual bool IsBool() {
-    return false;
-  }
+  virtual bool IsSameWith(std::shared_ptr<BaseType>);
+  virtual std::string TypeName() = 0;
 
-  virtual bool IsFunction() {
-    return false;
-  }
+  BaseType(Type type);
 
-  virtual bool IsUserClass() {
-    return false;
-  }
+ public:
+  Type type_;
 };
 
-#endif  // MYCOMPILLER_BASEOBJECT_H
+#endif  // MYCOMPILLER_BASETYPE_H

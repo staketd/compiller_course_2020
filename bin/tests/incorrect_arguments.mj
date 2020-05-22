@@ -1,7 +1,12 @@
-Integer test() {
-    return 1;
+class Main {
+    public static void main() {
+        Test test = new Test();
+        test.test(10);
+    }
 }
 
-Integer main() {
-    test(10);
+class Test {
+    Integer test() {
+        return 1;
+    }
 }

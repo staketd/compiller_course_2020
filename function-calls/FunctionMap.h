@@ -3,16 +3,16 @@
 #define MYCOMPILLER_FUNCTIONMAP_H
 #include <Symbol.h>
 #include <unordered_map>
-#include <Function.h>
+#include <ClassMethod.h>
 
 class FunctionMap {
  public:
   FunctionMap() = default;
-  void Set(const Symbol&, Function*);
-  Function* Get(const Symbol&);
+  void Set(const Symbol&, ClassMethod*);
+  ClassMethod* Get(const Symbol&);
 
  private:
-  std::unordered_map<Symbol, Function*> functions_;
+  std::unordered_map<Symbol, ClassMethod*> functions_;
 };
 
 #endif  // MYCOMPILLER_FUNCTIONMAP_H

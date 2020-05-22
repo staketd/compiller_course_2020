@@ -23,12 +23,19 @@ class Scope;
 class VariableDeclaration;
 class ModuloExpression;
 class WhileStatement;
-class Function;
+class ClassMethod;
 class CallArgumentList;
-class FuncArgumentList;
-class FunctionList;
-class FuncCallExpression;
+class MethodArgumentList;
+class ClassBody;
+class MethodCallExpression;
 class ReturnStatement;
-class FuncCallStatement;
+class MethodCallStmt;
+class Class;
+class ClassField;
+class ClassList;
+class ClassMain;
+class BinaryExpression;
+class ThisExpression;
+class NewExpression;
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

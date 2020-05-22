@@ -1,7 +1,9 @@
 #include "Program.h"
 
-Program::Program(FunctionList* functions) : functions_(functions) {}
+Program::Program(ClassMain* main, ClassList* list)
+    : main_(main), classes_(list) {
+}
 
 void Program::AcceptVisitor(BaseVisitor* visitor) {
-  functions_->AcceptVisitor(visitor);
+  visitor->Visit(this);
 }

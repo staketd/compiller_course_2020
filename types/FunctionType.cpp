@@ -1,18 +1,12 @@
-
 #include "FunctionType.h"
-#include <stdexcept>
-#include <utility>
 
-FunctionType::FunctionType() {
+FunctionType::FunctionType(std::shared_ptr<BaseType> return_type)
+    : BaseType(Type::Function), return_type_(return_type) {
+}
+std::string FunctionType::TypeName() {
+  return "Function";
 }
 
-int FunctionType::ToInt() {
-    throw std::runtime_error("Function cannot be assigned to variable");
-}
-
-bool FunctionType::IsFunction() {
-  return true;
-}
-BaseType* FunctionType::GetType() {
-  return new FunctionType();
+std::shared_ptr<BaseType> FunctionType::GetReturnType() {
+  return return_type_;
 }

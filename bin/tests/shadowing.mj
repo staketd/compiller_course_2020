@@ -1,10 +1,10 @@
-Integer main() {
-    Integer a;
-    a = 3;
-    if (a == 3) {
-        Integer a;
-        a = 4;
+class Main {
+    public static void main() {
+        Integer a = 3;
+        if (a == 3) {
+            Integer a = 4;
+            print(a);
+        }
         print(a);
     }
-    print(a);
 }

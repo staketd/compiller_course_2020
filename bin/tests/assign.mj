@@ -1,7 +1,8 @@
-Integer main() {
-    Integer a;
-    a = 2 + 4;
-    print(a);
-    a = a - 20;
-    print(a);
+class Main {
+    public static void main () {
+        Integer a = 2 + 4;
+        print(a);
+        a = a - 20;
+        print(a);
+    }
 }

@@ -1,5 +1,10 @@
-Integer main() {
-    if (2 + 2 * 2 == 6) {
-        print(1);
+class Main {
+    public static void main() {
+        if (2 + 2 * 2 == 6) {
+            print(1);
+        } else {
+            print(2);
+        }
+        print(3);
     }
 }

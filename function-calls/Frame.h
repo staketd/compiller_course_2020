@@ -2,22 +2,24 @@
 #ifndef MYCOMPILLER_FRAME_H
 #define MYCOMPILLER_FRAME_H
 #include <vector>
+#include <ClassObject.h>
 
 class Frame {
  public:
   Frame() = default;
-  Frame(const std::vector<int>&);
-  void SetParams(const std::vector<int>&);
-  void SetValue(int index, int value);
+  Frame(const std::vector<std::shared_ptr<BaseObject>>&);
+  void SetParams(const std::vector<std::shared_ptr<BaseObject>>&);
 
-  int GetValue(int index);
-  size_t AllocVariable();
+  void SetValue(int index, std::shared_ptr<BaseObject> value);
+
+  std::shared_ptr<BaseObject> GetValue(int index);
+  size_t AllocVariable(std::shared_ptr<BaseObject>);
 
   void BeginScope();
   void EndScope();
 
-  int GetReturnValue();
-  void SetParentReturnValue(int value);
+  std::shared_ptr<BaseObject> GetReturnValue();
+  void SetParentReturnValue(std::shared_ptr<BaseObject> value);
 
   bool HasParent();
   void SetParent(Frame*);
@@ -28,12 +30,12 @@ class Frame {
   Frame(Frame &&);
 
  private:
-  void SetResultValue(int);
+  void SetResultValue(std::shared_ptr<BaseObject>);
 
  private:
-  int result_;
-  std::vector<int> variables_;
-  std::vector<int> params_;
+  std::shared_ptr<BaseObject> result_;
+  std::vector<std::shared_ptr<BaseObject>> variables_;
+  std::vector<std::shared_ptr<BaseObject>> params_;
   std::vector<size_t> scope_sizes_;
   Frame* parent_;
 };

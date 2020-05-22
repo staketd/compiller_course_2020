@@ -1,15 +1,19 @@
-Integer binpow(a, k) {
-    if (k == 1) {
-        return a;
+class Main {
+    public static void main() {
+        Test test = new Test();
+        print(test.binpow(2, 10));
     }
-    Integer res;
-    res = binpow(a, k / 2);
-    if (k % 2 == 1) {
-        return res * res * a;
-    }
-    return res * res;
 }
 
-Integer main() {
-    print(binpow(2, 10));
+class Test {
+    Integer binpow(Integer a, Integer k) {
+        if (k == 1) {
+            return a;
+        }
+        Integer res = this.binpow(a, k / 2);
+        if (k % 2 == 1) {
+            return res * res * a;
+        }
+        return res * res;
+    }
 }

@@ -62,9 +62,15 @@ blank [ \t\r]
 "%"         return yy::parser::make_MODULO  (loc);
 "while"     return yy::parser::make_WHILE   (loc);
 ","         return yy::parser::make_COMMA(loc);
-"Integer"   return yy::parser::make_INTEGER(loc);
-"Bool"      return yy::parser::make_BOOL(loc);
 "return"    return yy::parser::make_RETURN(loc);
+"class"     return yy::parser::make_CLASS(loc);
+"this"      return yy::parser::make_THIS(loc);
+"."         return yy::parser::make_DOT(loc);
+"public"    return yy::parser::make_PUBLIC(loc);
+"static"    return yy::parser::make_STATIC(loc);
+"void"      return yy::parser::make_VOID(loc);
+"main"      return yy::parser::make_MAIN(loc);
+"new"       return yy::parser::make_NEW(loc);
 
 {int}       return make_NUMBER(yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER(yytext, loc);

@@ -13,9 +13,9 @@ class ScopeLayer : public std::enable_shared_from_this<ScopeLayer> {
   explicit ScopeLayer(ScopeLayer*);
 
   void DeclareSymbol(const Symbol&, std::shared_ptr<BaseType>);
-  std::shared_ptr<BaseType> GetValue(const Symbol&);
+  std::shared_ptr<BaseType> GetType(const Symbol& symbol);
 
-  void SetValue(const Symbol&, const std::shared_ptr<BaseType>&);
+  void SetType(const Symbol& symbol, const std::shared_ptr<BaseType>& obj);
   bool HasSymbol(const Symbol&);
 
   ScopeLayer* GetParent() const;

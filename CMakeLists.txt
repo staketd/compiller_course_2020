@@ -11,15 +11,17 @@ include_directories(
         driver
         visitors
         symbol_table
-        types
+        objects
         include
         grammar/expressions
         grammar/statements
         grammar/BaseASTClass
         grammar/scanner
         grammar/
-        grammar/functions
+        grammar/classes
         function-calls
+        class-map
+        types
         .
 )
 
@@ -59,12 +61,13 @@ set(
         grammar/expressions/Expression.h
         grammar/expressions/BinaryExpression.cpp
         grammar/expressions/EqualExpression.cpp
+        grammar/expressions/ThisExpression.cpp
         grammar/expressions/LessExpression.cpp
         grammar/expressions/GreaterExpression.cpp
         grammar/expressions/LessOrEqualExpression.cpp
         grammar/expressions/GreaterOrEqualExpression.cpp
         grammar/expressions/ModuloExpression.cpp
-        grammar/expressions/FuncCallExpression.cpp
+        grammar/expressions/MethodCallExpression.cpp
         grammar/statements/Assignment.cpp
         grammar/statements/Statement.cpp
         grammar/statements/PrintStatement.cpp
@@ -75,34 +78,47 @@ set(
         grammar/statements/VariableDeclaration.cpp
         grammar/statements/WhileStatement.cpp
         grammar/statements/ReturnStatement.cpp
-        grammar/statements/FuncCallStatement.cpp
-        grammar/functions/Function.cpp
-        grammar/functions/FunctionList.cpp
+        grammar/statements/MethodCallStmt.cpp
+        grammar/classes/Class.cpp
+        grammar/classes/ClassField.cpp
+        grammar/classes/ClassList.cpp
+        grammar/classes/ClassMethod.cpp
+        grammar/classes/ClassBody.cpp
+        grammar/classes/ClassMain.cpp
         ${BISON_MyParser_OUTPUTS}
         ${FLEX_MyScanner_OUTPUTS}
         include/sources.h
         visitors/BaseVisitor.cpp visitors/BaseVisitor.h
-        visitors/Interprenter.cpp visitors/Interprenter.h
         visitors/TemplateBaseVisitor.cpp
         symbol_table/Symbol.cpp
-        types/BaseType.h
-        types/Integer.cpp types/Integer.h
-        types/UninitObject.cpp types/UninitObject.h
+        objects/BaseObject.h
+        objects/Integer.cpp objects/Integer.h
+        objects/UninitObject.cpp objects/UninitObject.h
         symbol_table/ScopeLayer.cpp
         symbol_table/ScopeLayerTree.cpp
-        types/PrimitiveType.cpp
-        types/FunctionType.cpp
-        types/UserClassType.cpp
+        objects/PrimitiveObject.cpp
+        objects/FunctionObject.cpp
+        objects/ClassObject.cpp
         visitors/BuildSymbolLayerTree.cpp
-        types/BoolType.cpp types/BoolType.h
+        objects/BoolObject.cpp objects/BoolObject.h
         visitors/TypeChecker.cpp
         visitors/FunctionCallVisitor.cpp
         include/error_macro.h
-        grammar/functions/CallArgumentList.cpp
-        grammar/functions/FuncArgumentList.cpp
-        function-calls/FunctionTable.cpp
+        grammar/classes/CallArgumentList.cpp
+        grammar/classes/MethodArgumentList.cpp
+        function-calls/CallTable.cpp
         function-calls/Frame.cpp
         function-calls/FunctionMap.cpp
+        types/BaseType.cpp
+        types/IntegerType.cpp
+        types/BoolType.cpp
+        types/ClassType.cpp
+        types/FunctionType.cpp
+        types/VoidType.cpp
+        types/TypesSupport.cpp
+        objects/ObjectsSupport.cpp
+        grammar/expressions/NewExpression.cpp
+        class-map/ClassMap.cpp
 
 )
 

@@ -28,12 +28,18 @@ public:
     virtual void Visit(VariableDeclaration*) = 0;
     virtual void Visit(WhileStatement*) = 0;
     virtual void Visit(CallArgumentList*) = 0;
-    virtual void Visit(Function*) = 0;
-    virtual void Visit(FuncArgumentList*) = 0;
-    virtual void Visit(FunctionList*) = 0;
-    virtual void Visit(FuncCallExpression*) = 0;
+    virtual void Visit(ClassMethod*) = 0;
+    virtual void Visit(MethodArgumentList*) = 0;
+    virtual void Visit(ClassBody*) = 0;
+    virtual void Visit(MethodCallExpression*) = 0;
     virtual void Visit(ReturnStatement*) = 0;
-    virtual void Visit(FuncCallStatement*) = 0;
+    virtual void Visit(MethodCallStmt*) = 0;
+    virtual void Visit(Class*) = 0;
+    virtual void Visit(ClassList*) = 0;
+    virtual void Visit(ClassField*) = 0;
+    virtual void Visit(ClassMain*) = 0;
+    virtual void Visit(ThisExpression*) = 0;
+    virtual void Visit(NewExpression*) = 0;
 };
 
 

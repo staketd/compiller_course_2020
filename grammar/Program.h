@@ -1,17 +1,17 @@
 #ifndef MYCOMPILLER_PROGRAM_H
 #define MYCOMPILLER_PROGRAM_H
 
-#include <FunctionList.h>
+#include <ClassBody.h>
 #include <Expression.h>
 
-class Program: BaseASTClass {
-public:
-    explicit Program(FunctionList*);
-    void AcceptVisitor(BaseVisitor*) override;
+class Program : BaseASTClass {
+ public:
+  explicit Program(ClassMain*, ClassList*);
+  void AcceptVisitor(BaseVisitor*) override;
 
-private:
-    FunctionList* functions_;
+ public:
+  ClassMain* main_;
+  ClassList* classes_;
 };
 
-
-#endif //MYCOMPILLER_PROGRAM_H
+#endif  // MYCOMPILLER_PROGRAM_H

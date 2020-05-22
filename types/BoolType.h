@@ -1,18 +1,12 @@
 
-#ifndef MYCOMPILLER_OBJECTS_BOOL_H_
-#define MYCOMPILLER_OBJECTS_BOOL_H_
-#include <PrimitiveType.h>
+#ifndef MYCOMPILLER_BOOLTYPE_H
+#define MYCOMPILLER_BOOLTYPE_H
+#include <BaseType.h>
 
-class BoolType : public PrimitiveType {
+class BoolType : public BaseType {
  public:
   BoolType();
-  BoolType(bool);
-  bool IsBool() override;
-  int ToInt() override;
-  BaseType* GetType() override;
-
- private:
-  bool value_;
+  std::string TypeName() override;
 };
 
-#endif  // MYCOMPILLER_OBJECTS_BOOL_H_
+#endif  // MYCOMPILLER_BOOLTYPE_H

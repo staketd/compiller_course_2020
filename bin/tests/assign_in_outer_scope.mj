@@ -1,8 +1,9 @@
-Integer main() {
-    Integer a;
-    a = 2;
-    if (a == 2) {
-        a = 10;
+class Main {
+    public static void main () {
+        Integer a = 2;
+        if (a == 2) {
+            a = 10;
+        }
+        print(a);
     }
-    print(a);
 }

@@ -8,7 +8,7 @@
 template <typename T>
 class TemplateBaseVisitor : public BaseVisitor {
 public:
-    T VisitAndSetValue(BaseASTClass*);
+    T VisitAndReturnValue(BaseASTClass*);
 
 protected:
     T last_value_set_;

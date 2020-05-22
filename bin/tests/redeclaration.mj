@@ -1,4 +1,6 @@
-Integer main() {
-    Integer a;
-    Bool a;
+class Main {
+    public static void main() {
+        Integer a = 1;
+        Bool a = 0;
+    }
 }

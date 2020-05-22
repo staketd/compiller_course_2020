@@ -59,9 +59,15 @@
     MODULO "%"
     WHILE "while"
     COMMA ","
-    INTEGER "Integer"
-    BOOL "Bool"
     RETURN "return"
+    CLASS "class"
+    THIS "this"
+    DOT "."
+    PUBLIC "public"
+    STATIC "static"
+    VOID "void"
+    MAIN "main"
+    NEW "new"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
@@ -77,39 +83,60 @@
 %nterm <Scope*> Scope
 %nterm <VariableDeclaration*> VariableDeclaration
 %nterm <WhileStatement*> While
-%nterm <FunctionList*> Functions
 %nterm <std::string> type
-%nterm <FuncArgumentList*> Arguments
-%nterm <FuncArgumentList*> empty_arguments
-%nterm <FuncArgumentList*> complex_arguments
+%nterm <MethodArgumentList*> Arguments
+%nterm <MethodArgumentList*> empty_arguments
+%nterm <MethodArgumentList*> complex_arguments
 %nterm <CallArgumentList*> call_arguments
-%nterm <FuncCallExpression*> func_call
 %nterm <CallArgumentList*> empty_call_arguments
 %nterm <CallArgumentList*> complex_call_arguments
-%nterm <Function*> function
-%nterm <FuncCallStatement*> st_func_call
+%nterm <Class*> class
+%nterm <ClassBody*> class_body
+%nterm <ClassField*> class_field
+%nterm <ClassMethod*> class_method;
+%nterm <MethodCallExpression*> call_method;
+%nterm <ClassMain*> main_class
+%nterm <ClassList*> classes
+%nterm <ReturnStatement*> returnStatement
 
 %printer {yyo << $$;} <*>;
 
 %%
 %start unit;
-unit: Functions { $$ = new Program($1); driver.program = $$;};
+unit:  main_class classes { $$ = new Program($1, $2); driver.program = $$;};
 
-Functions:
-	%empty {$$ = new FunctionList();}
-	| Functions function {
-		$1->AddFunction($2);
-		$$ = $1;
+main_class:
+	"class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" {
+		$$ = new ClassMain($2, new ClassMethod("main", new MethodArgumentList(), $11, "void"));
 	}
 	;
 
-function:
-	type "identifier" "(" Arguments ")" "{" statements "}" {$$ = new Function($2, $4, $7, $1);}
+classes:
+	%empty {$$ = new ClassList();}
+	| classes class {$1->AddClass($2); $$ = $1;}
+	;
+
+class:
+	"class" "identifier" "{" class_body "}" {$$ = new Class($2, $4);}
+	;
+
+class_body:
+	%empty {$$ = new ClassBody();}
+	| class_body class_field {$1->AddField($2); $$ = $1;}
+	| class_body class_method {$1->AddMethod($2); $$ = $1;}
+	;
+
+class_field:
+	type "identifier" ";" {$$ = new ClassField($1, $2);}
+	;
+
+class_method:
+	type "identifier" "(" Arguments ")" "{" statements "}" {$$ = new ClassMethod($2, $4, $7, $1);}
+	| "void" "identifier" "(" Arguments ")" "{" statements "}" {$$ = new ClassMethod($2, $4, $7, "void");}
 	;
 
 type:
-	"Integer" {$$ = "Integer";}
-	| "Bool" {$$ = "Bool";}
+	"identifier" {$$ = $1;}
 	;
 
 Arguments:
@@ -118,15 +145,15 @@ Arguments:
 	;
 
 empty_arguments:
-	%empty {$$ = new FuncArgumentList();}
+	%empty {$$ = new MethodArgumentList();}
 	;
 
 complex_arguments:
-	"identifier" {
-		$$ = new FuncArgumentList();
-		$$->AddArgument($1);
+	type "identifier" {
+		$$ = new MethodArgumentList();
+		$$->AddArgument($1, $2);
 	}
-	| complex_arguments "," "identifier" {$1->AddArgument($3), $$ = $1;}
+	| complex_arguments "," type "identifier" {$1->AddArgument($3, $4), $$ = $1;}
 	;
 
 statements:
@@ -144,12 +171,13 @@ statement:
 	| Scope {$$ = $1;}
 	| VariableDeclaration ";" {$$ = $1;}
 	| While {$$ = $1;}
-	| st_func_call ";" {$$ = $1;}
-	| "return" expr ";" {$$ = new ReturnStatement($2);}
+	| returnStatement ";" {$$ = $1;}
+	| call_method ";" {$$ = new MethodCallStmt($1);}
 	;
 
-st_func_call:
-	func_call {$$ = new FuncCallStatement($1);}
+returnStatement:
+	"return" expr {$$ = new ReturnStatement($2);}
+	| "return" {$$ = new ReturnStatement(nullptr);}
 	;
 
 While:
@@ -157,7 +185,7 @@ While:
 	;
 
 VariableDeclaration:
-	type "identifier" {$$ = new VariableDeclaration($2, $1);}
+	type "identifier" "=" expr {$$ = new VariableDeclaration($2, $1, $4);}
 	;
 
 Scope:
@@ -186,6 +214,9 @@ assignment:
 %left "+" "-";
 %left "*" "/" "%";
 
+call_method:
+	expr "." "identifier" "(" call_arguments ")" {$$ = new MethodCallExpression($1, $3, $5);}
+
 expr:
     "number" 			{$$ = new NumExpression($1);}
     | "identifier" 		{$$ = new IdentExpression($1); }
@@ -200,11 +231,10 @@ expr:
     | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3);}
     | expr "%" expr 	{$$ = new ModuloExpression($1, $3);}
     | "(" expr ")" 	{$$ = $2; }
-    | func_call {$$ = $1;}
+    | call_method {$$ = $1;}
+    | "this" {$$ = new ThisExpression();}
+    | "new" "identifier" "(" ")" {$$ = new NewExpression($2);}
     ;
-
-func_call:
-	"identifier" "(" call_arguments ")" {$$ = new FuncCallExpression($1, $3);}
 
 call_arguments:
 	empty_call_arguments {$$ = $1;}

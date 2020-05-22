@@ -1,9 +1,9 @@
 
 #include "FunctionMap.h"
-void FunctionMap::Set(const Symbol& symb, Function* function) {
+void FunctionMap::Set(const Symbol& symb, ClassMethod* function) {
   functions_[symb] = function;
 }
 
-Function* FunctionMap::Get(const Symbol& symb) {
+ClassMethod* FunctionMap::Get(const Symbol& symb) {
   return functions_[symb];
 }

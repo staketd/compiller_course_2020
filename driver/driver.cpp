@@ -3,7 +3,7 @@
 #include <Frame.h>
 #include <BuildSymbolLayerTree.h>
 #include <TypeChecker.h>
-#include <Function.h>
+#include <ClassMethod.h>
 #include <FunctionCallVisitor.h>
 
 Driver::Driver()
@@ -12,8 +12,6 @@ Driver::Driver()
       scanner(*this),
       parser(scanner, *this),
       global_scope_(new ScopeLayer()) {
-  variables["one"] = 1;
-  variables["two"] = 2;
 }
 
 int Driver::Parse(const std::string& f) {
@@ -47,20 +45,22 @@ void Driver::Evaluate() {
 
   Frame main_frame;
 
-  FunctionCallVisitor visitor(std::move(main_frame), map_, global_scope_,
-                              global_scope_.Get(Symbol("main")));
-  visitor.ExecuteCode(map_.Get(Symbol("main")));
+  FunctionCallVisitor visitor(
+      std::move(main_frame), func_map_, global_scope_,
+      global_scope_.Get(Symbol(program->main_->name_ + "::main")), nullptr,
+      class_map_);
+  visitor.ExecuteCode(func_map_.Get(Symbol(program->main_->name_ + "::main")));
 }
 
 void Driver::Print() const {
 }
 
 void Driver::BuildSymbolTree() {
-  BuildSymbolLayerTree build(global_scope_, map_);
+  BuildSymbolLayerTree build(global_scope_, func_map_, class_map_);
   build.BuildTree(program);
 }
 
 void Driver::CheckTypes() {
-  TypeChecker checker(global_scope_.GetRoot(), map_);
+  TypeChecker checker(global_scope_.GetRoot(), func_map_, global_scope_);
   checker.CheckType(program);
 }
