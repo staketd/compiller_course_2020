@@ -12,3 +12,5 @@ Checkpoints 04-05
 Тесты находятся в папке 
 
 `/bin/tests`
+
+ТГ @stakett
