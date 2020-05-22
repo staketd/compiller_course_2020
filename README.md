@@ -1,4 +1,4 @@
-Checkpoints 04-05
+Checkpoints 06
 ----
 
 Для сборки проекта нужно выполнить команду
@@ -6,7 +6,7 @@ Checkpoints 04-05
 `cmake CMakeLists.txt && make`
 
 Исполняемый файл будет находится по следующему пути:
-
+q
 `/bin/myCompiller`
 
 Тесты находятся в папке 

@@ -234,12 +234,6 @@ void FunctionCallVisitor::Visit(MethodCallExpression* expression) {
                              "\" has no \"" + expression->name_ + "\" method");
   }
 
-  if (call_function->arguments_->names_.size() != args.size()) {
-    ERROR(std::to_string(call_function->arguments_->names_.size()) +
-          " Arguments expected, but " + std::to_string(args.size()) +
-          " were given\n");
-  }
-
   FunctionCallVisitor visitor(
       std::move(frame), functions_, tree_,
       tree_.Get(Symbol(class_obj->GetType() + "::" + expression->name_)),

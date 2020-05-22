@@ -182,27 +182,42 @@ void TypeChecker::Visit(MethodArgumentList*) {
 }
 
 void TypeChecker::Visit(CallArgumentList* list) {
-  for (size_t i = 0; i < list->arguments_.size(); ++i) {
-    auto expr_type = VisitAndReturnValue(list->arguments_[i]);
-    auto func_type = CreateTypePtr(current_method_->arguments_->types_[i]);
-    if (!IsConvertible(expr_type, func_type) &&
-        !expr_type->IsSameWith(func_type)) {
-      ERROR("Expected \"" + func_type->TypeName() + "\" but " +
-            expr_type->TypeName() + "\" was given");
-    }
-  }
 }
 
 void TypeChecker::Visit(MethodCallExpression* expression) {
   auto expr_type = VisitAndReturnValue(expression->expression_);
+
   if (!expr_type->IsClass()) {
     ERROR("Can not call method from non-class object");
   }
+
   ScopeLayer* class_scope = tree_.Get(Symbol(expr_type->TypeName()));
   auto type = class_scope->GetType(Symbol(expression->name_));
+
   if (!type->IsFunction()) {
     ERROR(expression->name_ + "is not a function\n");
   }
+
+  ClassMethod* callee_method =
+      func_map_.Get(Symbol(expr_type->TypeName() + "::" + expression->name_));
+
+  size_t callee_arguments = callee_method->arguments_->names_.size();
+  size_t passed_arguments = expression->arguments_->arguments_.size();
+
+  if (callee_arguments != passed_arguments) {
+    ERROR(std::to_string(callee_arguments) + " Arguments expected, but " +
+          std::to_string(passed_arguments) + " were given\n");
+  }
+
+  for (size_t i = 0; i < callee_arguments; ++i) {
+    auto arg_type = VisitAndReturnValue(expression->arguments_->arguments_[i]);
+    auto func_type = CreateTypePtr(callee_method->arguments_->types_[i]);
+    if (!IsConvertible(arg_type, func_type) && !arg_type->IsSameWith(func_type)) {
+      ERROR("Expected \"" + func_type->TypeName() + "\" but " +
+            arg_type->TypeName() + "\" was given");
+    }
+  }
+
   std::shared_ptr<FunctionType> method_type =
       std::dynamic_pointer_cast<FunctionType>(type);
   last_value_set_ = method_type->GetReturnType();

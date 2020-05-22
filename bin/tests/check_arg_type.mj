@@ -1,0 +1,29 @@
+class Main {
+    public static void main() {
+        B b = new B();
+        A a = new A();
+        b.Set(b, 1);
+        b.Print(a);
+        b.Set(a, 10);
+        b.Print(a);
+    }
+}
+
+class A {
+    Integer field_;
+    void SetField(Integer a) {
+        field_ = a;
+    }
+    void PrintField() {
+        print(field_);
+    }
+}
+
+class B {
+    void Set(A a_, Integer a) {
+        a_.SetField(a);
+    }
+    void Print(A a_) {
+        a_.PrintField();
+    }
+}
