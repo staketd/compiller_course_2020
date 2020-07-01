@@ -48,5 +48,9 @@
 #include <BinaryExpression.h>
 #include <ThisExpression.h>
 #include <NewExpression.h>
+#include <ArrayDeclaration.h>
+#include <ArrayType.h>
+#include <ArrayAssignment.h>
+#include <ArrayExpression.h>
 
 #endif //MYCOMPILLER_SOURCES_H

@@ -289,3 +289,39 @@ std::shared_ptr<ClassObject> FunctionCallVisitor::InitClass(Class* cl) {
   }
   return result;
 }
+
+void FunctionCallVisitor::Visit(ArrayDeclaration* declaration) {
+  std::vector<std::shared_ptr<BaseObject>> array;
+  for (size_t i = 0; i < declaration->size_; ++i) {
+    array.push_back(CreateObjectPtr(declaration->array_type_));
+  }
+  table_.DeclareVariable(Symbol(declaration->name_),
+                         frame_.AllocVariable(std::make_shared<ArrayObject>(
+                             declaration->name_, declaration->size_, array)));
+}
+
+void FunctionCallVisitor::Visit(ArrayAssignment* assignment) {
+  auto array = std::dynamic_pointer_cast<ArrayObject>(
+      GetValue(Symbol(assignment->array_name_)));
+  if (array == nullptr) {
+    ERROR("\"" + assignment->array_name_ + "\" is not an array", assignment);
+  }
+  int index = VisitAndReturnValue(assignment->ind_expression_)->ToInt();
+  if (index < 0) {
+    ERROR("index must be more than -1", assignment);
+  }
+  array->array_[index] = VisitAndReturnValue(assignment->expression_);
+}
+
+void FunctionCallVisitor::Visit(ArrayExpression* expression) {
+  auto array = std::dynamic_pointer_cast<ArrayObject>(
+      GetValue(Symbol(expression->name_)));
+  if (array == nullptr) {
+    ERROR("\"" + expression->name_ + "\" is not an array", expression);
+  }
+  int index = VisitAndReturnValue(expression->expression_)->ToInt();
+  if (index < 0) {
+    ERROR("index must be more than -1", expression);
+  }
+  last_value_set_ = array->array_[index];
+}

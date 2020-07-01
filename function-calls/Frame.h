@@ -3,6 +3,7 @@
 #define MYCOMPILLER_FRAME_H
 #include <vector>
 #include <ClassObject.h>
+#include <ArrayObject.h>
 
 class Frame {
  public:
@@ -11,9 +12,12 @@ class Frame {
   void SetParams(const std::vector<std::shared_ptr<BaseObject>>&);
 
   void SetValue(int index, std::shared_ptr<BaseObject> value);
+  void SetArrayValue(int index, size_t array_index,
+                      std::shared_ptr<BaseObject> value);
 
   std::shared_ptr<BaseObject> GetValue(int index);
   size_t AllocVariable(std::shared_ptr<BaseObject>);
+  std::shared_ptr<BaseObject> GetArrayValue(int index, size_t array_index);
 
   void BeginScope();
   void EndScope();
@@ -27,7 +31,7 @@ class Frame {
   Frame(const Frame&) = delete;
   Frame operator=(const Frame&) = delete;
 
-  Frame(Frame &&);
+  Frame(Frame&&);
 
  private:
   void SetResultValue(std::shared_ptr<BaseObject>);

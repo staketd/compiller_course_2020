@@ -40,6 +40,9 @@ public:
     virtual void Visit(ClassMain*) = 0;
     virtual void Visit(ThisExpression*) = 0;
     virtual void Visit(NewExpression*) = 0;
+    virtual void Visit(ArrayDeclaration*) = 0;
+    virtual void Visit(ArrayAssignment*) = 0;
+    virtual void Visit(ArrayExpression*) = 0;
 };
 
 

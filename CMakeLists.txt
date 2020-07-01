@@ -22,6 +22,13 @@ include_directories(
         function-calls
         class-map
         types
+        irtree/generators
+        irtree/types
+        irtree/visitors
+        irtree/tree_wrapper
+        irtree/nodes
+        irtree/nodes/expressions
+        irtree/nodes/statements
         .
 )
 
@@ -52,6 +59,7 @@ set(
         grammar/Program.cpp grammar/Program.h
         main.cpp
         driver/driver.cpp
+
         grammar/expressions/AddExpression.cpp
         grammar/expressions/MulExpression.cpp
         grammar/expressions/DivExpression.cpp
@@ -68,6 +76,8 @@ set(
         grammar/expressions/GreaterOrEqualExpression.cpp
         grammar/expressions/ModuloExpression.cpp
         grammar/expressions/MethodCallExpression.cpp
+        grammar/expressions/ArrayExpression.cpp
+
         grammar/statements/Assignment.cpp
         grammar/statements/Statement.cpp
         grammar/statements/PrintStatement.cpp
@@ -79,21 +89,29 @@ set(
         grammar/statements/WhileStatement.cpp
         grammar/statements/ReturnStatement.cpp
         grammar/statements/MethodCallStmt.cpp
+        grammar/statements/ArrayDeclaration.cpp
+        grammar/statements/ArrayAssignment.cpp
+
         grammar/classes/Class.cpp
         grammar/classes/ClassField.cpp
         grammar/classes/ClassList.cpp
         grammar/classes/ClassMethod.cpp
         grammar/classes/ClassBody.cpp
         grammar/classes/ClassMain.cpp
+
         ${BISON_MyParser_OUTPUTS}
         ${FLEX_MyScanner_OUTPUTS}
+
         include/sources.h
         visitors/BaseVisitor.cpp visitors/BaseVisitor.h
         visitors/TemplateBaseVisitor.cpp
         symbol_table/Symbol.cpp
+
         objects/BaseObject.h
         objects/Integer.cpp objects/Integer.h
         objects/UninitObject.cpp objects/UninitObject.h
+        objects/ArrayObject.cpp
+
         symbol_table/ScopeLayer.cpp
         symbol_table/ScopeLayerTree.cpp
         objects/PrimitiveObject.cpp
@@ -104,11 +122,13 @@ set(
         visitors/TypeChecker.cpp
         visitors/FunctionCallVisitor.cpp
         include/error_macro.h
+        SetLocation.h
         grammar/classes/CallArgumentList.cpp
         grammar/classes/MethodArgumentList.cpp
         function-calls/CallTable.cpp
         function-calls/Frame.cpp
         function-calls/FunctionMap.cpp
+
         types/BaseType.cpp
         types/IntegerType.cpp
         types/BoolType.cpp
@@ -116,6 +136,8 @@ set(
         types/FunctionType.cpp
         types/VoidType.cpp
         types/TypesSupport.cpp
+        types/ArrayType.cpp
+
         objects/ObjectsSupport.cpp
         grammar/expressions/NewExpression.cpp
         class-map/ClassMap.cpp

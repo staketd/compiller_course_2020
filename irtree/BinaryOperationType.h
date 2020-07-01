@@ -1,0 +1,7 @@
+
+#ifndef MYCOMPILLER_BINARYOPERATIONTYPE_H
+#define MYCOMPILLER_BINARYOPERATIONTYPE_H
+namespace ir_tree {
+class BinaryOperationType {};
+}
+#endif  // MYCOMPILLER_BINARYOPERATIONTYPE_H

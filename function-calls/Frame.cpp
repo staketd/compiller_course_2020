@@ -62,6 +62,29 @@ Frame::Frame(Frame&& other) {
   variables_ = other.variables_;
   scope_sizes_ = other.scope_sizes_;
 }
+
 void Frame::SetParent(Frame* parent) {
   parent_ = parent;
+}
+
+void Frame::SetArrayValue(int index, size_t array_index,
+                           std::shared_ptr<BaseObject> value) {
+  std::shared_ptr<ArrayObject> array;
+  if (index >= 0) {
+    array = std::dynamic_pointer_cast<ArrayObject>(variables_[index]);
+  } else {
+    array = std::dynamic_pointer_cast<ArrayObject>(params_[-index - 1]);
+  }
+  array->array_[array_index] = value;
+}
+
+std::shared_ptr<BaseObject> Frame::GetArrayValue(int index,
+                                                 size_t array_index) {
+  std::shared_ptr<ArrayObject> array;
+  if (index >= 0) {
+    array = std::dynamic_pointer_cast<ArrayObject>(variables_[index]);
+  } else {
+    array = std::dynamic_pointer_cast<ArrayObject>(params_[-index - 1]);
+  }
+  return array->array_[array_index];
 }

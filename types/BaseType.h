@@ -12,12 +12,14 @@ class BaseType {
     Void,
     Class,
     Function,
+    Array,
   };
 
   bool IsBool();
   bool IsInteger();
   bool IsClass();
   bool IsFunction();
+  bool IsArray();
   bool IsVoid();
 
   virtual bool IsSameWith(std::shared_ptr<BaseType>);

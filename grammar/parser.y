@@ -1,3 +1,4 @@
+
 %skeleton "lalr1.cc"
 %require "3.5"
 
@@ -11,6 +12,7 @@
     class Scanner;
     class Driver;
     #include <sources.h>
+    #include <SetLocation.h>
 }
 
 %define parse.trace
@@ -43,6 +45,8 @@
     SLASH "/"
     LPAREN "("
     RPAREN ")"
+    SLPAREN "["
+    SRPAREN "]"
     PRINT "print"
     READ "read"
     LESS "<"
@@ -98,6 +102,8 @@
 %nterm <ClassMain*> main_class
 %nterm <ClassList*> classes
 %nterm <ReturnStatement*> returnStatement
+%nterm <ArrayAssignment*> array_assignment
+%nterm <ArrayDeclaration*> ArrayDeclaration
 
 %printer {yyo << $$;} <*>;
 
@@ -108,6 +114,7 @@ unit:  main_class classes { $$ = new Program($1, $2); driver.program = $$;};
 main_class:
 	"class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" {
 		$$ = new ClassMain($2, new ClassMethod("main", new MethodArgumentList(), $11, "void"));
+		SetLocation($$, @1);
 	}
 	;
 
@@ -117,7 +124,7 @@ classes:
 	;
 
 class:
-	"class" "identifier" "{" class_body "}" {$$ = new Class($2, $4);}
+	"class" "identifier" "{" class_body "}" {$$ = new Class($2, $4); SetLocation($$, @1);}
 	;
 
 class_body:
@@ -127,17 +134,16 @@ class_body:
 	;
 
 class_field:
-	type "identifier" ";" {$$ = new ClassField($1, $2);}
+	type "identifier" ";" {$$ = new ClassField($1, $2); SetLocation($$, @1);}
 	;
 
 class_method:
-	type "identifier" "(" Arguments ")" "{" statements "}" {$$ = new ClassMethod($2, $4, $7, $1);}
+	type "identifier" "(" Arguments ")" "{" statements "}" {$$ = new ClassMethod($2, $4, $7, $1); SetLocation($$, @1);}
 	| "void" "identifier" "(" Arguments ")" "{" statements "}" {$$ = new ClassMethod($2, $4, $7, "void");}
 	;
 
 type:
 	"identifier" {$$ = $1;}
-	;
 
 Arguments:
 	empty_arguments {$$ = $1;}
@@ -152,8 +158,12 @@ complex_arguments:
 	type "identifier" {
 		$$ = new MethodArgumentList();
 		$$->AddArgument($1, $2);
+		SetLocation($$, @1);
 	}
-	| complex_arguments "," type "identifier" {$1->AddArgument($3, $4), $$ = $1;}
+	| complex_arguments "," type "identifier" {
+		$1->AddArgument($3, $4), $$ = $1;
+		SetLocation($$, @1);
+	}
 	;
 
 statements:
@@ -161,18 +171,21 @@ statements:
     | statements statement {
     	$1->AddStatement($2);
     	$$ = $1;
-    };
+	}
+	;
 
 statement:
-	assignment ";" {$$ = $1;}
-	| printStatement ";" {$$ = $1;}
-	| readStatement ";" {$$ = $1;}
-	| IfStatement {$$ = $1;}
-	| Scope {$$ = $1;}
-	| VariableDeclaration ";" {$$ = $1;}
-	| While {$$ = $1;}
-	| returnStatement ";" {$$ = $1;}
-	| call_method ";" {$$ = new MethodCallStmt($1);}
+	assignment ";" {$$ = $1; SetLocation($$, @1);}
+	| printStatement ";" {$$ = $1; SetLocation($$, @1);}
+	| readStatement ";" {$$ = $1; SetLocation($$, @1);}
+	| IfStatement {$$ = $1; SetLocation($$, @1);}
+	| Scope {$$ = $1; SetLocation($$, @1);}
+	| VariableDeclaration ";" {$$ = $1; SetLocation($$, @1);}
+	| While {$$ = $1; SetLocation($$, @1);}
+	| returnStatement ";" {$$ = $1; SetLocation($$, @1);}
+	| call_method ";" {$$ = new MethodCallStmt($1); SetLocation($$, @1);}
+	| array_assignment ";" {$$ = $1; SetLocation($$, @1);}
+	| ArrayDeclaration ";" {$$ = $1; SetLocation($$, @1);}
 	;
 
 returnStatement:
@@ -186,6 +199,10 @@ While:
 
 VariableDeclaration:
 	type "identifier" "=" expr {$$ = new VariableDeclaration($2, $1, $4);}
+	;
+
+ArrayDeclaration:
+	type "identifier" "[" "number" "]" {$$ = new ArrayDeclaration($1, $2, $4);}
 	;
 
 Scope:
@@ -208,7 +225,14 @@ readStatement:
 assignment:
     "identifier" "=" expr {
     	$$ = new Assignment($1, $3);
-    };
+    }
+    ;
+
+array_assignment:
+    "identifier" "[" expr "]" "=" expr {
+    	$$ = new ArrayAssignment($1, $3, $6);
+    }
+    ;
 
 %left "<" ">" "==" "<=" ">=";
 %left "+" "-";
@@ -218,22 +242,23 @@ call_method:
 	expr "." "identifier" "(" call_arguments ")" {$$ = new MethodCallExpression($1, $3, $5);}
 
 expr:
-    "number" 			{$$ = new NumExpression($1);}
-    | "identifier" 		{$$ = new IdentExpression($1); }
-    | expr "+" expr 	{$$ = new AddExpression($1, $3); }
-    | expr "-" expr 	{$$ = new SubstractExpression($1, $3); }
-    | expr "*" expr 	{$$ = new MulExpression($1, $3); }
-    | expr "/" expr 	{$$ = new DivExpression($1, $3); }
-    | expr "<" expr		{$$ = new LessExpression($1, $3);}
-    | expr ">" expr		{$$ = new GreaterExpression($1, $3);}
-    | expr "==" expr	{$$ = new EqualExpression($1, $3);}
-    | expr ">=" expr	{$$ = new GreaterOrEqualExpression($1, $3);}
-    | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3);}
-    | expr "%" expr 	{$$ = new ModuloExpression($1, $3);}
-    | "(" expr ")" 	{$$ = $2; }
-    | call_method {$$ = $1;}
-    | "this" {$$ = new ThisExpression();}
-    | "new" "identifier" "(" ")" {$$ = new NewExpression($2);}
+    "number" 			{$$ = new NumExpression($1);  SetLocation($$, @1);}
+    | "identifier" 		{$$ = new IdentExpression($1); SetLocation($$, @1);}
+    | expr "+" expr 	{$$ = new AddExpression($1, $3); SetLocation($$, @1);}
+    | expr "-" expr 	{$$ = new SubstractExpression($1, $3); SetLocation($$, @1);}
+    | expr "*" expr 	{$$ = new MulExpression($1, $3); SetLocation($$, @1);}
+    | expr "/" expr 	{$$ = new DivExpression($1, $3); SetLocation($$, @1);}
+    | expr "<" expr		{$$ = new LessExpression($1, $3); SetLocation($$, @1);}
+    | expr ">" expr		{$$ = new GreaterExpression($1, $3); SetLocation($$, @1);}
+    | expr "==" expr	{$$ = new EqualExpression($1, $3); SetLocation($$, @1);}
+    | expr ">=" expr	{$$ = new GreaterOrEqualExpression($1, $3); SetLocation($$, @1);}
+    | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3); SetLocation($$, @1);}
+    | expr "%" expr 	{$$ = new ModuloExpression($1, $3); SetLocation($$, @1);}
+    | "(" expr ")" 	{$$ = $2;  SetLocation($$, @2);}
+    | call_method {$$ = $1; SetLocation($$, @1);}
+    | "this" {$$ = new ThisExpression(); SetLocation($$, @1);}
+    | "new" "identifier" "(" ")" {$$ = new NewExpression($2); SetLocation($$, @1);}
+    | "identifier" "[" expr "]" {$$ = new ArrayExpression($1, $3); SetLocation($$, @1);}
     ;
 
 call_arguments:

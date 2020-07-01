@@ -37,5 +37,8 @@ class ClassMain;
 class BinaryExpression;
 class ThisExpression;
 class NewExpression;
+class ArrayDeclaration;
+class ArrayAssignment;
+class ArrayExpression;
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

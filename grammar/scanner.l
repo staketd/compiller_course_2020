@@ -71,6 +71,8 @@ blank [ \t\r]
 "void"      return yy::parser::make_VOID(loc);
 "main"      return yy::parser::make_MAIN(loc);
 "new"       return yy::parser::make_NEW(loc);
+"["         return yy::parser::make_SLPAREN(loc);
+"]"         return yy::parser::make_SRPAREN(loc);
 
 {int}       return make_NUMBER(yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER(yytext, loc);

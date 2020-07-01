@@ -47,6 +47,9 @@ class BuildSymbolLayerTree : public BaseVisitor {
   void Visit(ClassMain*) override;
   void Visit(ThisExpression*) override;
   void Visit(NewExpression*) override;
+  void Visit(ArrayDeclaration*) override;
+  void Visit(ArrayAssignment*) override;
+  void Visit(ArrayExpression*) override;
 
   bool IsCorrectVariableType(const std::string& type);
 

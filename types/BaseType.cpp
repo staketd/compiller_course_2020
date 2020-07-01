@@ -27,3 +27,7 @@ bool BaseType::IsVoid() {
 bool BaseType::IsSameWith(std::shared_ptr<BaseType> other) {
   return type_ == other->type_;
 }
+
+bool BaseType::IsArray() {
+  return type_ == Type::Array;
+}

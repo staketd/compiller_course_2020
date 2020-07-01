@@ -46,6 +46,9 @@ class TypeChecker : public TemplateBaseVisitor<std::shared_ptr<BaseType>> {
   void Visit(ClassMain*) override;
   void Visit(ThisExpression*) override;
   void Visit(NewExpression*) override;
+  void Visit(ArrayDeclaration*) override;
+  void Visit(ArrayAssignment*) override;
+  void Visit(ArrayExpression*) override;
 
   void CheckIntegerOperation(BinaryExpression*);
 
