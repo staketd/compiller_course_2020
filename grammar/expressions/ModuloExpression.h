@@ -6,7 +6,7 @@
 class ModuloExpression : public BinaryExpression {
 public:
     using BinaryExpression::BinaryExpression;
-    void AcceptVisitor(BaseVisitor*);
+    void AcceptVisitor(BaseASTVisitor*);
 };
 
 

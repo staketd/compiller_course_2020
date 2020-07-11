@@ -1,13 +1,13 @@
 
 #ifndef MYCOMPILLER_BUILDSYMBOLLAYERTREE_H
 #define MYCOMPILLER_BUILDSYMBOLLAYERTREE_H
-#include <BaseVisitor.h>
+#include <BaseVisitors.h>
 #include <ScopeLayer.h>
 #include <ScopeLayerTree.h>
 #include <FunctionMap.h>
 #include <ClassMap.h>
 
-class BuildSymbolLayerTree : public BaseVisitor {
+class BuildSymbolLayerTree : public BaseASTVisitor {
  public:
   BuildSymbolLayerTree(ScopeLayerTree&, FunctionMap&, ClassMap&);
   void BuildTree(Program*);
@@ -50,6 +50,8 @@ class BuildSymbolLayerTree : public BaseVisitor {
   void Visit(ArrayDeclaration*) override;
   void Visit(ArrayAssignment*) override;
   void Visit(ArrayExpression*) override;
+  void Visit(LogicAndExpression*) override;
+  void Visit(LogicOrExpression*) override;
 
   bool IsCorrectVariableType(const std::string& type);
 

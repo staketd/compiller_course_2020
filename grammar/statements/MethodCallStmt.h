@@ -7,7 +7,7 @@
 class MethodCallStmt : public Statement {
  public:
   MethodCallStmt(MethodCallExpression*);
-  void AcceptVisitor(BaseVisitor*);
+  void AcceptVisitor(BaseASTVisitor*);
  public:
   MethodCallExpression* expression_;
 };

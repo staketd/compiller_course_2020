@@ -7,4 +7,4 @@
 class Expression: public BaseASTClass {
 };
 
-#endif //MYCOMPILLER_EXPRESSION_H
+#endif  // MYCOMPILLER_IREXPRESSION_H

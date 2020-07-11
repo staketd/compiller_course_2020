@@ -8,7 +8,7 @@ class SubstractExpression: public BinaryExpression {
 public:
     using BinaryExpression::BinaryExpression;
 
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
 };
 
 

@@ -9,7 +9,7 @@ class MethodArgumentList : public BaseASTClass {
  public:
   MethodArgumentList() = default;
   void AddArgument(const std::string&, const std::string&);
-  void AcceptVisitor(BaseVisitor*) override ;
+  void AcceptVisitor(BaseASTVisitor*) override ;
 
  public:
   std::vector<std::string> types_;

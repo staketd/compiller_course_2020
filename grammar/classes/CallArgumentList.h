@@ -8,7 +8,7 @@
 class CallArgumentList : public BaseASTClass {
  public:
   CallArgumentList() = default;
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
   void AddArgument(Expression*);
 
  public:

@@ -3,6 +3,6 @@
 
 IdentExpression::IdentExpression(std::string ident): name_(std::move(ident)) {}
 
-void IdentExpression::AcceptVisitor(BaseVisitor* visitor) {
+void IdentExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

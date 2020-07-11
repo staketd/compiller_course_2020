@@ -5,6 +5,6 @@
 PrintStatement::PrintStatement(Expression* expr) : expr_(expr) {
 }
 
-void PrintStatement::AcceptVisitor(BaseVisitor* visitor) {
+void PrintStatement::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

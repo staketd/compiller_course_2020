@@ -20,12 +20,14 @@ include_directories(
         grammar/
         grammar/classes
         function-calls
+        function-calls/address
         class-map
         types
         irtree/generators
         irtree/types
         irtree/visitors
         irtree/tree_wrapper
+        irtree/tree_wrapper/conditional_wrappers
         irtree/nodes
         irtree/nodes/expressions
         irtree/nodes/statements
@@ -77,6 +79,8 @@ set(
         grammar/expressions/ModuloExpression.cpp
         grammar/expressions/MethodCallExpression.cpp
         grammar/expressions/ArrayExpression.cpp
+        grammar/expressions/LogicAndExpression.cpp
+        grammar/expressions/LogicOrExpression.cpp
 
         grammar/statements/Assignment.cpp
         grammar/statements/Statement.cpp
@@ -103,8 +107,13 @@ set(
         ${FLEX_MyScanner_OUTPUTS}
 
         include/sources.h
-        visitors/BaseVisitor.cpp visitors/BaseVisitor.h
+        visitors/BaseVisitors.cpp visitors/BaseVisitors.h
         visitors/TemplateBaseVisitor.cpp
+        visitors/BuildSymbolLayerTree.cpp
+        visitors/TypeChecker.cpp
+        visitors/FunctionCallVisitor.cpp
+        visitors/IRTreeBuildVisitor.cpp
+
         symbol_table/Symbol.cpp
 
         objects/BaseObject.h
@@ -117,17 +126,20 @@ set(
         objects/PrimitiveObject.cpp
         objects/FunctionObject.cpp
         objects/ClassObject.cpp
-        visitors/BuildSymbolLayerTree.cpp
         objects/BoolObject.cpp objects/BoolObject.h
-        visitors/TypeChecker.cpp
-        visitors/FunctionCallVisitor.cpp
-        include/error_macro.h
+
+        include/macros.h
         SetLocation.h
         grammar/classes/CallArgumentList.cpp
         grammar/classes/MethodArgumentList.cpp
+
         function-calls/CallTable.cpp
         function-calls/Frame.cpp
         function-calls/FunctionMap.cpp
+        function-calls/address/Address.h
+        function-calls/address/FrameAddress.cpp
+        function-calls/address/RegAddress.cpp
+        function-calls/IRFrameTranslator.cpp
 
         types/BaseType.cpp
         types/IntegerType.cpp
@@ -142,6 +154,39 @@ set(
         grammar/expressions/NewExpression.cpp
         class-map/ClassMap.cpp
 
+        irtree/generators/Label.cpp
+        irtree/generators/Temp.cpp
+        irtree/nodes/expressions/BinOpExpression.cpp
+        irtree/nodes/BaseIRNode.cpp
+        irtree/nodes/ExpressionList.cpp
+        irtree/types/BinOperatorType.cpp
+        irtree/types/LogicOperatorType.cpp
+        irtree/nodes/expressions/IRExpression.cpp
+        irtree/nodes/expressions/CallExpression.cpp
+        irtree/nodes/expressions/ConstExpression.cpp
+        irtree/nodes/expressions/EseqExpression.cpp
+        irtree/nodes/expressions/MemExpression.cpp
+        irtree/nodes/expressions/NameExpression.cpp
+        irtree/nodes/expressions/TempExpression.cpp
+
+        irtree/nodes/statements/IRStatement.cpp
+        irtree/nodes/statements/ExpStatement.cpp
+        irtree/nodes/statements/JumpConditionalStatement.cpp
+        irtree/nodes/statements/JumpStatement.cpp
+        irtree/nodes/statements/LabelStatement.cpp
+        irtree/nodes/statements/MoveStatement.cpp
+        irtree/nodes/statements/SeqStatement.cpp
+        irtree/nodes/statements/IRPrintStatement.cpp
+
+        irtree/tree_wrapper/SubtreeWrapper.h
+        irtree/tree_wrapper/ExpressionWrapper.cpp
+        irtree/tree_wrapper/StatementWrapper.cpp
+        irtree/tree_wrapper/conditional_wrappers/AndConditionalWrapper.cpp
+        irtree/tree_wrapper/conditional_wrappers/ConditionalWrapper.cpp
+        irtree/tree_wrapper/conditional_wrappers/NegateConditionalWrapper.cpp
+        irtree/tree_wrapper/conditional_wrappers/OrConditionalWrapper.cpp
+        irtree/tree_wrapper/conditional_wrappers/CompareConditionalWrapper.cpp
+        irtree/visitors/IRPrintVisitor.cpp
 )
 
 add_executable(

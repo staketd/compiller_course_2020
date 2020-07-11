@@ -6,6 +6,6 @@ MethodCallExpression::MethodCallExpression(Expression* expression,
     :expression_(expression), name_(name), arguments_(arguments) {
 }
 
-void MethodCallExpression::AcceptVisitor(BaseVisitor* visitor) {
+void MethodCallExpression::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

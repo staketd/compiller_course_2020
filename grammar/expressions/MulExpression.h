@@ -7,7 +7,7 @@ class MulExpression: public BinaryExpression {
 public:
     using BinaryExpression::BinaryExpression;
 
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
 };
 
 #endif //MYCOMPILLER_MULEXPRESSION_H

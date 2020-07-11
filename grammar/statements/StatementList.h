@@ -5,12 +5,11 @@
 #include <Statement.h>
 #include <vector>
 
-class StatementList: BaseASTClass {
+class StatementList: public BaseASTClass {
 public:
     void AddStatement(Statement*);
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
 
-//private: # TODO add iterator
     std::vector<Statement*> statements_;
 };
 

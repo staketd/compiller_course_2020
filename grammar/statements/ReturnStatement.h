@@ -7,7 +7,7 @@
 class ReturnStatement : public Statement {
  public:
   ReturnStatement(Expression*);
-  void AcceptVisitor(BaseVisitor*);
+  void AcceptVisitor(BaseASTVisitor*);
 
  public:
   Expression* expression_;

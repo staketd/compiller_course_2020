@@ -2,6 +2,6 @@
 
 NumExpression::NumExpression(int value): value_(value) {}
 
-void NumExpression::AcceptVisitor(BaseVisitor* visitor) {
+void NumExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

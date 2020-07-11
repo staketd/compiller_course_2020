@@ -2,12 +2,12 @@
 #ifndef MYCOMPILLER_BASEASTCLASS_H
 #define MYCOMPILLER_BASEASTCLASS_H
 
-#include <BaseVisitor.h>
+#include <BaseVisitors.h>
 #include <location.hh>
 
 class BaseASTClass {
  public:
-  virtual void AcceptVisitor(BaseVisitor*) = 0;
+  virtual void AcceptVisitor(BaseASTVisitor*) = 0;
   virtual ~BaseASTClass() = default;
  public:
   yy::location loc;

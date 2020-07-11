@@ -7,4 +7,4 @@ class Statement: public BaseASTClass {
 };
 
 
-#endif //MYCOMPILLER_STATEMENT_H
+#endif  // MYCOMPILLER_IRSTATEMENT_H

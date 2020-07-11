@@ -1,6 +1,6 @@
 
 #include "GreaterExpression.h"
 
-void GreaterExpression::AcceptVisitor(BaseVisitor* visitor) {
+void GreaterExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

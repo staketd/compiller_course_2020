@@ -5,6 +5,8 @@
 #include <TypeChecker.h>
 #include <ClassMethod.h>
 #include <FunctionCallVisitor.h>
+#include <IRTreeBuildVisitor.h>
+#include <IRPrintVisitor.h>
 
 Driver::Driver()
     : trace_parsing(false),
@@ -53,6 +55,10 @@ void Driver::Evaluate() {
 }
 
 void Driver::Print() const {
+  for (auto method: methods_) {
+    ir_tree::IRPrintVisitor printer(method.first.GetName() + "_irt.txt");
+    method.second->ToStatement()->AcceptVisitor(&printer);
+  }
 }
 
 void Driver::BuildSymbolTree() {
@@ -63,4 +69,10 @@ void Driver::BuildSymbolTree() {
 void Driver::CheckTypes() {
   TypeChecker checker(global_scope_.GetRoot(), func_map_, global_scope_);
   checker.CheckType(program);
+}
+
+void Driver::BuildIrTree() {
+  IRTreeBuildVisitor builder;
+  builder.Build(program);
+  methods_ = builder.GetMethods();
 }

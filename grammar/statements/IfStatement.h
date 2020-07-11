@@ -7,7 +7,7 @@
 class IfStatement : public Statement {
 public:
     IfStatement(Expression*, Scope*, Scope*);
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
 
 public:
     Expression* ifExpression_;

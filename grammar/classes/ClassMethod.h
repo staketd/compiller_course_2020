@@ -10,7 +10,7 @@
 class ClassMethod : public BaseASTClass {
  public:
   ClassMethod(const std::string&, MethodArgumentList*, StatementList*, const std::string&);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
   std::string name_;
   MethodArgumentList* arguments_;

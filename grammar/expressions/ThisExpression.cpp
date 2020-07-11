@@ -1,5 +1,5 @@
 
 #include "ThisExpression.h"
-void ThisExpression::AcceptVisitor(BaseVisitor* visitor) {
+void ThisExpression::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

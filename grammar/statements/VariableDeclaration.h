@@ -8,7 +8,7 @@
 class VariableDeclaration : public Statement {
  public:
   explicit VariableDeclaration(std::string, std::string, Expression*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::string type_name_;

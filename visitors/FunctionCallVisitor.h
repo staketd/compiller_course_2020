@@ -55,6 +55,8 @@ class FunctionCallVisitor
   void Visit(ArrayDeclaration*) override;
   void Visit(ArrayAssignment*) override;
   void Visit(ArrayExpression*) override;
+  void Visit(LogicAndExpression*) override;
+  void Visit(LogicOrExpression*) override;
 
   std::shared_ptr<ClassObject> InitClass(Class*);
 

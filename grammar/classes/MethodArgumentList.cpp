@@ -6,6 +6,6 @@ void MethodArgumentList::AddArgument(const std::string& type,
   names_.push_back(name);
 }
 
-void MethodArgumentList::AcceptVisitor(BaseVisitor* visitor) {
+void MethodArgumentList::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

@@ -4,7 +4,7 @@
 ReadStatement::ReadStatement(std::string var) : variable_(std::move(var)) {
 }
 
-void ReadStatement::AcceptVisitor(BaseVisitor* visitor) {
+void ReadStatement::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }
 

@@ -5,7 +5,7 @@
 class ArrayExpression : public Expression {
  public:
   ArrayExpression(const std::string&, Expression*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::string name_;

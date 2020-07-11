@@ -1,10 +1,10 @@
 
-#ifndef MYCOMPILLER_BASEVISITOR_H
-#define MYCOMPILLER_BASEVISITOR_H
+#ifndef MYCOMPILLER_BASEVISITORS_H
+#define MYCOMPILLER_BASEVISITORS_H
 
 #include "include/forward_decl.h"
 
-class BaseVisitor {
+class BaseASTVisitor {
 public:
     virtual void Visit(StatementList*) = 0;
     virtual void Visit(Assignment*) = 0;
@@ -43,7 +43,32 @@ public:
     virtual void Visit(ArrayDeclaration*) = 0;
     virtual void Visit(ArrayAssignment*) = 0;
     virtual void Visit(ArrayExpression*) = 0;
+    virtual void Visit(LogicOrExpression*) = 0;
+    virtual void Visit(LogicAndExpression*) = 0;
 };
 
+namespace ir_tree {
 
-#endif //MYCOMPILLER_BASEVISITOR_H
+class BaseIRVisitor {
+ public:
+  virtual void Visit(BinOpExpression*) = 0;
+  virtual void Visit(CallExpression*) = 0;
+  virtual void Visit(ConstExpression*) = 0;
+  virtual void Visit(EseqExpression*) = 0;
+  virtual void Visit(MemExpression*) = 0;
+  virtual void Visit(NameExpression*) = 0;
+  virtual void Visit(TempExpression*) = 0;
+  virtual void Visit(ExpStatement*) = 0;
+  virtual void Visit(JumpConditionalStatement*) = 0;
+  virtual void Visit(JumpStatement*) = 0;
+  virtual void Visit(LabelStatement*) = 0;
+  virtual void Visit(MoveStatement*) = 0;
+  virtual void Visit(SeqStatement*) = 0;
+  virtual void Visit(ExpressionList*) = 0;
+  virtual void Visit(IRPrintStatement*) = 0;
+};
+
+}
+
+
+#endif  // MYCOMPILLER_BASEVISITORS_H

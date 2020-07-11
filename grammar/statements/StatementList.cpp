@@ -4,6 +4,6 @@ void StatementList::AddStatement(Statement* statement) {
     statements_.push_back(statement);
 }
 
-void StatementList::AcceptVisitor(BaseVisitor* visitor) {
+void StatementList::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

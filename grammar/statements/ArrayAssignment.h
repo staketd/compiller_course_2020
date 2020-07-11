@@ -7,7 +7,7 @@
 class ArrayAssignment : public Statement {
  public:
   ArrayAssignment(const std::string&, Expression*, Expression*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::string array_name_;

@@ -9,6 +9,6 @@ VariableDeclaration::VariableDeclaration(std::string name,
       expression_(expression) {
 }
 
-void VariableDeclaration::AcceptVisitor(BaseVisitor* visitor) {
+void VariableDeclaration::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

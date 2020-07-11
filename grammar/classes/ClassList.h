@@ -8,7 +8,7 @@ class ClassList : public BaseASTClass {
  public:
   ClassList() = default;
   void AddClass(Class*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::vector<Class*> classes_;

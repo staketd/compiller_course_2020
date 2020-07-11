@@ -5,7 +5,7 @@ void ClassBody::AddMethod(ClassMethod* function) {
   methods_.push_back(function);
 }
 
-void ClassBody::AcceptVisitor(BaseVisitor* visitor) {
+void ClassBody::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }
 

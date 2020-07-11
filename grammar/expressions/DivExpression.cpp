@@ -1,5 +1,5 @@
 #include "DivExpression.h"
 
-void DivExpression::AcceptVisitor(BaseVisitor* visitor) {
+void DivExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

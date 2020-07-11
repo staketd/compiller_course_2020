@@ -4,6 +4,6 @@
 
 #include "AddExpression.h"
 
-void AddExpression::AcceptVisitor(BaseVisitor* visitor) {
+void AddExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

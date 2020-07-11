@@ -72,6 +72,8 @@
     VOID "void"
     MAIN "main"
     NEW "new"
+    LOGICAND "&&"
+    LOGICOR "||"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
@@ -233,7 +235,7 @@ array_assignment:
     	$$ = new ArrayAssignment($1, $3, $6);
     }
     ;
-
+%left "&&" "||";
 %left "<" ">" "==" "<=" ">=";
 %left "+" "-";
 %left "*" "/" "%";
@@ -254,6 +256,8 @@ expr:
     | expr ">=" expr	{$$ = new GreaterOrEqualExpression($1, $3); SetLocation($$, @1);}
     | expr "<=" expr	{$$ = new LessOrEqualExpression($1, $3); SetLocation($$, @1);}
     | expr "%" expr 	{$$ = new ModuloExpression($1, $3); SetLocation($$, @1);}
+    | expr "&&" expr 	{$$ = new LogicAndExpression($1, $3); SetLocation($$, @1);}
+    | expr "||" expr 	{$$ = new LogicOrExpression($1, $3); SetLocation($$, @1);}
     | "(" expr ")" 	{$$ = $2;  SetLocation($$, @2);}
     | call_method {$$ = $1; SetLocation($$, @1);}
     | "this" {$$ = new ThisExpression(); SetLocation($$, @1);}

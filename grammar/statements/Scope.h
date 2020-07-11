@@ -8,7 +8,7 @@
 class Scope: public Statement {
 public:
     explicit Scope(StatementList*);
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
 
 public:
     StatementList* statements_;

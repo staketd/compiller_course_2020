@@ -11,6 +11,6 @@ ClassMethod::ClassMethod(const std::string& name, MethodArgumentList* args,
       return_type_(type) {
 }
 
-void ClassMethod::AcceptVisitor(BaseVisitor* visitor) {
+void ClassMethod::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

@@ -5,6 +5,6 @@ ArrayDeclaration::ArrayDeclaration(const std::string& type,
     : size_(size), array_type_(type), name_(name) {
 }
 
-void ArrayDeclaration::AcceptVisitor(BaseVisitor* visitor) {
+void ArrayDeclaration::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

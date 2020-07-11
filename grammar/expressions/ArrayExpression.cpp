@@ -5,6 +5,6 @@ ArrayExpression::ArrayExpression(const std::string& name,
     : name_(name), expression_(expression) {
 }
 
-void ArrayExpression::AcceptVisitor(BaseVisitor* visitor) {
+void ArrayExpression::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }

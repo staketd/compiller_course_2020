@@ -7,7 +7,7 @@
 class ClassField : public BaseASTClass {
  public:
   ClassField(const std::string&, const std::string&);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::string type_;

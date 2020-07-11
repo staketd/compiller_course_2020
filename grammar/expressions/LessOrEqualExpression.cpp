@@ -1,6 +1,6 @@
 
 #include "LessOrEqualExpression.h"
 
-void LessOrEqualExpression::AcceptVisitor(BaseVisitor* visitor) {
+void LessOrEqualExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

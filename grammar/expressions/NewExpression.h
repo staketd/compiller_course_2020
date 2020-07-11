@@ -5,7 +5,7 @@
 class NewExpression : public Expression {
  public:
   NewExpression(const std::string&);
-  void AcceptVisitor(BaseVisitor*);
+  void AcceptVisitor(BaseASTVisitor*);
 
  public:
   std::string type_;

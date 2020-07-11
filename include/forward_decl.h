@@ -40,5 +40,28 @@ class NewExpression;
 class ArrayDeclaration;
 class ArrayAssignment;
 class ArrayExpression;
+class LogicOrExpression;
+class LogicAndExpression;
+
+namespace ir_tree {
+
+class BinOpExpression;
+class CallExpression;
+class MoveStatement;
+class ConstExpression;
+class EseqExpression;
+class MemExpression;
+class NameExpression;
+class TempExpression;
+
+class ExpStatement;
+class JumpConditionalStatement;
+class JumpStatement;
+class LabelStatement;
+class MoveStatement;
+class SeqStatement;
+class ExpressionList;
+class IRPrintStatement;
+}
 
 #endif //MYCOMPILLER_FORWARD_DECL_H

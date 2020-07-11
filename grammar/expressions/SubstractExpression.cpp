@@ -1,5 +1,5 @@
 #include "SubstractExpression.h"
 
-void SubstractExpression::AcceptVisitor(BaseVisitor* visitor) {
+void SubstractExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

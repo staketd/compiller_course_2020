@@ -5,7 +5,7 @@
 
 class ThisExpression : public Expression {
  public:
-  void AcceptVisitor(BaseVisitor*);
+  void AcceptVisitor(BaseASTVisitor*);
 };
 
 #endif  // MYCOMPILLER_THISEXPRESSION_H

@@ -3,7 +3,7 @@
 #include <sources.h>
 #include <iostream>
 #include <algorithm>
-#include <error_macro.h>
+#include <macros.h>
 #include "objects/ObjectsSupport.cpp"
 #include "types/TypesSupport.cpp"
 
@@ -324,4 +324,16 @@ void FunctionCallVisitor::Visit(ArrayExpression* expression) {
     ERROR("index must be more than -1", expression);
   }
   last_value_set_ = array->array_[index];
+}
+
+void FunctionCallVisitor::Visit(LogicAndExpression* expression) {
+  auto result = VisitAndReturnValue(expression->first_)->ToInt() &&
+                VisitAndReturnValue(expression->second_)->ToInt();
+  last_value_set_ = std::make_shared<BoolObject>(result);
+}
+
+void FunctionCallVisitor::Visit(LogicOrExpression* expression) {
+  auto result = VisitAndReturnValue(expression->first_)->ToInt() ||
+                VisitAndReturnValue(expression->second_)->ToInt();
+  last_value_set_ = std::make_shared<BoolObject>(result);
 }

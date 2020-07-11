@@ -2,11 +2,11 @@
 #ifndef MYCOMPILLER_TEMPLATEBASEVISITOR_H
 #define MYCOMPILLER_TEMPLATEBASEVISITOR_H
 
-#include <BaseVisitor.h>
+#include <BaseVisitors.h>
 #include <Expression.h>
 
 template <typename T>
-class TemplateBaseVisitor : public BaseVisitor {
+class TemplateBaseVisitor : public BaseASTVisitor {
 public:
     T VisitAndReturnValue(BaseASTClass*);
 

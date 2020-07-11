@@ -1,7 +1,7 @@
 
 #include "BuildSymbolLayerTree.h"
 #include <include/sources.h>
-#include "include/error_macro.h"
+#include "include/macros.h"
 #include "types/TypesSupport.cpp"
 
 void BuildSymbolLayerTree::Visit(StatementList* statements) {
@@ -280,4 +280,13 @@ void BuildSymbolLayerTree::Visit(ArrayExpression* expression) {
           expression);
   }
   expression->expression_->AcceptVisitor(this);
+}
+
+void BuildSymbolLayerTree::Visit(LogicAndExpression* expression) {
+  expression->first_->AcceptVisitor(this);
+  expression->second_->AcceptVisitor(this);
+}
+void BuildSymbolLayerTree::Visit(LogicOrExpression* expression) {
+  expression->first_->AcceptVisitor(this);
+  expression->second_->AcceptVisitor(this);
 }

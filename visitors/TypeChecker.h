@@ -1,7 +1,7 @@
 
 #ifndef MYCOMPILLER_VISITORS_TYPECHECKER_H_
 #define MYCOMPILLER_VISITORS_TYPECHECKER_H_
-#include <BaseVisitor.h>
+#include <BaseVisitors.h>
 #include <ScopeLayerTree.h>
 #include <FunctionMap.h>
 #include <TemplateBaseVisitor.h>
@@ -49,6 +49,8 @@ class TypeChecker : public TemplateBaseVisitor<std::shared_ptr<BaseType>> {
   void Visit(ArrayDeclaration*) override;
   void Visit(ArrayAssignment*) override;
   void Visit(ArrayExpression*) override;
+  void Visit(LogicOrExpression*) override;
+  void Visit(LogicAndExpression*) override;
 
   void CheckIntegerOperation(BinaryExpression*);
 

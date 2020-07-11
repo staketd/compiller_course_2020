@@ -7,7 +7,7 @@
 class ReadStatement: public Statement {
 public:
     explicit ReadStatement(std::string var);
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
     [[nodiscard]] std::string GetVariableName() const;
 private:
     std::string variable_;

@@ -1,5 +1,6 @@
 
 #include "Temp.h"
+size_t ir_tree::Temp::counter = 0;
 
 ir_tree::Temp::Temp() : name_(std::to_string(counter++)) {
 }

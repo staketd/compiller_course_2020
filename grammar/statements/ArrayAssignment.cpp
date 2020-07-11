@@ -1,7 +1,7 @@
 
 #include "ArrayAssignment.h"
 
-void ArrayAssignment::AcceptVisitor(BaseVisitor* visitor) {
+void ArrayAssignment::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }
 

@@ -15,6 +15,7 @@ class Temp {
   static size_t counter;
 };
 
+
 } // namespace ir_tree
 
 #endif  // MYCOMPILLER_TEMP_H

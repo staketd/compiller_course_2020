@@ -8,7 +8,7 @@
 class Assignment: public Statement {
 public:
     Assignment(std::string variable, Expression* expression);
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
     Expression* expression_;
     std::string variable_;
 };

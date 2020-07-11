@@ -7,7 +7,7 @@
 class WhileStatement : public Statement {
 public:
     WhileStatement(Expression*, Scope*);
-    void AcceptVisitor(BaseVisitor*);
+    void AcceptVisitor(BaseASTVisitor*);
 
 public:
     Expression* check_expression_;

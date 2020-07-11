@@ -1,6 +1,6 @@
 #include "CallArgumentList.h"
 
-void CallArgumentList::AcceptVisitor(BaseVisitor* visitor) {
+void CallArgumentList::AcceptVisitor(BaseASTVisitor* visitor) {
   visitor->Visit(this);
 }
 

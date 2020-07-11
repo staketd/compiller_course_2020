@@ -1,5 +1,5 @@
 #include "MulExpression.h"
 
-void MulExpression::AcceptVisitor(BaseVisitor* visitor) {
+void MulExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }

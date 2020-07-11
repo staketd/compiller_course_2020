@@ -7,7 +7,7 @@
 class Program : BaseASTClass {
  public:
   explicit Program(ClassMain*, ClassList*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   ClassMain* main_;

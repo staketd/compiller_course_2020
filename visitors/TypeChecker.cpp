@@ -1,7 +1,7 @@
 
 #include "TypeChecker.h"
 #include <include/sources.h>
-#include "include/error_macro.h"
+#include "include/macros.h"
 #include "types/TypesSupport.cpp"
 
 void TypeChecker::Visit(StatementList* statements) {
@@ -18,7 +18,8 @@ void TypeChecker::Visit(Assignment* assignment) {
   auto right_type = VisitAndReturnValue(assignment->expression_);
   if (!IsConvertible(left_type, right_type)) {
     ERROR("Can not assign " + right_type->TypeName() + " to " +
-          left_type->TypeName(), assignment);
+              left_type->TypeName(),
+          assignment);
   }
 }
 
@@ -29,7 +30,8 @@ void TypeChecker::CheckIntegerOperation(BinaryExpression* expression) {
   bool result = IsConvertible(first_type, second_type);
   if (!result) {
     ERROR("Invalid operands to binary expression (\"" + first_type->TypeName() +
-          "\" and \"" + second_type->TypeName() + "\")", expression);
+              "\" and \"" + second_type->TypeName() + "\")",
+          expression);
   }
 }
 
@@ -131,7 +133,8 @@ void TypeChecker::Visit(VariableDeclaration* vardecl) {
   if (!left_type->IsSameWith(right_type) &&
       !IsConvertible(right_type, left_type)) {
     ERROR("Can not assign " + right_type->TypeName() + " to " +
-          left_type->TypeName(), vardecl);
+              left_type->TypeName(),
+          vardecl);
   }
 }
 
@@ -192,6 +195,12 @@ void TypeChecker::Visit(MethodCallExpression* expression) {
   }
 
   ScopeLayer* class_scope = tree_.Get(Symbol(expr_type->TypeName()));
+  expression->class_type_name_ = expr_type->TypeName();
+  if (!class_scope->HasSymbol(Symbol(expression->name_))) {
+    ERROR("Class \"" + expr_type->TypeName() + "\" has no member \"" +
+              expression->name_ + "\"",
+          expression)
+  }
   auto type = class_scope->GetType(Symbol(expression->name_));
 
   if (!type->IsFunction()) {
@@ -206,7 +215,8 @@ void TypeChecker::Visit(MethodCallExpression* expression) {
 
   if (callee_arguments != passed_arguments) {
     ERROR(std::to_string(callee_arguments) + " Arguments expected, but " +
-          std::to_string(passed_arguments) + " were given\n", expression);
+              std::to_string(passed_arguments) + " were given\n",
+          expression);
   }
 
   for (size_t i = 0; i < callee_arguments; ++i) {
@@ -215,7 +225,8 @@ void TypeChecker::Visit(MethodCallExpression* expression) {
     if (!IsConvertible(arg_type, func_type) &&
         !arg_type->IsSameWith(func_type)) {
       ERROR("Expected \"" + func_type->TypeName() + "\" but " +
-            arg_type->TypeName() + "\" was given", expression);
+                arg_type->TypeName() + "\" was given",
+            expression);
     }
   }
 
@@ -240,7 +251,8 @@ void TypeChecker::Visit(ReturnStatement* statement) {
   auto return_type = CreateTypePtr(current_method_->return_type_);
   if (!IsConvertible(type, return_type) && !type->IsSameWith(return_type)) {
     ERROR("Return type is \"" + return_type->TypeName() + "\" but \"" +
-          type->TypeName() + "\" was given", statement);
+              type->TypeName() + "\" was given",
+          statement);
   }
 }
 
@@ -294,7 +306,8 @@ void TypeChecker::Visit(ArrayAssignment* assignment) {
   auto right_type = VisitAndReturnValue(assignment->expression_);
   if (!IsConvertible(left_type, right_type)) {
     ERROR("Cannot assign \"" + right_type->TypeName() + "\" to \"" +
-          left_type->TypeName(), assignment);
+              left_type->TypeName(),
+          assignment);
   }
 }
 
@@ -306,4 +319,32 @@ void TypeChecker::Visit(ArrayExpression* expression) {
     ERROR("\"" + expression->name_ + "\" is not an array!", expression);
   }
   last_value_set_ = array_type->array_type_;
+}
+
+void TypeChecker::Visit(LogicOrExpression* expression) {
+  auto left_type = VisitAndReturnValue(expression->first_);
+  auto right_type = VisitAndReturnValue(expression->second_);
+  if (!left_type->IsBool() && !left_type->IsInteger()) {
+    ERROR("Cannot convert + \"" + left_type->TypeName() + "\" to Bool",
+          expression);
+  }
+  if (!right_type->IsBool() && !right_type->IsInteger()) {
+    ERROR("Cannot convert + \"" + right_type->TypeName() + "\" to Bool",
+          expression);
+  }
+  last_value_set_ = CreateTypePtr("Bool");
+}
+
+void TypeChecker::Visit(LogicAndExpression* expression) {
+  auto left_type = VisitAndReturnValue(expression->first_);
+  auto right_type = VisitAndReturnValue(expression->second_);
+  if (!left_type->IsBool() && !left_type->IsInteger()) {
+    ERROR("Cannot convert + \"" + left_type->TypeName() + "\" to Bool",
+          expression);
+  }
+  if (!right_type->IsBool() && !right_type->IsInteger()) {
+    ERROR("Cannot convert + \"" + right_type->TypeName() + "\" to Bool",
+          expression);
+  }
+  last_value_set_ = CreateTypePtr("Bool");
 }

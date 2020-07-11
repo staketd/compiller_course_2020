@@ -52,5 +52,30 @@
 #include <ArrayType.h>
 #include <ArrayAssignment.h>
 #include <ArrayExpression.h>
+#include <LogicAndExpression.h>
+#include <LogicOrExpression.h>
+
+#include <BinOpExpression.h>
+#include <CallExpression.h>
+#include <ConstExpression.h>
+#include <EseqExpression.h>
+#include <MoveStatement.h>
+#include <ExpressionWrapper.h>
+#include <StatementWrapper.h>
+#include <BinOperatorType.h>
+#include <LogicOperatorType.h>
+#include <SeqStatement.h>
+#include <CompareConditionalWrapper.h>
+#include <LabelStatement.h>
+#include <JumpStatement.h>
+#include <NameExpression.h>
+#include <ExpressionList.h>
+#include <MemExpression.h>
+#include <AndConditionalWrapper.h>
+#include <OrConditionalWrapper.h>
+#include <TempExpression.h>
+#include <ExpStatement.h>
+#include <JumpConditionalStatement.h>
+#include <IRPrintStatement.h>
 
 #endif //MYCOMPILLER_SOURCES_H

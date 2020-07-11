@@ -73,6 +73,8 @@ blank [ \t\r]
 "new"       return yy::parser::make_NEW(loc);
 "["         return yy::parser::make_SLPAREN(loc);
 "]"         return yy::parser::make_SRPAREN(loc);
+"&&"        return yy::parser::make_LOGICAND(loc);
+"||"        return yy::parser::make_LOGICOR(loc);
 
 {int}       return make_NUMBER(yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER(yytext, loc);

@@ -11,7 +11,7 @@ class ClassBody : public BaseASTClass {
   ClassBody() = default;
   void AddMethod(ClassMethod*);
   void AddField(ClassField*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::vector<ClassMethod*> methods_;

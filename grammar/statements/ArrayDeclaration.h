@@ -7,7 +7,7 @@
 class ArrayDeclaration : public Statement {
  public:
   ArrayDeclaration(const std::string&, const std::string&, size_t);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   size_t size_;

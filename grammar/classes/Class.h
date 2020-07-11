@@ -7,7 +7,7 @@
 class Class : public BaseASTClass  {
  public:
   Class(const std::string&, ClassBody*);
-  void AcceptVisitor(BaseVisitor*) override;
+  void AcceptVisitor(BaseASTVisitor*) override;
 
  public:
   std::string name_;

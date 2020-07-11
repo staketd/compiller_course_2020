@@ -1,5 +1,5 @@
 
-#ifndef MYCOMPILLER_PRINTSTATEMENT_H
+#ifndef MYCOMPILLER_IRPRINTSTATEMENT_H
 #define MYCOMPILLER_PRINTSTATEMENT_H
 
 #include <Statement.h>
@@ -9,10 +9,10 @@
 class PrintStatement: public Statement {
 public:
     explicit PrintStatement(Expression* );
-    void AcceptVisitor(BaseVisitor*) override;
+    void AcceptVisitor(BaseASTVisitor*) override;
 
     Expression* expr_;
 };
 
 
-#endif //MYCOMPILLER_PRINTSTATEMENT_H
+#endif  // MYCOMPILLER_IRPRINTSTATEMENT_H

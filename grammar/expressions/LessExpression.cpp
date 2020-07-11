@@ -1,6 +1,6 @@
 
 #include "LessExpression.h"
 
-void LessExpression::AcceptVisitor(BaseVisitor* visitor) {
+void LessExpression::AcceptVisitor(BaseASTVisitor* visitor) {
     visitor->Visit(this);
 }
