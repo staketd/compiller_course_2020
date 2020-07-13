@@ -19,7 +19,7 @@ void IRTreeBuildVisitor::Visit(StatementList* statements) {
     }
   }
   ir_tree::IRStatement* prev = stmts.back();
-  for (int i = statements->statements_.size() - 2; i >= 0; --i) {
+  for (int i = stmts.size() - 2; i >= 0; --i) {
     prev = new ir_tree::SeqStatement(stmts[i], prev);
   }
   last_value_set_ = new ir_tree::StatementWrapper(prev);
