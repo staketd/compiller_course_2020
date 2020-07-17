@@ -11,6 +11,8 @@ class ExpStatement : public ir_tree::IRStatement {
   ExpStatement(ir_tree::IRExpression*);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   ir_tree::IRExpression* expression_;
 };

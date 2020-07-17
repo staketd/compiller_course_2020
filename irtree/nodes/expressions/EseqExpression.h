@@ -12,6 +12,8 @@ class EseqExpression : public ir_tree::IRExpression {
   EseqExpression(ir_tree::IRStatement*, ir_tree::IRExpression*);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   IRStatement* statement_;
   IRExpression* expression_;

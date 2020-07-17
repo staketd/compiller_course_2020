@@ -8,3 +8,7 @@ ir_tree::MemExpression::MemExpression(IRExpression* expression)
 void ir_tree::MemExpression::AcceptVisitor(ir_tree::BaseIRVisitor* visitor) {
   visitor->Visit(this);
 }
+
+ir_tree::IRNodeType ir_tree::MemExpression::GetType() {
+  return IRNodeType::Mem;
+}

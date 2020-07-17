@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
         } else if (!driver.Parse(argv[i])) {
             driver.Evaluate();
             driver.BuildIrTree();
-            driver.Print();
+            driver.PrintByStatements();
         } else {
             result = 1;
         }

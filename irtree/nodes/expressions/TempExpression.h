@@ -11,6 +11,8 @@ class TempExpression : public ir_tree::IRExpression {
   explicit TempExpression(const ir_tree::Temp&);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType();
+
  public:
   Temp temp_;
 };

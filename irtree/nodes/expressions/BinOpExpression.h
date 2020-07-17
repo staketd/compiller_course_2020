@@ -11,6 +11,7 @@ class BinOpExpression : public IRExpression {
  public:
   BinOpExpression(BinOperatorType, IRExpression*, IRExpression*);
   void AcceptVisitor(BaseIRVisitor*) override;
+  ir_tree::IRNodeType GetType() override;
 
  public:
   BinOperatorType type_;

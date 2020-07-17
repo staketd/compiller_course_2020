@@ -8,3 +8,7 @@ ir_tree::EseqExpression::EseqExpression(ir_tree::IRStatement* statement,
 void ir_tree::EseqExpression::AcceptVisitor(ir_tree::BaseIRVisitor* visitor) {
   visitor->Visit(this);
 }
+
+ir_tree::IRNodeType ir_tree::EseqExpression::GetType() {
+  return IRNodeType::Eseq;
+}

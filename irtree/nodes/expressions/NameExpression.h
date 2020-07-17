@@ -10,6 +10,8 @@ class NameExpression : public ir_tree::IRExpression {
   NameExpression(Label);
   void AcceptVisitor(ir_tree::BaseIRVisitor*);
 
+  IRNodeType GetType() override;
+
  public:
   Label label_;
 };

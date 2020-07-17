@@ -10,6 +10,8 @@ class LabelStatement : public ir_tree::IRStatement {
   LabelStatement(ir_tree::Label);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   Label label_;
 };

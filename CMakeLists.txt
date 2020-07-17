@@ -186,7 +186,12 @@ set(
         irtree/tree_wrapper/conditional_wrappers/NegateConditionalWrapper.cpp
         irtree/tree_wrapper/conditional_wrappers/OrConditionalWrapper.cpp
         irtree/tree_wrapper/conditional_wrappers/CompareConditionalWrapper.cpp
+
         irtree/visitors/IRPrintVisitor.cpp
+        irtree/visitors/IRUnion.h
+        irtree/visitors/EliminateDoubleCalls.cpp
+        irtree/visitors/EliminateEseq.cpp
+        irtree/visitors/LinearizeIRTree.cpp
 )
 
 add_executable(

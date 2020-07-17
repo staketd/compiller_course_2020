@@ -14,3 +14,7 @@ void ir_tree::JumpConditionalStatement::AcceptVisitor(
     ir_tree::BaseIRVisitor* visitor) {
   visitor->Visit(this);
 }
+
+ir_tree::IRNodeType ir_tree::JumpConditionalStatement::GetType() {
+  return IRNodeType::CJump;
+}

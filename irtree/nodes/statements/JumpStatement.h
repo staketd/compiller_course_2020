@@ -10,6 +10,8 @@ class JumpStatement : public ir_tree::IRStatement {
   JumpStatement(Label);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   Label label_;
 };

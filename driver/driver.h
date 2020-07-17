@@ -31,12 +31,14 @@ class Driver {
   void BuildIrTree();
   void CheckTypes();
   void Print() const;
+  void PrintByStatements() const;
 
   int Parse(const std::string& f);
   friend class Scanner;
 
  private:
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> methods_;
+  std::unordered_map<Symbol, std::vector<ir_tree::IRStatement*>> method_stmts_;
 
   std::ifstream stream_;
   ScopeLayerTree global_scope_;

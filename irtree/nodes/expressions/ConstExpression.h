@@ -12,6 +12,7 @@ class ConstExpression : public ir_tree::IRExpression {
   int Value();
 
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
+  IRNodeType GetType() override;
 
  private:
   int value_;

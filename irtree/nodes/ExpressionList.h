@@ -11,6 +11,8 @@ class ExpressionList : public ir_tree::BaseIRNode {
   ExpressionList(std::vector<IRExpression*>);
   void AcceptVisitor(ir_tree::BaseIRVisitor*);
 
+  IRNodeType GetType() override;
+
  public:
   std::vector<IRExpression*> expressions_;
 };

@@ -202,6 +202,8 @@ void TypeChecker::Visit(MethodCallExpression* expression) {
           expression)
   }
   auto type = class_scope->GetType(Symbol(expression->name_));
+  expression->has_return_value_ = !type->IsVoid();
+
 
   if (!type->IsFunction()) {
     ERROR(expression->name_ + "is not a function\n", expression);

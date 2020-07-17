@@ -1,7 +1,7 @@
 class Main {
     public static void main() {
         Test test = new Test();
-        print(test.binpow(2, 10));
+        print(test.binpow(2, test.binpow(2, 1)));
     }
 }
 

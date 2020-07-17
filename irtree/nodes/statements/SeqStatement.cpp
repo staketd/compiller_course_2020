@@ -9,3 +9,7 @@ ir_tree::SeqStatement::SeqStatement(ir_tree::IRStatement* first,
 void ir_tree::SeqStatement::AcceptVisitor(ir_tree::BaseIRVisitor* visitor) {
   visitor->Visit(this);
 }
+
+ir_tree::IRNodeType ir_tree::SeqStatement::GetType() {
+  return IRNodeType::Seq;
+}

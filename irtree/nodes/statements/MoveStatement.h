@@ -10,9 +10,11 @@ class MoveStatement : public ir_tree::IRStatement {
   MoveStatement(ir_tree::IRExpression* source, ir_tree::IRExpression* dest);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   ir_tree::IRExpression* source_;
-  ir_tree::IRExpression* target_;
+  ir_tree::IRExpression* destination_;
 };
 }  // namespace ir_tree
 #endif  // MYCOMPILLER_MOVESTATEMENT_H

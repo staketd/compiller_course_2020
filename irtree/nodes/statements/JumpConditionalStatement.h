@@ -19,6 +19,8 @@ class JumpConditionalStatement : public ir_tree::IRStatement {
       );
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   LogicOperatorType operator_;
   ir_tree::IRExpression* left_;

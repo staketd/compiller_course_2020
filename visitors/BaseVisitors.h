@@ -45,6 +45,8 @@ public:
     virtual void Visit(ArrayExpression*) = 0;
     virtual void Visit(LogicOrExpression*) = 0;
     virtual void Visit(LogicAndExpression*) = 0;
+
+    virtual ~BaseASTVisitor() = default;
 };
 
 namespace ir_tree {
@@ -66,6 +68,8 @@ class BaseIRVisitor {
   virtual void Visit(SeqStatement*) = 0;
   virtual void Visit(ExpressionList*) = 0;
   virtual void Visit(IRPrintStatement*) = 0;
+
+  virtual ~BaseIRVisitor() = default;
 };
 
 }

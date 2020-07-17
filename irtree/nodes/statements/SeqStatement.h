@@ -8,6 +8,8 @@ class SeqStatement : public ir_tree::IRStatement {
   SeqStatement(IRStatement*, IRStatement*);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   IRStatement* first_;
   IRStatement* second_;

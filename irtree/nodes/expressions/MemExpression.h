@@ -10,6 +10,8 @@ class MemExpression : public ir_tree::IRExpression {
   MemExpression(IRExpression* expression);
   void AcceptVisitor(ir_tree::BaseIRVisitor*);
 
+  IRNodeType GetType() override;
+
  public:
   IRExpression* expression_;
 };

@@ -15,6 +15,7 @@ class MethodCallExpression : public Expression {
   CallArgumentList* arguments_;
   std::string name_;
   std::string class_type_name_;
+  bool has_return_value_;
 };
 
 #endif  // MYCOMPILLER_METHODCALLEXPRESSION_H

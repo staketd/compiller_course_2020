@@ -74,6 +74,7 @@ void ir_tree::IRPrintVisitor::Visit(ir_tree::MemExpression* expression) {
 
 void ir_tree::IRPrintVisitor::Visit(ir_tree::NameExpression* expression) {
   PrintTabs();
+
   stream_ << "NameExpression: " << expression->label_.ToString() << "\n";
 }
 
@@ -140,7 +141,7 @@ void ir_tree::IRPrintVisitor::Visit(ir_tree::MoveStatement* statement) {
   stream_ << "MoveStatement:\n";
   ++tabs_;
   statement->source_->AcceptVisitor(this);
-  statement->target_->AcceptVisitor(this);
+  statement->destination_->AcceptVisitor(this);
   --tabs_;
 }
 

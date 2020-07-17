@@ -10,6 +10,8 @@ class IRPrintStatement : public IRStatement {
   IRPrintStatement(IRExpression*);
   void AcceptVisitor(ir_tree::BaseIRVisitor*) override;
 
+  IRNodeType GetType() override;
+
  public:
   IRExpression* expression_;
 };

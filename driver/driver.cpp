@@ -7,6 +7,9 @@
 #include <FunctionCallVisitor.h>
 #include <IRTreeBuildVisitor.h>
 #include <IRPrintVisitor.h>
+#include <EliminateDoubleCalls.h>
+#include <EliminateEseq.h>
+#include <LinearizeIRTree.h>
 
 Driver::Driver()
     : trace_parsing(false),
@@ -55,11 +58,14 @@ void Driver::Evaluate() {
 }
 
 void Driver::Print() const {
-  for (auto method: methods_) {
+  for (auto method : methods_) {
     ir_tree::IRPrintVisitor printer(method.first.GetName() + "_irt.txt");
-    method.second->ToStatement()->AcceptVisitor(&printer);
+    ir_tree::IRStatement* stmt = method.second->ToStatement();
+    stmt->AcceptVisitor(&printer);
   }
 }
+
+
 
 void Driver::BuildSymbolTree() {
   BuildSymbolLayerTree build(global_scope_, func_map_, class_map_);
@@ -75,4 +81,37 @@ void Driver::BuildIrTree() {
   IRTreeBuildVisitor builder;
   builder.Build(program);
   methods_ = builder.GetMethods();
+
+
+  for (auto& method : methods_) {
+    if (method.first != Symbol("Main::main")) {
+      continue;
+    }
+    ir_tree::EliminateDoubleCalls eliminate_double_calls;
+    method.second->ToStatement()->AcceptVisitor(&eliminate_double_calls);
+    method.second = eliminate_double_calls.GetTree();
+
+    Print();
+    ir_tree::EliminateEseq eliminate_eseqs;
+
+    method.second->ToStatement()->AcceptVisitor(&eliminate_eseqs);
+    method.second = new ir_tree::StatementWrapper(eliminate_eseqs.GetTree());
+
+    Print();
+    ir_tree::LinearizeIRTree linearize;
+
+    method.second->ToStatement()->AcceptVisitor(&linearize);
+    method.second = new ir_tree::StatementWrapper(linearize.GetTree());
+
+    method_stmts_[method.first] = linearize.GetStatementList();
+  }
+}
+
+void Driver::PrintByStatements() const {
+  for (auto method : method_stmts_) {
+    ir_tree::IRPrintVisitor printer(method.first.GetName());
+    for (auto stmt: method.second) {
+      stmt->AcceptVisitor(&printer);
+    }
+  }
 }
