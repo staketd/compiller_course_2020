@@ -30,8 +30,8 @@ class Driver {
   void BuildSymbolTree();
   void BuildIrTree();
   void CheckTypes();
-  void Print() const;
-  void PrintByStatements() const;
+  void Print(const std::string&) const;
+  void PrintByStatements(const std::string&) const;
 
   int Parse(const std::string& f);
   friend class Scanner;
@@ -39,6 +39,8 @@ class Driver {
  private:
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> methods_;
   std::unordered_map<Symbol, std::vector<ir_tree::IRStatement*>> method_stmts_;
+
+  bool linear_ = false;
 
   std::ifstream stream_;
   ScopeLayerTree global_scope_;

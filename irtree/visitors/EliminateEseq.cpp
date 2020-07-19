@@ -103,7 +103,7 @@ void ir_tree::EliminateEseq::Visit(ir_tree::JumpStatement* stmt) {
 
 void ir_tree::EliminateEseq::Visit(ir_tree::JumpConditionalStatement* stmt) {
   auto left_expr = VisitAndReturnVisitor(stmt->left_).expression_;
-  auto right_expr = VisitAndReturnVisitor(stmt->left_).expression_;
+  auto right_expr = VisitAndReturnVisitor(stmt->right_).expression_;
 
   if (left_expr->GetType() == IRNodeType::Eseq) {
     EseqExpression* left_eseq = dynamic_cast<EseqExpression*>(left_expr);

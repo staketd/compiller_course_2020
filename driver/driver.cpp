@@ -57,15 +57,17 @@ void Driver::Evaluate() {
   visitor.ExecuteCode(func_map_.Get(Symbol(program->main_->name_ + "::main")));
 }
 
-void Driver::Print() const {
+void Driver::Print(const std::string& suffix) const {
+  if (linear_) {
+    PrintByStatements(suffix);
+    return;
+  }
   for (auto method : methods_) {
-    ir_tree::IRPrintVisitor printer(method.first.GetName() + "_irt.txt");
+    ir_tree::IRPrintVisitor printer(method.first.GetName() + suffix + ".txt");
     ir_tree::IRStatement* stmt = method.second->ToStatement();
     stmt->AcceptVisitor(&printer);
   }
 }
-
-
 
 void Driver::BuildSymbolTree() {
   BuildSymbolLayerTree build(global_scope_, func_map_, class_map_);
@@ -82,22 +84,20 @@ void Driver::BuildIrTree() {
   builder.Build(program);
   methods_ = builder.GetMethods();
 
-
   for (auto& method : methods_) {
-    if (method.first != Symbol("Main::main")) {
-      continue;
-    }
     ir_tree::EliminateDoubleCalls eliminate_double_calls;
     method.second->ToStatement()->AcceptVisitor(&eliminate_double_calls);
     method.second = eliminate_double_calls.GetTree();
-
-    Print();
+  }
+  Print("DCalls");
+  for (auto& method : methods_) {
     ir_tree::EliminateEseq eliminate_eseqs;
 
     method.second->ToStatement()->AcceptVisitor(&eliminate_eseqs);
     method.second = new ir_tree::StatementWrapper(eliminate_eseqs.GetTree());
-
-    Print();
+  }
+  Print("NoEseqs");
+  for (auto& method : methods_) {
     ir_tree::LinearizeIRTree linearize;
 
     method.second->ToStatement()->AcceptVisitor(&linearize);
@@ -105,12 +105,15 @@ void Driver::BuildIrTree() {
 
     method_stmts_[method.first] = linearize.GetStatementList();
   }
+  linear_ = true;
+  Print("Linear");
 }
 
-void Driver::PrintByStatements() const {
+void Driver::PrintByStatements(const std::string& suffix) const {
   for (auto method : method_stmts_) {
-    ir_tree::IRPrintVisitor printer(method.first.GetName());
-    for (auto stmt: method.second) {
+    ir_tree::IRPrintVisitor printer(method.first.GetName() + "_" + suffix +
+                                    ".txt");
+    for (auto stmt : method.second) {
       stmt->AcceptVisitor(&printer);
     }
   }
