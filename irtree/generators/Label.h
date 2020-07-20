@@ -17,6 +17,8 @@ class Label {
   static size_t counter;
 };
 
+
+
 } // namespace IRTree
 
 #endif  // MYCOMPILLER_LABEL_H

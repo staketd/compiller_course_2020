@@ -66,6 +66,7 @@
 #include <LogicOperatorType.h>
 #include <SeqStatement.h>
 #include <CompareConditionalWrapper.h>
+#include <NegateConditionalWrapper.h>
 #include <LabelStatement.h>
 #include <JumpStatement.h>
 #include <NameExpression.h>

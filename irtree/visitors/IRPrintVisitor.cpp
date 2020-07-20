@@ -163,8 +163,8 @@ void ir_tree::IRPrintVisitor::Visit(ir_tree::ExpressionList* list) {
   }
   --tabs_;
 }
-ir_tree::IRPrintVisitor::IRPrintVisitor(std::string file)
-    : stream_(file), tabs_(0) {
+ir_tree::IRPrintVisitor::IRPrintVisitor(std::ofstream& stream)
+    : stream_(stream), tabs_(0) {
 }
 
 void ir_tree::IRPrintVisitor::Visit(IRPrintStatement* stmt) {

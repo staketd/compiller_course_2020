@@ -178,19 +178,19 @@ void IRTreeBuildVisitor::Visit(WhileStatement* while_stmt) {
   auto stmts = VisitAndReturnValue(while_stmt->scope_);
   ir_tree::Label check_label;
   ir_tree::Label start_label;
-  ir_tree::Label end_label;
+  ir_tree::Label done_label;
 
   last_value_set_ = new ir_tree::StatementWrapper(new ir_tree::SeqStatement(
       new ir_tree::LabelStatement(check_label),
       new ir_tree::SeqStatement(
-          cond->ToConditional(start_label, end_label),
+          cond->ToConditional(start_label, done_label),
           new ir_tree::SeqStatement(
               new ir_tree::LabelStatement(start_label),
               new ir_tree::SeqStatement(
                   stmts->ToStatement(),
                   new ir_tree::SeqStatement(
                       new ir_tree::JumpStatement(check_label),
-                      new ir_tree::LabelStatement(end_label)))))));
+                      new ir_tree::LabelStatement(done_label)))))));
 }
 
 void IRTreeBuildVisitor::Visit(CallArgumentList*) {

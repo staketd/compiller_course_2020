@@ -31,6 +31,7 @@ include_directories(
         irtree/nodes
         irtree/nodes/expressions
         irtree/nodes/statements
+        irtree/
         .
 )
 
@@ -129,6 +130,7 @@ set(
         objects/BoolObject.cpp objects/BoolObject.h
 
         include/macros.h
+        include/Print.h
         SetLocation.h
         grammar/classes/CallArgumentList.cpp
         grammar/classes/MethodArgumentList.cpp
@@ -192,6 +194,9 @@ set(
         irtree/visitors/EliminateDoubleCalls.cpp
         irtree/visitors/EliminateEseq.cpp
         irtree/visitors/LinearizeIRTree.cpp
+
+        irtree/Block.cpp
+        irtree/Trace.cpp
 )
 
 add_executable(

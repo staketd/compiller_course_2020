@@ -10,6 +10,8 @@
 #include <EliminateDoubleCalls.h>
 #include <EliminateEseq.h>
 #include <LinearizeIRTree.h>
+#include <Block.h>
+#include <Print.h>
 
 Driver::Driver()
     : trace_parsing(false),
@@ -57,13 +59,18 @@ void Driver::Evaluate() {
   visitor.ExecuteCode(func_map_.Get(Symbol(program->main_->name_ + "::main")));
 }
 
-void Driver::Print(const std::string& suffix) const {
+void Driver::Print(const std::string& suffix) {
+  if (divided_into_traces_) {
+    PrintByTraces(suffix);
+    return;
+  }
   if (linear_) {
     PrintByStatements(suffix);
     return;
   }
   for (auto method : methods_) {
-    ir_tree::IRPrintVisitor printer(method.first.GetName() + suffix + ".txt");
+    std::ofstream stream(method.first.GetName() + suffix + ".txt");
+    ir_tree::IRPrintVisitor printer(stream);
     ir_tree::IRStatement* stmt = method.second->ToStatement();
     stmt->AcceptVisitor(&printer);
   }
@@ -107,14 +114,124 @@ void Driver::BuildIrTree() {
   }
   linear_ = true;
   Print("Linear");
+
+  DivideIntoBlocks();
+
+  divided_into_traces_ = true;
+
+  Print("Traces");
 }
 
 void Driver::PrintByStatements(const std::string& suffix) const {
   for (auto method : method_stmts_) {
-    ir_tree::IRPrintVisitor printer(method.first.GetName() + "_" + suffix +
-                                    ".txt");
+    std::ofstream stream(method.first.GetName() + "_" + suffix + ".txt");
+    ir_tree::IRPrintVisitor printer(stream);
     for (auto stmt : method.second) {
       stmt->AcceptVisitor(&printer);
+    }
+  }
+}
+
+void Driver::DivideIntoBlocks() {
+  for (auto& method : method_stmts_) {
+    auto blocks = DivideMethod(method.second);
+    blocks.back().SetJump(new ir_tree::JumpStatement(
+        ir_tree::Label(method.first.GetName() + "_done")));
+    blocks.back().last_block_ = true;
+
+    method_traces_[method.first] = ReorderBlocks(blocks);
+  }
+}
+
+std::vector<ir_tree::Block> Driver::DivideMethod(
+    std::vector<ir_tree::IRStatement*>& statements) {
+  std::vector<ir_tree::Block> blocks;
+  blocks.emplace_back();
+  for (auto stmt : statements) {
+    auto& block = blocks.back();
+    switch (stmt->GetType()) {
+      case ir_tree::IRNodeType::Label: {
+        auto label = dynamic_cast<ir_tree::LabelStatement*>(stmt);
+        if (block.GetLabel() == nullptr) {
+          block.SetLabel(label);
+        } else {
+          if (block.GetJump() == nullptr) {
+            block.SetJump(new ir_tree::JumpStatement(label->label_));
+          }
+          blocks.emplace_back();
+          blocks.back().SetLabel(label);
+        }
+        break;
+      }
+      case ir_tree::IRNodeType::Jump: {
+        auto jump = dynamic_cast<ir_tree::JumpStatement*>(stmt);
+        block.SetJump(jump);
+        break;
+      }
+      case ir_tree::IRNodeType::CJump: {
+        auto cjump = dynamic_cast<ir_tree::JumpConditionalStatement*>(stmt);
+        block.SetJump(cjump);
+        break;
+      }
+      default:
+        block.AddStatement(stmt);
+    }
+  }
+  return blocks;
+}
+
+std::vector<ir_tree::Trace> Driver::ReorderBlocks(
+    std::vector<ir_tree::Block>& blocks) {
+  std::vector<ir_tree::Trace> result;
+  std::unordered_map<std::string, ir_tree::Block*> block_by_label;
+  std::unordered_map<std::string, bool> used;
+  for (auto& block : blocks) {
+    block_by_label[block.GetLabel()->label_.ToString()] = &block;
+  }
+
+  for (size_t i = 0; i < blocks.size(); ++i) {
+    auto& block = blocks[i];
+    if (used[block.GetLabel()->label_.ToString()]) {
+      continue;
+    }
+    result.emplace_back();
+    ir_tree::Block* now_block = &block;
+    while (now_block != nullptr &&
+           !used[now_block->GetLabel()->label_.ToString()]) {
+      used[now_block->GetLabel()->label_.ToString()] = true;
+      result.back().AddBlock(*now_block);
+      if (now_block->GetJump()->GetType() == ir_tree::IRNodeType::CJump) {
+        auto jump = dynamic_cast<ir_tree::JumpConditionalStatement*>(
+            now_block->GetJump());
+        now_block = block_by_label[jump->label_false_.ToString()];
+      } else {
+        auto jump = dynamic_cast<ir_tree::JumpStatement*>(now_block->GetJump());
+        now_block = block_by_label[jump->label_.ToString()];
+      }
+    }
+  }
+
+  return result;
+}
+
+void Driver::PrintByTraces(const std::string& suffix) {
+  size_t trace_ind = 0;
+  for (auto& method : method_traces_) {
+    std::ofstream out(method.first.GetName() + "_" + suffix + ".txt");
+    ir_tree::IRPrintVisitor printer(out);
+    for (ir_tree::Trace& trace : method.second) {
+      MyPrint(out, "Trace №", trace_ind, "###################\n");
+      size_t block_ind = 0;
+      for (auto& block : trace.GetBlocks()) {
+        MyPrint(out, "Block №", block_ind, "-------------------\n");
+        block.GetLabel()->AcceptVisitor(&printer);
+        for (auto& stmt : block.GetStatements()) {
+          stmt->AcceptVisitor(&printer);
+        }
+        block.GetJump()->AcceptVisitor(&printer);
+        block_ind++;
+      }
+      trace_ind++;
     }
   }
 }

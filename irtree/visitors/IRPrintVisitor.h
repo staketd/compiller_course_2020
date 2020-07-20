@@ -8,7 +8,7 @@
 namespace ir_tree {
 class IRPrintVisitor : public ir_tree::BaseIRVisitor {
  public:
-  IRPrintVisitor(const std::string);
+  IRPrintVisitor(std::ofstream&);
  private:
   void Visit(BinOpExpression*) override;
   void Visit(CallExpression*) override;
@@ -27,7 +27,7 @@ class IRPrintVisitor : public ir_tree::BaseIRVisitor {
   void Visit(IRPrintStatement*) override;
 
   void PrintTabs();
-  std::ofstream stream_;
+  std::ofstream& stream_;
   size_t tabs_;
 };
 }  // namespace ir_tree
