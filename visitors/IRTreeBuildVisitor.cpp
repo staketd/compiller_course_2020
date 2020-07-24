@@ -200,8 +200,8 @@ void IRTreeBuildVisitor::Visit(ClassMethod* method) {
   current_frame_ = new ir_tree::IRFrameTranslator(Symbol(method->name_));
   VisitAndReturnValue(method->arguments_);
   auto stmts = VisitAndReturnValue(method->statements_);
-  ir_tree::Label method_label(current_class_name_ + "::" + method->name_);
-  methods_[Symbol(current_class_name_ + "::" + method->name_)] =
+  ir_tree::Label method_label(current_class_name_ + "__" + method->name_);
+  methods_[Symbol(current_class_name_ + "__" + method->name_)] =
       new ir_tree::StatementWrapper(new ir_tree::SeqStatement(
           new ir_tree::LabelStatement(method_label), stmts->ToStatement()));
 }
@@ -228,7 +228,7 @@ void IRTreeBuildVisitor::Visit(MethodCallExpression* expression) {
   }
   last_value_set_ = new ir_tree::ExpressionWrapper(new ir_tree::CallExpression(
       new ir_tree::NameExpression(
-          ir_tree::Label(expression->class_type_name_ + "::" + expression->name_)),
+          ir_tree::Label(expression->class_type_name_ + "__" + expression->name_)),
       new ir_tree::ExpressionList(args), expression->has_return_value_));
 }
 

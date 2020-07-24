@@ -75,8 +75,8 @@ void ir_tree::EliminateEseq::Visit(ir_tree::TempExpression* expression) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::EseqExpression* expression) {
-  auto stmt = VisitAndReturnVisitor(expression->statement_).statement_;
-  auto expr = VisitAndReturnVisitor(expression->expression_).expression_;
+  auto stmt = VisitAndReturnValue(expression->statement_).statement_;
+  auto expr = VisitAndReturnValue(expression->expression_).expression_;
   if (expr->GetType() == IRNodeType::Eseq) {
     EseqExpression* right_eseq = dynamic_cast<EseqExpression*>(expr);
     last_value_set_.expression_ = new EseqExpression(
@@ -87,7 +87,7 @@ void ir_tree::EliminateEseq::Visit(ir_tree::EseqExpression* expression) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::MemExpression* expression) {
-  auto expr = VisitAndReturnVisitor(expression->expression_).expression_;
+  auto expr = VisitAndReturnValue(expression->expression_).expression_;
   if (expr->GetType() == IRNodeType::Eseq) {
     EseqExpression* eseq = dynamic_cast<EseqExpression*>(expr);
     last_value_set_.expression_ = new EseqExpression(
@@ -102,8 +102,8 @@ void ir_tree::EliminateEseq::Visit(ir_tree::JumpStatement* stmt) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::JumpConditionalStatement* stmt) {
-  auto left_expr = VisitAndReturnVisitor(stmt->left_).expression_;
-  auto right_expr = VisitAndReturnVisitor(stmt->right_).expression_;
+  auto left_expr = VisitAndReturnValue(stmt->left_).expression_;
+  auto right_expr = VisitAndReturnValue(stmt->right_).expression_;
 
   if (left_expr->GetType() == IRNodeType::Eseq) {
     EseqExpression* left_eseq = dynamic_cast<EseqExpression*>(left_expr);
@@ -153,8 +153,8 @@ void ir_tree::EliminateEseq::Visit(ir_tree::LabelStatement* statement) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::MoveStatement* statement) {
-  auto src = VisitAndReturnVisitor(statement->source_).expression_;
-  auto dst = VisitAndReturnVisitor(statement->destination_).expression_;
+  auto src = VisitAndReturnValue(statement->source_).expression_;
+  auto dst = VisitAndReturnValue(statement->destination_).expression_;
   if (dst->GetType() == IRNodeType::Temp &&
       src->GetType() == IRNodeType::Eseq) {
     auto eseq = dynamic_cast<EseqExpression*>(src);
@@ -162,6 +162,7 @@ void ir_tree::EliminateEseq::Visit(ir_tree::MoveStatement* statement) {
     last_value_set_.statement_ = new SeqStatement(
         eseq->statement_,
         new MoveStatement(eseq->expression_, new TempExpression(temp->temp_)));
+    return;
   }
 
   if (dst->GetType() == IRNodeType::Mem) {
@@ -217,30 +218,17 @@ void ir_tree::EliminateEseq::Visit(ir_tree::MoveStatement* statement) {
           new SeqStatement(
               reordered.first,
               new MoveStatement(
-                  new CallExpression(
-                      eseq->expression_,
-                      reordered.second,
-                      call->has_return_value_
-                      ),
-                  new TempExpression(
-                      temp->temp_
-                      )
-                  )
-              )
-          );
+                  new CallExpression(eseq->expression_, reordered.second,
+                                     call->has_return_value_),
+                  new TempExpression(temp->temp_))));
       return;
     } else {
       last_value_set_.statement_ = new SeqStatement(
           reordered.first,
           new MoveStatement(
-              new CallExpression(
-                  call->function_name_,
-                  reordered.second,
-                  call->has_return_value_
-                  ),
-              new TempExpression(temp->temp_)
-              )
-          );
+              new CallExpression(call->function_name_, reordered.second,
+                                 call->has_return_value_),
+              new TempExpression(temp->temp_)));
       return;
     }
   }
@@ -249,13 +237,13 @@ void ir_tree::EliminateEseq::Visit(ir_tree::MoveStatement* statement) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::SeqStatement* stmt) {
-  auto first = VisitAndReturnVisitor(stmt->first_).statement_;
-  auto second = VisitAndReturnVisitor(stmt->second_).statement_;
+  auto first = VisitAndReturnValue(stmt->first_).statement_;
+  auto second = VisitAndReturnValue(stmt->second_).statement_;
   last_value_set_.statement_ = new ir_tree::SeqStatement(first, second);
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::IRPrintStatement* stmt) {
-  auto expr = VisitAndReturnVisitor(stmt->expression_).expression_;
+  auto expr = VisitAndReturnValue(stmt->expression_).expression_;
   if (expr->GetType() == IRNodeType::Eseq) {
     auto eseq = dynamic_cast<EseqExpression*>(expr);
 
@@ -267,7 +255,7 @@ void ir_tree::EliminateEseq::Visit(ir_tree::IRPrintStatement* stmt) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::ExpStatement* stmt) {
-  auto expr = VisitAndReturnVisitor(stmt->expression_).expression_;
+  auto expr = VisitAndReturnValue(stmt->expression_).expression_;
   if (expr->GetType() == IRNodeType::Eseq) {
     auto eseq = dynamic_cast<EseqExpression*>(expr);
 
@@ -281,29 +269,16 @@ void ir_tree::EliminateEseq::Visit(ir_tree::ExpStatement* stmt) {
       auto eseq = dynamic_cast<EseqExpression*>(call->function_name_);
       last_value_set_.statement_ = new SeqStatement(
           eseq->statement_,
-          new SeqStatement(
-              reordered.first,
-              new ExpStatement(
-                  new CallExpression(
-                      eseq->expression_,
-                      reordered.second,
-                      call->has_return_value_
-                      )
-                  )
-              )
-          );
+          new SeqStatement(reordered.first,
+                           new ExpStatement(new CallExpression(
+                               eseq->expression_, reordered.second,
+                               call->has_return_value_))));
       return;
     } else {
       last_value_set_.statement_ = new SeqStatement(
-          reordered.first,
-          new ExpStatement(
-              new CallExpression(
-                  call->function_name_,
-                  reordered.second,
-                  call->has_return_value_
-                  )
-              )
-          );
+          reordered.first, new ExpStatement(new CallExpression(
+                               call->function_name_, reordered.second,
+                               call->has_return_value_)));
       return;
     }
   }
@@ -311,15 +286,15 @@ void ir_tree::EliminateEseq::Visit(ir_tree::ExpStatement* stmt) {
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::CallExpression* expression) {
-  auto expr = VisitAndReturnVisitor(expression->function_name_).expression_;
-  auto args = VisitAndReturnVisitor(expression->args_).expression_list_;
+  auto expr = VisitAndReturnValue(expression->function_name_).expression_;
+  auto args = VisitAndReturnValue(expression->args_).expression_list_;
   last_value_set_.expression_ =
       new CallExpression(expr, args, expression->has_return_value_);
 }
 
 void ir_tree::EliminateEseq::Visit(ir_tree::BinOpExpression* expr) {
-  auto first = VisitAndReturnVisitor(expr->first_).expression_;
-  auto second = VisitAndReturnVisitor(expr->second_).expression_;
+  auto first = VisitAndReturnValue(expr->first_).expression_;
+  auto second = VisitAndReturnValue(expr->second_).expression_;
   if (first->GetType() == IRNodeType::Eseq &&
       second->GetType() == IRNodeType::Eseq) {
     auto f_eseq = dynamic_cast<EseqExpression*>(first);
@@ -357,7 +332,10 @@ void ir_tree::EliminateEseq::Visit(ir_tree::BinOpExpression* expr) {
     auto s_eseq = dynamic_cast<EseqExpression*>(second);
     Temp t;
     last_value_set_.expression_ = new EseqExpression(
-        new MoveStatement(first, new TempExpression(t)),
+        new SeqStatement(
+            new MoveStatement(first, new TempExpression(t)),
+            s_eseq->statement_
+            ),
         new BinOpExpression(expr->type_, new TempExpression(t),
                             s_eseq->expression_));
     return;
@@ -371,7 +349,7 @@ void ir_tree::EliminateEseq::Visit(ir_tree::ExpressionList* list) {
   auto& value_list = new_list->expressions_;
   value_list.resize(list->expressions_.size());
   for (size_t i = 0; i < value_list.size(); ++i) {
-    value_list[i] = VisitAndReturnVisitor(list->expressions_[i]).expression_;
+    value_list[i] = VisitAndReturnValue(list->expressions_[i]).expression_;
   }
   last_value_set_.expression_list_ = new_list;
 }

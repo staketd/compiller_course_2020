@@ -194,6 +194,7 @@ set(
         irtree/visitors/EliminateDoubleCalls.cpp
         irtree/visitors/EliminateEseq.cpp
         irtree/visitors/LinearizeIRTree.cpp
+        irtree/visitors/AsmGenerator.cpp
 
         irtree/Block.cpp
         irtree/Trace.cpp

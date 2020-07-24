@@ -34,6 +34,7 @@ class Driver {
   void Print(const std::string&);
   void PrintByStatements(const std::string&) const;
   void PrintByTraces(const std::string&);
+  void PrintAsm(const std::string&);
 
   int Parse(const std::string& f);
   friend class Scanner;

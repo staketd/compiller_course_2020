@@ -3,7 +3,6 @@
 #include <Frame.h>
 #include <BuildSymbolLayerTree.h>
 #include <TypeChecker.h>
-#include <ClassMethod.h>
 #include <FunctionCallVisitor.h>
 #include <IRTreeBuildVisitor.h>
 #include <IRPrintVisitor.h>
@@ -12,6 +11,7 @@
 #include <LinearizeIRTree.h>
 #include <Block.h>
 #include <Print.h>
+#include <AsmGenerator.h>
 
 Driver::Driver()
     : trace_parsing(false),
@@ -120,6 +120,8 @@ void Driver::BuildIrTree() {
   divided_into_traces_ = true;
 
   Print("Traces");
+
+  PrintAsm("");
 }
 
 void Driver::PrintByStatements(const std::string& suffix) const {
@@ -233,5 +235,31 @@ void Driver::PrintByTraces(const std::string& suffix) {
       }
       trace_ind++;
     }
+  }
+}
+
+void Driver::PrintAsm(const std::string& suffix) {
+  auto file_name = "asm" + suffix + ".asm";
+  ir_tree::AsmGenerator generator(file_name, program->main_->name_ + "__main");
+  for (auto& method : method_traces_) {
+    bool printed_prologue = false;
+    std::string label_name;
+    for (auto& trace : method.second) {
+      for (auto& block : trace.GetBlocks()) {
+        block.GetLabel()->AcceptVisitor(&generator);
+        if (!printed_prologue) {
+          generator.PrintPrologue();
+          printed_prologue = true;
+          label_name = block.GetLabel()->label_.ToString();
+        }
+        for (auto& stmt : block.GetStatements()) {
+          stmt->AcceptVisitor(&generator);
+        }
+        block.GetJump()->AcceptVisitor(&generator);
+      }
+    }
+    (new ir_tree::LabelStatement(ir_tree::Label(label_name + "_done")))
+        ->AcceptVisitor(&generator);
+    generator.PrintEpilogue();
   }
 }

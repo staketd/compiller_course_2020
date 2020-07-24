@@ -4,16 +4,16 @@
 #include <macros.h>
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::BinOpExpression* expression) {
-  auto first = VisitAndReturnVisitor(expression->first_).expression_;
-  auto second = VisitAndReturnVisitor(expression->second_).expression_;
+  auto first = VisitAndReturnValue(expression->first_).expression_;
+  auto second = VisitAndReturnValue(expression->second_).expression_;
 
   last_value_set_.expression_ = new BinOpExpression(
-      expression->type_, expression->first_, expression->second_);
+      expression->type_, first, second);
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::CallExpression* expression) {
-  auto expr = VisitAndReturnVisitor(expression->function_name_).expression_;
-  auto args = VisitAndReturnVisitor(expression->args_).expression_list_;
+  auto expr = VisitAndReturnValue(expression->function_name_).expression_;
+  auto args = VisitAndReturnValue(expression->args_).expression_list_;
 
   last_value_set_.expression_ =
       new CallExpression(expr, args, expression->has_return_value_);
@@ -24,11 +24,11 @@ void ir_tree::LinearizeIRTree::Visit(ir_tree::ConstExpression* expression) {
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::EseqExpression* expression) {
-  UNREACHABLE("Eseq found after eseq elimination");
+  UNREACHABLE("Eseq found after eseq elimination")
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::MemExpression* expression) {
-  auto expr = VisitAndReturnVisitor(expression->expression_).expression_;
+  auto expr = VisitAndReturnValue(expression->expression_).expression_;
   last_value_set_.expression_ = new MemExpression(expr);
 }
 
@@ -41,7 +41,7 @@ void ir_tree::LinearizeIRTree::Visit(ir_tree::TempExpression* expression) {
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::ExpStatement* statement) {
-  auto expr = VisitAndReturnVisitor(statement->expression_).expression_;
+  auto expr = VisitAndReturnValue(statement->expression_).expression_;
   last_value_set_.statement_ = new ExpStatement(expr);
 }
 
@@ -51,8 +51,8 @@ void ir_tree::LinearizeIRTree::Visit(ir_tree::JumpStatement* statement) {
 
 void ir_tree::LinearizeIRTree::Visit(
     ir_tree::JumpConditionalStatement* statement) {
-  auto left = VisitAndReturnVisitor(statement->left_).expression_;
-  auto right = VisitAndReturnVisitor(statement->right_).expression_;
+  auto left = VisitAndReturnValue(statement->left_).expression_;
+  auto right = VisitAndReturnValue(statement->right_).expression_;
 
   last_value_set_.statement_ = new JumpConditionalStatement(
       statement->operator_, left, right, statement->label_true_,
@@ -64,21 +64,21 @@ void ir_tree::LinearizeIRTree::Visit(ir_tree::LabelStatement* statement) {
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::MoveStatement* statement) {
-  auto src = VisitAndReturnVisitor(statement->source_).expression_;
-  auto dst = VisitAndReturnVisitor(statement->destination_).expression_;
+  auto src = VisitAndReturnValue(statement->source_).expression_;
+  auto dst = VisitAndReturnValue(statement->destination_).expression_;
 
   last_value_set_.statement_ = new MoveStatement(src, dst);
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::SeqStatement* statement) {
-  auto first = VisitAndReturnVisitor(statement->first_).statement_;
+  auto first = VisitAndReturnValue(statement->first_).statement_;
   if (first->GetType() == IRNodeType::Seq) {
     auto seq = dynamic_cast<SeqStatement*>(first);
     statement->second_ = new SeqStatement(seq->second_, statement->second_);
     first = seq->first_;
   }
 
-  auto second = VisitAndReturnVisitor(statement->second_).statement_;
+  auto second = VisitAndReturnValue(statement->second_).statement_;
 
   last_value_set_.statement_ = new SeqStatement(first, second);
 }
@@ -89,12 +89,12 @@ void ir_tree::LinearizeIRTree::Visit(ir_tree::ExpressionList* list) {
 
   for (size_t i = 0; i < list->expressions_.size(); ++i) {
     last_value_set_.expression_list_->expressions_[i] =
-        VisitAndReturnVisitor(list->expressions_[i]).expression_;
+        VisitAndReturnValue(list->expressions_[i]).expression_;
   }
 }
 
 void ir_tree::LinearizeIRTree::Visit(ir_tree::IRPrintStatement* statement) {
-  auto expr = VisitAndReturnVisitor(statement->expression_).expression_;
+  auto expr = VisitAndReturnValue(statement->expression_).expression_;
 
   last_value_set_.statement_ = new IRPrintStatement(expr);
 }
@@ -110,7 +110,7 @@ ir_tree::LinearizeIRTree::GetStatementList() {
   while (true) {
     result.push_back(now->first_);
     if (now->first_->GetType() == IRNodeType::Seq) {
-      UNREACHABLE("All left seqs must have been eliminated, but found one");
+      UNREACHABLE("All left seqs must have been eliminated, but found one")
     }
     auto stmt = now->second_;
     now = dynamic_cast<SeqStatement*>(now->second_);

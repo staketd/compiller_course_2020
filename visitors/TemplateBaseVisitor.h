@@ -19,7 +19,7 @@ namespace ir_tree {
 template <typename T>
 class TemplateBaseVisitor : public BaseIRVisitor {
  public:
-  T VisitAndReturnVisitor(BaseIRNode*);
+  T VisitAndReturnValue(BaseIRNode*);
 
  protected:
   T last_value_set_;

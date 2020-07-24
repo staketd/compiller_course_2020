@@ -10,7 +10,7 @@
               << " column:" << node->loc.begin.column << "\n" \
               << msg << std::endl;                            \
     exit(1);                                                  \
-  }
+  }                                                           \
 
 #define UNREACHABLE(msg)      \
   {                           \
