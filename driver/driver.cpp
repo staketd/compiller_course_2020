@@ -239,7 +239,7 @@ void Driver::PrintByTraces(const std::string& suffix) {
 }
 
 void Driver::PrintAsm(const std::string& suffix) {
-  auto file_name = "asm" + suffix + ".asm";
+  auto file_name = "asm" + suffix + ".S";
   ir_tree::AsmGenerator generator(file_name, program->main_->name_ + "__main");
   for (auto& method : method_traces_) {
     bool printed_prologue = false;
@@ -262,4 +262,5 @@ void Driver::PrintAsm(const std::string& suffix) {
         ->AcceptVisitor(&generator);
     generator.PrintEpilogue();
   }
+  generator.PrintAll();
 }

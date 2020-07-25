@@ -7,6 +7,8 @@
 #include <fstream>
 #include <IRExpression.h>
 #include <BinOperatorType.h>
+#include <AsmInstruction.h>
+#include <vector>
 
 namespace ir_tree {
 class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
@@ -14,6 +16,7 @@ class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
   AsmGenerator(const std::string&, const std::string&);
   void PrintEpilogue();
   void PrintPrologue();
+  void PrintAll();
 
  private:
   void Visit(BinOpExpression*) override;
@@ -32,12 +35,15 @@ class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
   void Visit(ExpressionList*) override;
   void Visit(IRPrintStatement*) override;
 
-  std::string BinOp(IRExpression*, IRExpression*, BinOperatorType,
-                    const std::string&);
+  std::string BinOp(IRExpression*, IRExpression*, BinOperatorType);
 
   std::string Div(IRExpression*, IRExpression*, BinOperatorType);
+  void PrintInstructions();
+  void PrintHead();
 
  private:
+  void Add(AsmInstruction*);
+  std::vector<AsmInstruction*> instructions_;
   std::ofstream stream_;
 };
 }  // namespace ir_tree

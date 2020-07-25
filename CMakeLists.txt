@@ -33,6 +33,8 @@ include_directories(
         irtree/nodes/statements
         irtree/
         .
+        asm/instructions
+        asm/
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myCompiller_SOURCE_DIR}/bin)
@@ -196,6 +198,22 @@ set(
         irtree/visitors/LinearizeIRTree.cpp
         irtree/visitors/AsmGenerator.cpp
 
+        asm/instructions/AsmInstruction.cpp
+        asm/instructions/MovInstruction.cpp
+        asm/instructions/AddInstruction.cpp
+        asm/instructions/SubInstruction.cpp
+        asm/instructions/CallInstruction.cpp
+        asm/instructions/IDivInstruction.cpp
+        asm/instructions/JumpInstruction.cpp
+        asm/instructions/PopInstruction.cpp
+        asm/instructions/PushInstruction.cpp
+        asm/instructions/IMulInstruction.cpp
+        asm/instructions/LabelInstruction.cpp
+        asm/instructions/OrInstruction.cpp
+        asm/instructions/AndInstruction.cpp
+        asm/instructions/CmpInstruction.cpp
+        asm/instructions/RetInstruction.cpp
+        asm/Instructions.h
         irtree/Block.cpp
         irtree/Trace.cpp
 )
