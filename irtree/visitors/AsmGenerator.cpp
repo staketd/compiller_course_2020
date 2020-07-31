@@ -314,6 +314,27 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
     }
   }
 
+  if (statement->destination_->GetType() == IRNodeType::Temp &&
+      statement->source_->GetType() == IRNodeType::Call) {
+    auto temp = dynamic_cast<TempExpression*>(statement->destination_);
+    auto call = dynamic_cast<CallExpression*>(statement->source_);
+
+    for (auto expr : call->args_->expressions_) {
+      auto name = VisitAndReturnValue(expr);
+      Add(new PushInstruction(name));
+    }
+    auto func_name = VisitAndReturnValue(call->function_name_);
+
+    Add(new CallInstruction(func_name));
+
+    Add(new MovInstruction(temp->temp_.ToString(), "rax"));
+
+    for (size_t i = 0; i < call->args_->expressions_.size(); ++i) {
+      Add(new PopInstruction());
+    }
+    return;
+  }
+
   if (statement->destination_->GetType() != IRNodeType::Mem) {
     auto reg2 = VisitAndReturnValue(statement->source_);
     auto reg1 = VisitAndReturnValue(statement->destination_);
