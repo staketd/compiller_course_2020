@@ -174,24 +174,30 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MemExpression* expression) {
 
   if ((binop->first_->GetType() == IRNodeType::Const) ==
           (binop->second_->GetType() == IRNodeType::Const) ||
-      binop->type_ != BinOperatorType::PLUS) {
+      (binop->type_ != BinOperatorType::PLUS &&
+       binop->type_ != BinOperatorType::MINUS)) {
     auto name = VisitAndReturnValue(expr);
     Add(new MovInstruction(reg_name, name, 0, 0, false, true));
     last_value_set_ = reg_name;
     return;
   }
 
+  int factor = 1;
+  if (binop->type_ == BinOperatorType::MINUS) {
+    factor = -1;
+  }
+
   if (binop->first_->GetType() == IRNodeType::Const) {
     auto name = VisitAndReturnValue(binop->second_);
     auto con = dynamic_cast<ConstExpression*>(binop->first_)->Value();
-    Add(new MovInstruction(reg_name, name, 0, con, false, true));
+    Add(new MovInstruction(reg_name, name, 0, con * factor, false, true));
     last_value_set_ = reg_name;
     return;
   }
 
   auto name = VisitAndReturnValue(binop->first_);
   auto con = dynamic_cast<ConstExpression*>(binop->second_)->Value();
-  Add(new MovInstruction(reg_name, name, 0, con, false, true));
+  Add(new MovInstruction(reg_name, name, 0, con * factor, false, true));
 
   last_value_set_ = reg_name;
 }
@@ -282,7 +288,7 @@ void ir_tree::AsmGenerator::Visit(
 
   if (right->GetType() == IRNodeType::Const) {
     auto right_const = dynamic_cast<ConstExpression*>(right)->Value();
-    auto name = VisitAndReturnValue(right);
+    auto name = VisitAndReturnValue(left);
     Add(new CmpInstruction(name, std::to_string(right_const)));
   }
 
@@ -301,19 +307,25 @@ void ir_tree::AsmGenerator::Visit(ir_tree::ExpressionList* list) {
 
 void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
   bool print_epilogue = false;
-  if (statement->source_->GetType() == IRNodeType::Temp) {
-    auto temp = dynamic_cast<TempExpression*>(statement->source_);
+  if (statement->destination_->GetType() == IRNodeType::Temp) {
+    auto temp = dynamic_cast<TempExpression*>(statement->destination_);
     if (temp->temp_.ToString() == "::return_value") {
       print_epilogue = true;
     }
   }
 
   if (statement->destination_->GetType() != IRNodeType::Mem) {
-    auto reg1 = VisitAndReturnValue(statement->source_);
-    auto reg2 = VisitAndReturnValue(statement->destination_);
+    auto reg2 = VisitAndReturnValue(statement->source_);
+    auto reg1 = VisitAndReturnValue(statement->destination_);
     Add(new MovInstruction(reg1, reg2));
   } else {
-    auto src = VisitAndReturnValue(statement->source_);
+    std::string src;
+    if (statement->source_->GetType() == IRNodeType::Const) {
+      auto con = dynamic_cast<ConstExpression*>(statement->source_);
+      src = std::to_string(con->Value());
+    } else {
+      src = VisitAndReturnValue(statement->source_);
+    }
     auto mem = dynamic_cast<MemExpression*>(statement->destination_);
     switch (mem->expression_->GetType()) {
       case IRNodeType::Const: {
@@ -323,7 +335,8 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
       }
       case IRNodeType::BinOp: {
         auto binop = dynamic_cast<BinOpExpression*>(mem->expression_);
-        if (binop->type_ == BinOperatorType::PLUS) {
+        if (binop->type_ == BinOperatorType::PLUS ||
+            binop->type_ == BinOperatorType::MINUS) {
           auto left = binop->first_->GetType();
           auto right = binop->second_->GetType();
           if ((left == IRNodeType::Const) + (right == IRNodeType::Const) == 1) {
@@ -334,6 +347,9 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
             }
             auto name = VisitAndReturnValue(node_to_visit);
             auto con = dynamic_cast<ConstExpression*>(const_expr)->Value();
+            if (binop->type_ == BinOperatorType::MINUS) {
+              con = -con;
+            }
             Add(new MovInstruction(name, src, con, 0, true, false));
             break;
           }
@@ -341,13 +357,13 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
       }
       default: {
         auto dst = VisitAndReturnValue(mem->expression_);
-        Add(new MovInstruction(dst, src));
+        Add(new MovInstruction(dst, src, 0, 0, true, false));
       }
     }
   }
 
   if (print_epilogue) {
-    PrintEpilogue();
+    AddEpilogue();
   }
 }
 
@@ -376,13 +392,13 @@ void ir_tree::AsmGenerator::Visit(ir_tree::IRPrintStatement* statement) {
   Add(new PopInstruction(name));
 }
 
-void ir_tree::AsmGenerator::PrintEpilogue() {
+void ir_tree::AsmGenerator::AddEpilogue() {
   Add(new MovInstruction("rsp", "rbp"));
   Add(new PopInstruction("rbp"));
   Add(new RetInstruction());
 }
 
-void ir_tree::AsmGenerator::PrintPrologue() {
+void ir_tree::AsmGenerator::AddPrologue() {
   Add(new PushInstruction("rbp"));
   Add(new MovInstruction("rbp", "rsp"));
 }
@@ -390,8 +406,6 @@ void ir_tree::AsmGenerator::PrintPrologue() {
 std::string ir_tree::AsmGenerator::Div(ir_tree::IRExpression* first,
                                        ir_tree::IRExpression* second,
                                        BinOperatorType type) {
-  Add(new PushInstruction("rax"));
-  Add(new PushInstruction("rdx"));
   std::string to_return;
   auto src = "rax";
   if (type == BinOperatorType::MOD) {
@@ -428,14 +442,10 @@ std::string ir_tree::AsmGenerator::Div(ir_tree::IRExpression* first,
     Add(new MovInstruction(name1, src));
     to_return = name1;
   }
-  Add(new PopInstruction("rdx"));
-  Add(new PopInstruction("rax"));
   return to_return;
 }
 
-ir_tree::AsmGenerator::AsmGenerator(const std::string& file,
-                                    const std::string& start)
-    : stream_(file) {
+ir_tree::AsmGenerator::AsmGenerator(const std::string& start) {
   Add(new LabelInstruction("_start"));
   Add(new JumpInstruction(start, JumpType::jmp));
 }
@@ -444,18 +454,22 @@ void ir_tree::AsmGenerator::Add(AsmInstruction* instruction) {
   instructions_.push_back(instruction);
 }
 
-void ir_tree::AsmGenerator::PrintHead() {
-  MyPrint(stream_, "\t.intel_syntax noprefix\n");
-  MyPrint(stream_, "\tglobal _start\n");
-  MyPrint(stream_, "\t.text\n");
+void ir_tree::AsmGenerator::PrintHead(std::ostream& stream) {
+  MyPrint(stream, "\t.intel_syntax noprefix\n");
+  MyPrint(stream, "\tglobal _start\n");
+  MyPrint(stream, "\t.text\n");
 }
 
-void ir_tree::AsmGenerator::PrintInstructions() {
-  for (auto inst: instructions_) {
-    inst->Print(stream_);
+void ir_tree::AsmGenerator::PrintInstructions(std::ostream& stream) {
+  for (auto inst : instructions_) {
+    inst->Print(stream);
   }
 }
-void ir_tree::AsmGenerator::PrintAll() {
-  PrintHead();
-  PrintInstructions();
+void ir_tree::AsmGenerator::PrintAll(std::ostream& stream) {
+  PrintHead(stream);
+  PrintInstructions(stream);
+}
+
+std::vector<AsmInstruction*>& ir_tree::AsmGenerator::GetInstructions() {
+  return instructions_;
 }

@@ -140,8 +140,8 @@ void ir_tree::IRPrintVisitor::Visit(ir_tree::MoveStatement* statement) {
   PrintTabs();
   stream_ << "MoveStatement:\n";
   ++tabs_;
-  statement->source_->AcceptVisitor(this);
   statement->destination_->AcceptVisitor(this);
+  statement->source_->AcceptVisitor(this);
   --tabs_;
 }
 

@@ -13,10 +13,11 @@
 namespace ir_tree {
 class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
  public:
-  AsmGenerator(const std::string&, const std::string&);
-  void PrintEpilogue();
-  void PrintPrologue();
-  void PrintAll();
+  AsmGenerator(const std::string&);
+  void AddEpilogue();
+  void AddPrologue();
+  void PrintAll(std::ostream&);
+  std::vector<AsmInstruction*>& GetInstructions();
 
  private:
   void Visit(BinOpExpression*) override;
@@ -38,13 +39,12 @@ class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
   std::string BinOp(IRExpression*, IRExpression*, BinOperatorType);
 
   std::string Div(IRExpression*, IRExpression*, BinOperatorType);
-  void PrintInstructions();
-  void PrintHead();
+  void PrintInstructions(std::ostream&);
+  void PrintHead(std::ostream&);
 
  private:
   void Add(AsmInstruction*);
   std::vector<AsmInstruction*> instructions_;
-  std::ofstream stream_;
 };
 }  // namespace ir_tree
 #endif  // MYCOMPILLER_ASMGENERATOR_H

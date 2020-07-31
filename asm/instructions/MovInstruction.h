@@ -10,6 +10,12 @@ class MovInstruction : public AsmInstruction {
                  bool = false, bool = false);
   void Print(std::ostream&) override;
 
+  std::vector<std::string> GetDef() override;
+  std::vector<std::string> GetUse() override;
+  void ChangeNames(
+      ElementSetk* support,
+      const std::vector<std::string>& change) override;
+
  public:
   std::string destination_;
   std::string source_;

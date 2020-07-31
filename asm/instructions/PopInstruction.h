@@ -5,9 +5,15 @@
 
 class PopInstruction : public AsmInstruction {
  public:
-  PopInstruction() = default;
+  PopInstruction();
   PopInstruction(const std::string&);
   void Print(std::ostream&) override;
+
+  std::vector<std::string> GetDef() override;
+  std::vector<std::string> GetUse() override;
+  void ChangeNames(
+      ElementSetk* support,
+      const std::vector<std::string>& change) override;
 
  public:
   std::string reg_;

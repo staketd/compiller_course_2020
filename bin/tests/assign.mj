@@ -1,8 +1,10 @@
 class Main {
     public static void main () {
         Integer a = 2 + 4;
-        print(a);
-        a = a - 20;
-        print(a);
+        Integer b = 3;
+        Integer c = 4;
+        a = b + c;
+        c = b * b;
+        Integer d = c;
     }
 }

@@ -19,9 +19,15 @@ class JumpInstruction : public AsmInstruction {
   JumpInstruction(const std::string&, JumpType);
   void Print(std::ostream&) override;
 
+  std::vector<std::string> GetDef() override;
+  std::vector<std::string> GetUse() override;
+  void ChangeNames(
+      ElementSetk* support,
+      const std::vector<std::string>& change) override;
+
  public:
   std::string label_;
-  JumpType type_;
+  JumpType jump_type_;
 };
 
 #endif  // MYCOMPILLER_JUMPINSTRUCTION_H

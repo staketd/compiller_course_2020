@@ -12,10 +12,10 @@ ir_tree::FrameAddress::FrameAddress(ir_tree::Address* frame, int offset)
 ir_tree::IRExpression* ir_tree::FrameAddress::ToExpression() {
   IRExpression* offset_expression;
   if (offset_ != 0) {
-    BinOperatorType type = BinOperatorType::PLUS;
+    BinOperatorType type = BinOperatorType::MINUS;
     int value = offset_;
     if (offset_ < 0) {
-      type = BinOperatorType::MINUS;
+      type = BinOperatorType::PLUS;
       value = -offset_;
     }
     offset_expression = new ir_tree::BinOpExpression(

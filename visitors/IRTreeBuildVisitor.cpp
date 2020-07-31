@@ -235,8 +235,9 @@ void IRTreeBuildVisitor::Visit(MethodCallExpression* expression) {
 void IRTreeBuildVisitor::Visit(ReturnStatement* return_stmt) {
   auto return_expr = VisitAndReturnValue(return_stmt->expression_);
   last_value_set_ = new ir_tree::StatementWrapper(new ir_tree::MoveStatement(
-      current_frame_->GetReturnValueAddress()->ToExpression(),
-      return_expr->ToExpression()));
+      return_expr->ToExpression(),
+      current_frame_->GetReturnValueAddress()->ToExpression()
+      ));
 }
 
 void IRTreeBuildVisitor::Visit(MethodCallStmt* stmt) {
@@ -263,7 +264,15 @@ void IRTreeBuildVisitor::Visit(ClassMain* main) {
 }
 
 void IRTreeBuildVisitor::Visit(ThisExpression* expression) {
-  last_value_set_ = new ir_tree::ExpressionWrapper(current_this_);
+  last_value_set_ = new ir_tree::ExpressionWrapper(
+      new ir_tree::MemExpression(
+        new ir_tree::BinOpExpression(
+          ir_tree::BinOperatorType::MINUS,
+          new ir_tree::TempExpression(ir_tree::Temp("::fp")),
+          new ir_tree::ConstExpression(8)
+          )
+      )
+  );
 }
 
 void IRTreeBuildVisitor::Visit(NewExpression*) {

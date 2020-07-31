@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
             driver.trace_scanning = true;
         } else if (!driver.Parse(argv[i])) {
             driver.Evaluate();
-            driver.BuildIrTree();
+            driver.Compile();
         } else {
             result = 1;
         }
