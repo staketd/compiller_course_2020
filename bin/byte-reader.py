@@ -11,5 +11,7 @@ def bytes_from_file(filename, chunksize=8192):
                 break
 
 
+print()
 for word in bytes_from_file(sys.argv[1], 8):
     print(int.from_bytes(word, "little"))
+
