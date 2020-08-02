@@ -93,7 +93,7 @@ void Driver::CheckTypes() {
 }
 
 void Driver::Compile() {
-  IRTreeBuildVisitor builder;
+  IRTreeBuildVisitor builder(class_map_);
   builder.Build(program);
   methods_ = builder.GetMethods();
   Print("");

@@ -175,6 +175,7 @@ void BuildSymbolLayerTree::Visit(MethodArgumentList* list) {
 
 void BuildSymbolLayerTree::Visit(ClassBody* list) {
   for (auto var : list->fields_) {
+    current_class_layout_->AddField(Symbol(var->name_));
     var->AcceptVisitor(this);
   }
   for (auto func : list->methods_) {
@@ -202,6 +203,8 @@ void BuildSymbolLayerTree::Visit(MethodCallStmt* statement) {
 
 void BuildSymbolLayerTree::Visit(Class* cl) {
   class_map_.SetClass(Symbol(cl->name_), cl);
+  current_class_layout_ = new ClassLayout(cl->name_);
+  class_map_.SetClassLayout(Symbol(cl->name_), current_class_layout_);
   current_layer_->DeclareSymbol(Symbol(cl->name_),
                                 std::make_shared<ClassType>(cl->name_));
 

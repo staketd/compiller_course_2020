@@ -27,8 +27,7 @@ void IRTreeBuildVisitor::Visit(StatementList* statements) {
 
 void IRTreeBuildVisitor::Visit(Assignment* assignment) {
   auto source = VisitAndReturnValue(assignment->expression_)->ToExpression();
-  auto destination =
-      current_frame_->GetAddress(Symbol(assignment->variable_))->ToExpression();
+  auto destination = GetAddress(Symbol(assignment->variable_));
   last_value_set_ = new ir_tree::StatementWrapper(
       new ir_tree::MoveStatement(source, destination));
 }
@@ -59,9 +58,8 @@ void IRTreeBuildVisitor::Visit(SubstractExpression* expression) {
 }
 
 void IRTreeBuildVisitor::Visit(IdentExpression* expression) {
-  auto address =
-      current_frame_->GetAddress(Symbol(expression->name_))->ToExpression();
-  last_value_set_ = new ir_tree::ExpressionWrapper(address);
+  last_value_set_ =
+      new ir_tree::ExpressionWrapper(GetAddress(Symbol(expression->name_)));
 }
 
 void IRTreeBuildVisitor::Visit(NumExpression* expression) {
@@ -77,8 +75,7 @@ void IRTreeBuildVisitor::Visit(Program* program) {
 void IRTreeBuildVisitor::Visit(PrintStatement* print) {
   auto expr = VisitAndReturnValue(print->expr_);
   last_value_set_ = new ir_tree::StatementWrapper(
-        new ir_tree::IRPrintStatement(expr->ToExpression())
-      );
+      new ir_tree::IRPrintStatement(expr->ToExpression()));
 }
 void IRTreeBuildVisitor::Visit(ReadStatement*) {
   last_value_set_ = nullptr;
@@ -213,7 +210,7 @@ void IRTreeBuildVisitor::Visit(ClassBody* class_body) {
 }
 
 void IRTreeBuildVisitor::Visit(MethodArgumentList* args) {
-  for (auto arg: args->names_) {
+  for (auto arg : args->names_) {
     current_frame_->AddArgument(Symbol(arg));
   }
 }
@@ -222,13 +219,12 @@ void IRTreeBuildVisitor::Visit(MethodCallExpression* expression) {
   auto obj = VisitAndReturnValue(expression->expression_);
   std::vector<ir_tree::IRExpression*> args;
   args.push_back(obj->ToExpression());
-  current_this_ = obj->ToExpression();
   for (auto arg : expression->arguments_->arguments_) {
     args.push_back(VisitAndReturnValue(arg)->ToExpression());
   }
   last_value_set_ = new ir_tree::ExpressionWrapper(new ir_tree::CallExpression(
-      new ir_tree::NameExpression(
-          ir_tree::Label(expression->class_type_name_ + "__" + expression->name_)),
+      new ir_tree::NameExpression(ir_tree::Label(expression->class_type_name_ +
+                                                 "__" + expression->name_)),
       new ir_tree::ExpressionList(args), expression->has_return_value_));
 }
 
@@ -236,8 +232,7 @@ void IRTreeBuildVisitor::Visit(ReturnStatement* return_stmt) {
   auto return_expr = VisitAndReturnValue(return_stmt->expression_);
   last_value_set_ = new ir_tree::StatementWrapper(new ir_tree::MoveStatement(
       return_expr->ToExpression(),
-      current_frame_->GetReturnValueAddress()->ToExpression()
-      ));
+      current_frame_->GetReturnValueAddress()->ToExpression()));
 }
 
 void IRTreeBuildVisitor::Visit(MethodCallStmt* stmt) {
@@ -265,14 +260,10 @@ void IRTreeBuildVisitor::Visit(ClassMain* main) {
 
 void IRTreeBuildVisitor::Visit(ThisExpression* expression) {
   last_value_set_ = new ir_tree::ExpressionWrapper(
-      new ir_tree::MemExpression(
-        new ir_tree::BinOpExpression(
+      new ir_tree::MemExpression(new ir_tree::BinOpExpression(
           ir_tree::BinOperatorType::MINUS,
           new ir_tree::TempExpression(ir_tree::Temp("::fp")),
-          new ir_tree::ConstExpression(8)
-          )
-      )
-  );
+          new ir_tree::ConstExpression(8))));
 }
 
 void IRTreeBuildVisitor::Visit(NewExpression*) {
@@ -323,4 +314,26 @@ void IRTreeBuildVisitor::Build(Program* program) {
 std::unordered_map<Symbol, ir_tree::SubtreeWrapper*>
 IRTreeBuildVisitor::GetMethods() {
   return std::move(methods_);
+}
+
+IRTreeBuildVisitor::IRTreeBuildVisitor(ClassMap& class_map)
+    : class_map_(class_map) {
+}
+
+ir_tree::IRExpression* IRTreeBuildVisitor::GetAddress(const Symbol& symbol) {
+  ir_tree::IRExpression* address;
+  if (current_frame_->HasVariable(symbol)) {
+    address = current_frame_->GetAddress(symbol)->ToExpression();
+  } else {
+    auto class_layout = class_map_.GetClassLayout(Symbol(current_class_name_));
+    size_t offset = class_layout->GetOffset(symbol);
+    address = new ir_tree::MemExpression(new ir_tree::BinOpExpression(
+        ir_tree::BinOperatorType::PLUS,
+        new ir_tree::MemExpression(new ir_tree::BinOpExpression(
+            ir_tree::BinOperatorType::MINUS,
+            new ir_tree::TempExpression(ir_tree::Temp("::fp")),
+            new ir_tree::ConstExpression(8))),
+        new ir_tree::ConstExpression(offset)));
+  }
+  return address;
 }

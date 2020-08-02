@@ -7,7 +7,7 @@ const std::string ir_tree::IRFrameTranslator::kReturnAddress = "::return";
 const std::string ir_tree::IRFrameTranslator::kFramePointerAddress = "::fp";
 const std::string ir_tree::IRFrameTranslator::kReturnValueAddress =
     "::return_value";
-const int ir_tree::IRFrameTranslator::kWordSize = 4;
+const int ir_tree::IRFrameTranslator::kWordSize = 8;
 
 void ir_tree::IRFrameTranslator::AddVariable(Symbol symb, int offset) {
   scopes_symbols_stack_.push_back(symb);
@@ -39,7 +39,7 @@ void ir_tree::IRFrameTranslator::AddArgument(const Symbol& symbol,
 ir_tree::IRFrameTranslator::IRFrameTranslator(const Symbol& symbol)
     : function_name_(symbol),
       local_offset_(kWordSize),
-      arg_offset_(-kWordSize) {
+      arg_offset_(-2 * kWordSize) {
   addresses_[Symbol(kFramePointerAddress)].push_back(
       new RegAddress(Temp(kFramePointerAddress)));
 
@@ -71,4 +71,8 @@ void ir_tree::IRFrameTranslator::EndScope() {
     }
   }
   scopes_symbols_stack_.pop_back();
+}
+
+bool ir_tree::IRFrameTranslator::HasVariable(const Symbol& symbol) {
+  return addresses_.find(symbol) != addresses_.end();
 }

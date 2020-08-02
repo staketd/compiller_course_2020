@@ -36,6 +36,7 @@ include_directories(
         asm/instructions
         asm/
         support/
+        class-layout/
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myCompiller_SOURCE_DIR}/bin)
@@ -218,6 +219,7 @@ set(
         irtree/Block.cpp
         irtree/Trace.cpp
         support/ElementSet.cpp
+        class-layout/ClassLayout.cpp
 )
 
 add_executable(

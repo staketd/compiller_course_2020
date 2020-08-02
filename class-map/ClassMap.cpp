@@ -11,3 +11,11 @@ Class* ClassMap::GetClass(const Symbol& symbol) {
   }
   return classes_[symbol];
 }
+
+void ClassMap::SetClassLayout(const Symbol& symbol, ClassLayout* layout) {
+  class_layouts_[symbol] = layout;
+}
+
+ClassLayout* ClassMap::GetClassLayout(const Symbol& symbol) {
+  return class_layouts_[symbol];
+}

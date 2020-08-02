@@ -6,6 +6,7 @@
 #include <ScopeLayerTree.h>
 #include <FunctionMap.h>
 #include <ClassMap.h>
+#include <ClassLayout.h>
 
 class BuildSymbolLayerTree : public BaseASTVisitor {
  public:
@@ -57,6 +58,7 @@ class BuildSymbolLayerTree : public BaseASTVisitor {
 
  private:
   std::string current_class_name_;
+  ClassLayout* current_class_layout_;
   ClassMap& class_map_;
   ScopeLayerTree& tree_;
   ScopeLayer* current_layer_;

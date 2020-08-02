@@ -21,6 +21,8 @@ class IRFrameTranslator {
   Address* FramePointer();
   Address* GetAddress(const Symbol&);
 
+  bool HasVariable(const Symbol&);
+
   Address* GetReturnValueAddress();
   void AddReturnAddress();
 

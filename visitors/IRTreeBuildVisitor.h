@@ -9,11 +9,12 @@
 #include <IRFrameTranslator.h>
 #include <BinOperatorType.h>
 #include <LogicOperatorType.h>
+#include <ClassMap.h>
 
 class IRTreeBuildVisitor
     : public TemplateBaseVisitor<ir_tree::SubtreeWrapper*> {
  public:
-  IRTreeBuildVisitor() = default;
+  IRTreeBuildVisitor(ClassMap&);
   void Build(Program*);
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> GetMethods();
 
@@ -61,10 +62,12 @@ class IRTreeBuildVisitor
   void VisitBinaryExpression(BinaryExpression*, ir_tree::BinOperatorType);
   void VisitLogicExpression(BinaryExpression*, ir_tree::LogicOperatorType);
 
+  ir_tree::IRExpression* GetAddress(const Symbol&);
+
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> methods_;
   std::string current_class_name_;
   ir_tree::IRFrameTranslator* current_frame_;
-  ir_tree::IRExpression* current_this_;
+  ClassMap& class_map_;
 };
 
 #endif  // MYCOMPILLER_IRTREEBUILDVISITOR_H
