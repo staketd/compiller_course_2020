@@ -78,5 +78,6 @@
 #include <ExpStatement.h>
 #include <JumpConditionalStatement.h>
 #include <IRPrintStatement.h>
+#include <AllocExpression.h>
 
 #endif //MYCOMPILLER_SOURCES_H

@@ -73,6 +73,7 @@ std::string ir_tree::AsmGenerator::BinOp(ir_tree::IRExpression* first,
     Add(new MovInstruction(t.ToString(), std::to_string(const1), 0, 0, false,
                            false));
     Add(BinOpInst(type, t.ToString(), name));
+    return t.ToString();
   } else if (second->GetType() == IRNodeType::Const) {
     auto name = VisitAndReturnValue(first);
     if (name[0] == ':') {
@@ -319,8 +320,9 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
     auto temp = dynamic_cast<TempExpression*>(statement->destination_);
     auto call = dynamic_cast<CallExpression*>(statement->source_);
 
-    for (auto expr : call->args_->expressions_) {
-      auto name = VisitAndReturnValue(expr);
+    size_t n = call->args_->expressions_.size();
+    for (int i = n - 1; i >= 0; --i) {
+      auto name = VisitAndReturnValue(call->args_->expressions_[i]);
       Add(new PushInstruction(name));
     }
     auto func_name = VisitAndReturnValue(call->function_name_);
@@ -329,9 +331,18 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
 
     Add(new MovInstruction(temp->temp_.ToString(), "rax"));
 
-    for (size_t i = 0; i < call->args_->expressions_.size(); ++i) {
-      Add(new PopInstruction());
-    }
+    Add(new AddInstruction(
+        "rsp", std::to_string(8 * call->args_->expressions_.size())));
+    return;
+  }
+
+  if (statement->destination_->GetType() == IRNodeType::Temp &&
+      statement->source_->GetType() == IRNodeType::Alloc) {
+    auto alloc = dynamic_cast<AllocExpression*>(statement->source_);
+    auto temp = dynamic_cast<TempExpression*>(statement->destination_)->temp_;
+    Add(new MmapSyscall(alloc->size_));
+    Add(new MovInstruction(temp.ToString(), "rax"));
+    last_value_set_ = temp.ToString();
     return;
   }
 
@@ -389,6 +400,7 @@ void ir_tree::AsmGenerator::Visit(ir_tree::MoveStatement* statement) {
 }
 
 void ir_tree::AsmGenerator::Visit(ir_tree::CallExpression* expression) {
+  UNREACHABLE("")
   for (auto expr : expression->args_->expressions_) {
     auto name = VisitAndReturnValue(expr);
     Add(new PushInstruction(name));
@@ -408,12 +420,13 @@ void ir_tree::AsmGenerator::Visit(ir_tree::CallExpression* expression) {
 
 void ir_tree::AsmGenerator::Visit(ir_tree::IRPrintStatement* statement) {
   auto name = VisitAndReturnValue(statement->expression_);
-  Add(new PushInstruction(name));
-  Add(new CallInstruction("print"));
-  Add(new PopInstruction(name));
+  Add(new WriteSyscall(name));
 }
 
 void ir_tree::AsmGenerator::AddEpilogue() {
+  for (size_t i = x86_regs.size() - 7; i >= 3; --i) {
+    Add(new PopInstruction(x86_regs[i]));
+  }
   Add(new MovInstruction("rsp", "rbp"));
   Add(new PopInstruction("rbp"));
   Add(new RetInstruction());
@@ -422,6 +435,10 @@ void ir_tree::AsmGenerator::AddEpilogue() {
 void ir_tree::AsmGenerator::AddPrologue() {
   Add(new PushInstruction("rbp"));
   Add(new MovInstruction("rbp", "rsp"));
+  Add(new SubInstruction("rsp", std::to_string(stack_offset_)));
+  for (size_t i = 3; i < x86_regs.size() - 6; ++i) {
+    Add(new PushInstruction(x86_regs[i]));
+  }
 }
 
 std::string ir_tree::AsmGenerator::Div(ir_tree::IRExpression* first,
@@ -432,6 +449,7 @@ std::string ir_tree::AsmGenerator::Div(ir_tree::IRExpression* first,
   if (type == BinOperatorType::MOD) {
     src = "rdx";
   }
+  Add(new MovInstruction("rdx", std::to_string(0)));
   if (first->GetType() == IRNodeType::Const &&
       second->GetType() == IRNodeType::Const) {
     auto const1 = dynamic_cast<ConstExpression*>(first)->Value();
@@ -476,9 +494,16 @@ void ir_tree::AsmGenerator::Add(AsmInstruction* instruction) {
 }
 
 void ir_tree::AsmGenerator::PrintHead(std::ostream& stream) {
-  MyPrint(stream, "\t.intel_syntax noprefix\n");
-  MyPrint(stream, "\tglobal _start\n");
-  MyPrint(stream, "\t.text\n");
+  MyPrint(stream, ".intel_syntax noprefix\n");
+  MyPrint(stream, ".global _start\n");
+  //  MyPrint(stream, ".data\n");
+  //  MyPrint(stream, "PROT_READ_WRITE: .quad 0x03\n");
+  //  MyPrint(stream, "MAP_PRIVATE_ANON: .quad 0x22\n");
+  //  MyPrint(stream, "FD_FOR_MMAP: .quad -1\n");
+  //  MyPrint(stream, "OFFSET_FOR_MMAP: .quad 0\n");
+  //  MyPrint(stream, "NULL: .quad 0\n");
+  //  MyPrint(stream, "STDOUT: .quad 1\n");
+  MyPrint(stream, ".text\n");
 }
 
 void ir_tree::AsmGenerator::PrintInstructions(std::ostream& stream) {
@@ -493,4 +518,16 @@ void ir_tree::AsmGenerator::PrintAll(std::ostream& stream) {
 
 std::vector<AsmInstruction*>& ir_tree::AsmGenerator::GetInstructions() {
   return instructions_;
+}
+
+void ir_tree::AsmGenerator::Visit(ir_tree::AllocExpression* expression) {
+  UNREACHABLE("")
+}
+
+void ir_tree::AsmGenerator::SetStackOffset(size_t offset) {
+  stack_offset_ = offset;
+}
+
+void ir_tree::AsmGenerator::AddExit(size_t code) {
+  Add(new ExitSysCall(code));
 }

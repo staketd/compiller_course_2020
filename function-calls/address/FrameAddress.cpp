@@ -16,7 +16,7 @@ ir_tree::IRExpression* ir_tree::FrameAddress::ToExpression() {
     int value = offset_;
     if (offset_ < 0) {
       type = BinOperatorType::PLUS;
-      value = -offset_;
+      value = -offset_ + 24;
     }
     offset_expression = new ir_tree::BinOpExpression(
         type, frame_addres_->ToExpression(),

@@ -16,5 +16,8 @@
 #include <OrInstruction.h>
 #include <CmpInstruction.h>
 #include <RetInstruction.h>
+#include <MmapSyscall.h>
+#include <WriteSyscall.h>
+#include <ExitSysCall.h>
 
 #endif  // MYCOMPILLER_INSTUCTIONS_H

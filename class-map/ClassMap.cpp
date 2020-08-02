@@ -19,3 +19,6 @@ void ClassMap::SetClassLayout(const Symbol& symbol, ClassLayout* layout) {
 ClassLayout* ClassMap::GetClassLayout(const Symbol& symbol) {
   return class_layouts_[symbol];
 }
+bool ClassMap::HasClass(const Symbol& symbol) {
+  return classes_.find(symbol) != classes_.end();
+}

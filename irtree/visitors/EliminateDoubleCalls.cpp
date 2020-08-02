@@ -109,3 +109,7 @@ void ir_tree::EliminateDoubleCalls::Visit(
 ir_tree::SubtreeWrapper* ir_tree::EliminateDoubleCalls::GetTree() {
   return new ir_tree::StatementWrapper(last_value_set_.statement_);
 }
+
+void ir_tree::EliminateDoubleCalls::Visit(ir_tree::AllocExpression* expression) {
+  last_value_set_.expression_ = new AllocExpression(expression->size_);
+}

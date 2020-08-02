@@ -19,3 +19,7 @@ std::string ClassLayout::GetName() const {
 }
 ClassLayout::ClassLayout(const std::string& name) : class_name_(name) {
 }
+
+size_t ClassLayout::GetSize() {
+  return class_size_;
+}

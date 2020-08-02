@@ -25,10 +25,12 @@ class IRPrintVisitor : public ir_tree::BaseIRVisitor {
   void Visit(SeqStatement*) override;
   void Visit(ExpressionList*) override;
   void Visit(IRPrintStatement*) override;
+  void Visit(AllocExpression*) override;
 
   void PrintTabs();
   std::ofstream& stream_;
   size_t tabs_;
+
 };
 }  // namespace ir_tree
 

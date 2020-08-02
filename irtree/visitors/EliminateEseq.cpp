@@ -357,3 +357,7 @@ void ir_tree::EliminateEseq::Visit(ir_tree::ExpressionList* list) {
 ir_tree::IRStatement* ir_tree::EliminateEseq::GetTree() {
   return last_value_set_.statement_;
 }
+
+void ir_tree::EliminateEseq::Visit(ir_tree::AllocExpression* expression) {
+  last_value_set_.expression_ = new AllocExpression(expression->size_);
+}

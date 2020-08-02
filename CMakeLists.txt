@@ -174,6 +174,7 @@ set(
         irtree/nodes/expressions/MemExpression.cpp
         irtree/nodes/expressions/NameExpression.cpp
         irtree/nodes/expressions/TempExpression.cpp
+        irtree/nodes/expressions/AllocExpression.cpp
 
         irtree/nodes/statements/IRStatement.cpp
         irtree/nodes/statements/ExpStatement.cpp
@@ -215,6 +216,9 @@ set(
         asm/instructions/AndInstruction.cpp
         asm/instructions/CmpInstruction.cpp
         asm/instructions/RetInstruction.cpp
+        asm/instructions/MmapSyscall.cpp
+        asm/instructions/WriteSyscall.cpp
+        asm/instructions/ExitSysCall.cpp
         asm/Instructions.h
         irtree/Block.cpp
         irtree/Trace.cpp

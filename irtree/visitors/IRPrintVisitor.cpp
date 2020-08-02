@@ -174,3 +174,8 @@ void ir_tree::IRPrintVisitor::Visit(IRPrintStatement* stmt) {
   stmt->expression_->AcceptVisitor(this);
   --tabs_;
 }
+
+void ir_tree::IRPrintVisitor::Visit(ir_tree::AllocExpression* expression) {
+  PrintTabs();
+  stream_ << "AllocExpression :" << expression->size_ << "\n";
+}

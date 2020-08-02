@@ -6,5 +6,8 @@ class Main {
         a = b + c;
         c = b * b;
         Integer d = c;
+        print(a);
+        print(c);
+        print(d);
     }
 }

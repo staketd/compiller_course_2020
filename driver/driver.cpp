@@ -23,7 +23,7 @@ Driver::Driver()
       parser(scanner, *this),
       global_scope_(new ScopeLayer()) {
   for (size_t i = 0; i < colors_ + 2; ++i) {
-    reg_map_[x86_regs_[i]] = static_cast<RegType>(i);
+    reg_map_[x86_regs[i]] = static_cast<RegType>(i);
   }
 }
 
@@ -53,9 +53,6 @@ void Driver::FinishScan() {
 }
 
 void Driver::Evaluate() {
-  BuildSymbolTree();
-  CheckTypes();
-
   Frame main_frame;
 
   FunctionCallVisitor visitor(
@@ -93,24 +90,27 @@ void Driver::CheckTypes() {
 }
 
 void Driver::Compile() {
+  BuildSymbolTree();
+  CheckTypes();
   IRTreeBuildVisitor builder(class_map_);
   builder.Build(program);
   methods_ = builder.GetMethods();
-  Print("");
+  decl_count_ = builder.GetDecls();
+//  Print("");
 
   for (auto& method : methods_) {
     ir_tree::EliminateDoubleCalls eliminate_double_calls;
     method.second->ToStatement()->AcceptVisitor(&eliminate_double_calls);
     method.second = eliminate_double_calls.GetTree();
   }
-  Print("DCalls");
+//  Print("DCalls");
   for (auto& method : methods_) {
     ir_tree::EliminateEseq eliminate_eseqs;
 
     method.second->ToStatement()->AcceptVisitor(&eliminate_eseqs);
     method.second = new ir_tree::StatementWrapper(eliminate_eseqs.GetTree());
   }
-  Print("NoEseqs");
+//  Print("NoEseqs");
   for (auto& method : methods_) {
     ir_tree::LinearizeIRTree linearize;
 
@@ -120,13 +120,13 @@ void Driver::Compile() {
     method_stmts_[method.first] = linearize.GetStatementList();
   }
   linear_ = true;
-  Print("Linear");
+//  Print("Linear");
 
   DivideIntoBlocks();
 
   divided_into_traces_ = true;
 
-  Print("Traces");
+//  Print("Traces");
 
   BuildAsm();
 }
@@ -259,6 +259,8 @@ void Driver::BuildAsm() {
       for (auto& block : trace.GetBlocks()) {
         block.GetLabel()->AcceptVisitor(&generator);
         if (!printed_prologue) {
+          size_t offset = decl_count_[method.first];
+          generator.SetStackOffset(offset * 8);
           generator.AddPrologue();
           printed_prologue = true;
           label_name = block.GetLabel()->label_.ToString();
@@ -271,6 +273,10 @@ void Driver::BuildAsm() {
     }
     (new ir_tree::LabelStatement(ir_tree::Label(label_name + "_done")))
         ->AcceptVisitor(&generator);
+    if (method.first.GetName() == program->main_->name_ + "__main") {
+      generator.AddExit(0);
+      continue;
+    }
     generator.AddEpilogue();
   }
   std::ofstream not_painted("Asm_not_painted.s");
@@ -472,7 +478,7 @@ void Driver::PaintRegs() {
   change_reg_to_ = reg_list_;
   for (size_t i = 0; i < n; ++i) {
     if (!stack_stored[i]) {
-      change_reg_to_[i] = x86_regs_[static_cast<size_t>(reg_color_[i])];
+      change_reg_to_[i] = x86_regs[static_cast<size_t>(reg_color_[i])];
     } else {
       change_reg_to_[i] = "[rbp-" + std::to_string(offset[i]) + "]";
     }

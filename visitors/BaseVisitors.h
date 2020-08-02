@@ -68,6 +68,7 @@ class BaseIRVisitor {
   virtual void Visit(SeqStatement*) = 0;
   virtual void Visit(ExpressionList*) = 0;
   virtual void Visit(IRPrintStatement*) = 0;
+  virtual void Visit(AllocExpression*) = 0;
 
   virtual ~BaseIRVisitor() = default;
 };

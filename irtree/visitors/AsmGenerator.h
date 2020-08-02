@@ -10,13 +10,19 @@
 #include <AsmInstruction.h>
 #include <vector>
 
+const std::vector<std::string> x86_regs = {
+    "rax", "rdx", "rcx", "rsi", "rdi", "rbx", "r8",  "r9",
+    "r10", "r11", "r12", "r13", "r14", "r15", "rbp", "rsp"};
+
 namespace ir_tree {
 class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
  public:
   AsmGenerator(const std::string&);
   void AddEpilogue();
   void AddPrologue();
+  void AddExit(size_t);
   void PrintAll(std::ostream&);
+  void SetStackOffset(size_t);
   std::vector<AsmInstruction*>& GetInstructions();
 
  private:
@@ -35,6 +41,7 @@ class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
   void Visit(SeqStatement*) override;
   void Visit(ExpressionList*) override;
   void Visit(IRPrintStatement*) override;
+  void Visit(AllocExpression*) override;
 
   std::string BinOp(IRExpression*, IRExpression*, BinOperatorType);
 
@@ -45,6 +52,7 @@ class AsmGenerator : public ir_tree::TemplateBaseVisitor<std::string> {
  private:
   void Add(AsmInstruction*);
   std::vector<AsmInstruction*> instructions_;
+  size_t stack_offset_;
 };
 }  // namespace ir_tree
 #endif  // MYCOMPILLER_ASMGENERATOR_H

@@ -53,6 +53,7 @@ class EseqExpression;
 class MemExpression;
 class NameExpression;
 class TempExpression;
+class AllocExpression;
 
 class ExpStatement;
 class JumpConditionalStatement;

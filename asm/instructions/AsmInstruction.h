@@ -21,7 +21,10 @@ enum class AsmType {
   Pop,
   Ret,
   Sub,
-  Push
+  Push,
+  Mmap,
+  Write,
+  Exit
 };
 
 class AsmInstruction {

@@ -6,11 +6,15 @@ CallInstruction::CallInstruction(const std::string& func)
 }
 
 void CallInstruction::Print(std::ostream& ostream) {
+  MyPrint(ostream, "\tpush rcx\n");
+  MyPrint(ostream, "\tpush rdx\n");
   MyPrint(ostream, "\tcall ", func_, "\n");
+  MyPrint(ostream, "\tpop rdx\n");
+  MyPrint(ostream, "\tpop rcx\n");
 }
 
 std::vector<std::string> CallInstruction::GetDef() {
-  return {"rax"};
+  return {"rax", "rcx", "rdx"};
 }
 
 std::vector<std::string> CallInstruction::GetUse() {

@@ -13,6 +13,7 @@ class ClassMap {
   Class* GetClass(const Symbol&);
   void SetClassLayout(const Symbol&, ClassLayout*);
   ClassLayout* GetClassLayout(const Symbol&);
+  bool HasClass(const Symbol&);
 
  private:
   std::unordered_map<Symbol, Class*> classes_;

@@ -121,3 +121,7 @@ ir_tree::LinearizeIRTree::GetStatementList() {
   }
   return result;
 }
+
+void ir_tree::LinearizeIRTree::Visit(ir_tree::AllocExpression* expression) {
+  last_value_set_.expression_ = new AllocExpression(expression->size_);
+}

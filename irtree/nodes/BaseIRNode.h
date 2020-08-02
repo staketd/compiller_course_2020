@@ -20,7 +20,8 @@ enum class IRNodeType {
   Label,
   Move,
   Seq,
-  ExpList
+  ExpList,
+  Alloc,
 };
 
 class BaseIRNode {

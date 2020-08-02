@@ -32,7 +32,11 @@ void MovInstruction::Print(std::ostream& stream) {
       }
       offset = sign + std::to_string(factor * dst_offset_);
     }
-    MyPrint(stream, "\tmov [", destination_, offset, "], ", source_, "\n");
+    std::string qword_ptr = "";
+    if (!src_mem_ && CheckConst(source_)) {
+      qword_ptr = " qword ptr";
+    }
+    MyPrint(stream,"\tmov", qword_ptr, " [", destination_, offset, "], ", source_, "\n");
   }
   if (src_mem_) {
     std::string offset;
@@ -54,10 +58,15 @@ std::vector<std::string> MovInstruction::GetDef() {
 }
 
 std::vector<std::string> MovInstruction::GetUse() {
-  if (CheckConst(source_)) {
-    return {};
+  std::vector<std::string> ans;
+  if (dst_mem_) {
+    ans.push_back(destination_);
   }
-  return {source_};
+  if (CheckConst(source_)) {
+    return ans;
+  }
+  ans.push_back(source_);
+  return ans;
 }
 
 void MovInstruction::ChangeNames(ElementSetk* support,

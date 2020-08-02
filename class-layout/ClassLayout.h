@@ -9,6 +9,7 @@ class ClassLayout {
   ClassLayout(const std::string&);
   void AddField(const Symbol&);
   size_t GetOffset(const Symbol&);
+  size_t GetSize();
   bool HasField(const Symbol&) const;
   std::string GetName() const;
  private:

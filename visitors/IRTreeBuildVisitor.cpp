@@ -1,6 +1,7 @@
 
 #include "IRTreeBuildVisitor.h"
 #include <include/sources.h>
+#include <ClassMap.h>
 
 void IRTreeBuildVisitor::Visit(StatementList* statements) {
   if (statements->statements_.empty()) {
@@ -77,6 +78,7 @@ void IRTreeBuildVisitor::Visit(PrintStatement* print) {
   last_value_set_ = new ir_tree::StatementWrapper(
       new ir_tree::IRPrintStatement(expr->ToExpression()));
 }
+
 void IRTreeBuildVisitor::Visit(ReadStatement*) {
   last_value_set_ = nullptr;
 }
@@ -156,6 +158,7 @@ void IRTreeBuildVisitor::Visit(Scope* scope) {
 }
 
 void IRTreeBuildVisitor::Visit(VariableDeclaration* vardecl) {
+  ++decl_count_;
   current_frame_->AddLocalVariable(Symbol(vardecl->name_));
   auto expr = VisitAndReturnValue(vardecl->expression_);
   last_value_set_ = expr;
@@ -197,10 +200,13 @@ void IRTreeBuildVisitor::Visit(ClassMethod* method) {
   current_frame_ = new ir_tree::IRFrameTranslator(Symbol(method->name_));
   VisitAndReturnValue(method->arguments_);
   auto stmts = VisitAndReturnValue(method->statements_);
-  ir_tree::Label method_label(current_class_name_ + "__" + method->name_);
-  methods_[Symbol(current_class_name_ + "__" + method->name_)] =
+  auto asm_method_name = current_class_name_ + "__" + method->name_;
+  ir_tree::Label method_label(asm_method_name);
+  methods_[Symbol(asm_method_name)] =
       new ir_tree::StatementWrapper(new ir_tree::SeqStatement(
           new ir_tree::LabelStatement(method_label), stmts->ToStatement()));
+  method_decl_count_[Symbol(asm_method_name)] = decl_count_;
+  decl_count_ = 0;
 }
 
 void IRTreeBuildVisitor::Visit(ClassBody* class_body) {
@@ -261,13 +267,41 @@ void IRTreeBuildVisitor::Visit(ClassMain* main) {
 void IRTreeBuildVisitor::Visit(ThisExpression* expression) {
   last_value_set_ = new ir_tree::ExpressionWrapper(
       new ir_tree::MemExpression(new ir_tree::BinOpExpression(
-          ir_tree::BinOperatorType::MINUS,
+          ir_tree::BinOperatorType::PLUS,
           new ir_tree::TempExpression(ir_tree::Temp("::fp")),
-          new ir_tree::ConstExpression(8))));
+          new ir_tree::ConstExpression(16))));
 }
 
-void IRTreeBuildVisitor::Visit(NewExpression*) {
-  last_value_set_ = nullptr;
+void IRTreeBuildVisitor::Visit(NewExpression* expression) {
+  auto class_layout = class_map_.GetClassLayout(Symbol(expression->type_));
+  auto class_body = class_map_.GetClass(Symbol(expression->type_))->body_;
+  ir_tree::Temp t;
+  ir_tree::IRStatement* alloc = new ir_tree::MoveStatement(
+      new ir_tree::AllocExpression(std::max(8ul, class_layout->GetSize())),
+      new ir_tree::TempExpression(t));
+  ir_tree::IRStatement* stmts = nullptr;
+  for (auto field : class_body->fields_) {
+    if (class_map_.HasClass(Symbol(field->type_))) {
+      size_t offset = class_layout->GetOffset(Symbol(field->name_));
+      auto move = new ir_tree::MoveStatement(
+          new ir_tree::ConstExpression(0),
+          new ir_tree::MemExpression(new ir_tree::BinOpExpression(
+              ir_tree::BinOperatorType::PLUS, new ir_tree::TempExpression(t),
+              new ir_tree::ConstExpression(offset))));
+      if (stmts == nullptr) {
+        stmts = move;
+      } else {
+        stmts = new ir_tree::SeqStatement(move, stmts);
+      }
+    }
+  }
+  if (stmts != nullptr) {
+    stmts = new ir_tree::SeqStatement(alloc, stmts);
+  } else {
+    stmts = alloc;
+  }
+  last_value_set_ = new ir_tree::ExpressionWrapper(
+      new ir_tree::EseqExpression(stmts, new ir_tree::TempExpression(t)));
 }
 
 void IRTreeBuildVisitor::Visit(ArrayDeclaration*) {
@@ -317,7 +351,7 @@ IRTreeBuildVisitor::GetMethods() {
 }
 
 IRTreeBuildVisitor::IRTreeBuildVisitor(ClassMap& class_map)
-    : class_map_(class_map) {
+    : class_map_(class_map), decl_count_(0) {
 }
 
 ir_tree::IRExpression* IRTreeBuildVisitor::GetAddress(const Symbol& symbol) {
@@ -336,4 +370,8 @@ ir_tree::IRExpression* IRTreeBuildVisitor::GetAddress(const Symbol& symbol) {
         new ir_tree::ConstExpression(offset)));
   }
   return address;
+}
+
+std::unordered_map<Symbol, size_t> IRTreeBuildVisitor::GetDecls() {
+  return std::move(method_decl_count_);
 }

@@ -61,6 +61,7 @@ class Driver {
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> methods_;
   std::unordered_map<Symbol, std::vector<ir_tree::IRStatement*>> method_stmts_;
   std::unordered_map<Symbol, std::vector<ir_tree::Trace>> method_traces_;
+  std::unordered_map<Symbol, size_t> decl_count_;
 
   ir_tree::AsmGenerator* generator_;
 
@@ -86,11 +87,7 @@ class Driver {
 
   std::unordered_map<std::string, RegType> reg_map_;
 
-  const std::vector<std::string> x86_regs_ = {
-      "rax", "rdx", "rcx", "rsi", "rdi", "rbx", "r8",  "r9",
-      "r10", "r11", "r12", "r13", "r14", "r15", "rbp", "rsp"};
-
-  const size_t colors_ = x86_regs_.size() - 2;
+  const size_t colors_ = x86_regs.size() - 2;
   std::vector<RegType> reg_color_;
   std::vector<std::string> change_reg_to_;
   std::vector<Set> in_;

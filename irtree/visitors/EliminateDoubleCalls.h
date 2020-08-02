@@ -25,6 +25,7 @@ class EliminateDoubleCalls : public ir_tree::TemplateBaseVisitor<IRUnion> {
   void Visit(SeqStatement*) override;
   void Visit(ExpressionList*) override;
   void Visit(IRPrintStatement*) override;
+  void Visit(AllocExpression*) override;
 };
 }
 #endif  // MYCOMPILLER_ELIMINATEDOUBLECALLS_H

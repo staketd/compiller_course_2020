@@ -17,6 +17,10 @@ class IRTreeBuildVisitor
   IRTreeBuildVisitor(ClassMap&);
   void Build(Program*);
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> GetMethods();
+  std::unordered_map<Symbol, size_t> GetDecls();
+
+ public:
+  size_t decl_count_;
 
  private:
   void Visit(StatementList*) override;
@@ -65,6 +69,7 @@ class IRTreeBuildVisitor
   ir_tree::IRExpression* GetAddress(const Symbol&);
 
   std::unordered_map<Symbol, ir_tree::SubtreeWrapper*> methods_;
+  std::unordered_map<Symbol, size_t> method_decl_count_;
   std::string current_class_name_;
   ir_tree::IRFrameTranslator* current_frame_;
   ClassMap& class_map_;
